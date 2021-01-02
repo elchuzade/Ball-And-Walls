@@ -85,12 +85,15 @@ public class BallCatcher : MonoBehaviour
                 dropCoins[i].SetActive(false);
                 if (collectedCoins < dropCoinsAmount)
                 {
-                    homeStatus.CollectCoin();
-                    collectedCoins++;
-                    if (!triggerAnimTriggered)
+                    if (collectedCoins < dropCoinsAmount)
                     {
-                        coinsIcon.Trigger();
-                        triggerAnimTriggered = true;
+                        homeStatus.CollectCoin();
+                        collectedCoins++;
+                        if (!triggerAnimTriggered)
+                        {
+                            coinsIcon.Trigger();
+                            triggerAnimTriggered = true;
+                        }
                     }
                 }
             }
@@ -187,7 +190,7 @@ public class BallCatcher : MonoBehaviour
         }
         else
         {
-            player.coins += collectedCoins;
+            player.coins += homeStatus.GetCoins();
             player.SavePlayer();
             navigator.LoadNextLevel(player.nextLevelIndex);
         }
