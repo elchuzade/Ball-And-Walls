@@ -122,6 +122,10 @@ public class HomeStatus : MonoBehaviour
 
     public bool GetShuffle()
     {
+        if (player.nextLevelIndex > 3)
+        {
+            return true;
+        }
         return shuffle;
     }
 
