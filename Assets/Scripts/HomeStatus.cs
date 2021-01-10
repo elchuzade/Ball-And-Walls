@@ -75,6 +75,10 @@ public class HomeStatus : MonoBehaviour
         adWarningReceiveButton = GameObject.Find("AdWarningReceiveButton");
         adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
 
+        // Set ad stuff back to normal
+        adCancelBg.transform.localScale = new Vector3(1, 1, 1);
+        adCancelWarning.transform.localScale = new Vector3(1, 1, 1);
+
         GameObject.Find("GamePlane").SetActive(false);
 
         navigator = FindObjectOfType<Navigator>();
