@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using MoreMountains.NiceVibrations;
-using UnityEngine.UI;
 
 public class MoveAngular : MonoBehaviour
 {

@@ -1260,11 +1260,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: AdCancelBg
       objectReference: {fileID: 0}
-    - target: {fileID: 4666451201154667508, guid: e3c779efb781a4aa8bb87b024bc82e83,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4666451201154667509, guid: e3c779efb781a4aa8bb87b024bc82e83,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2603,6 +2598,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2430971185244488177, guid: 0a8fa8539fb5844b88efac1d9f4476a9,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2430971185244488177, guid: 0a8fa8539fb5844b88efac1d9f4476a9,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -2666,31 +2666,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: AdCancelWarning
       objectReference: {fileID: 0}
-    - target: {fileID: 2430971185244488179, guid: 0a8fa8539fb5844b88efac1d9f4476a9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8913570843069480287, guid: 0a8fa8539fb5844b88efac1d9f4476a9,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1266203353}
-    - target: {fileID: 8913570843069480287, guid: 0a8fa8539fb5844b88efac1d9f4476a9,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ContinuePlayingButtonClick
-      objectReference: {fileID: 0}
-    - target: {fileID: 8913570843494870132, guid: 0a8fa8539fb5844b88efac1d9f4476a9,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1266203353}
     - target: {fileID: 8913570843494870132, guid: 0a8fa8539fb5844b88efac1d9f4476a9,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReceiveHintButtonClick
-      objectReference: {fileID: 0}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1266203353}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a8fa8539fb5844b88efac1d9f4476a9, type: 3}
 --- !u!224 &2065043473 stripped
