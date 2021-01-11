@@ -75,7 +75,7 @@ public class HomeStatus : MonoBehaviour
         adWarningReceiveButton = GameObject.Find("AdWarningReceiveButton");
         adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
 
-        // Set ad stuff back to normal
+        // Set ad stuff back to normal as they are shrinked in x axis for visibility by default
         adCancelBg.transform.localScale = new Vector3(1, 1, 1);
         adCancelWarning.transform.localScale = new Vector3(1, 1, 1);
 
@@ -331,6 +331,8 @@ public class HomeStatus : MonoBehaviour
 
     public void ResetLevel()
     {
+        ResetForwardButton();
+
         resetButton.SetActive(false);
         forwardButton.SetActive(false);
 

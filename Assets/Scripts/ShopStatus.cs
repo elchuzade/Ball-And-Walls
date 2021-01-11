@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class ShopStatus : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class ShopStatus : MonoBehaviour
     private int currentBallIndex;
     Navigator navigator;
     [SerializeField] int adCoinsAmount;
+
+    private GameObject hapticsButton;
+    private GameObject soundsButton;
 
     //TriggerAnimation adsButtonScript;
     TriggerAnimation playButtonScript;
@@ -34,6 +38,12 @@ public class ShopStatus : MonoBehaviour
 
     void Start()
     {
+        hapticsButton = GameObject.Find("HapticsButton");
+        soundsButton = GameObject.Find("SoundsButton");
+
+        // For haptics and sounds
+        SetButtonInitialState();
+
         scoreboard.SetCoins(player.coins);
         AdManager.ShowBanner();
 
@@ -51,6 +61,10 @@ public class ShopStatus : MonoBehaviour
 
         adWarningReceiveButtonScript = adWarningReceiveButton.GetComponent<TriggerAnimation>();
         adWarningContinueButtonScript = adWarningContinueButton.GetComponent<TriggerAnimation>();
+
+        // Set ad stuff back to normal as they are shrinked in x axis for visibility by default
+        adCancelBg.transform.localScale = new Vector3(1, 1, 1);
+        adCancelWarning.transform.localScale = new Vector3(1, 1, 1);
 
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);
@@ -203,5 +217,66 @@ public class ShopStatus : MonoBehaviour
         showedAdCancelWarning = true;
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);
+    }
+
+    // Set initial states of haptics and sounds buttons based on player prefs
+    private void SetButtonInitialState()
+    {
+        if (PlayerPrefs.GetInt("Haptics") == 1)
+        {
+            hapticsButton.GetComponent<IconDisableButton>().SetButtonInitialState(ButtonStates.Enable);
+        }
+        else
+        {
+            hapticsButton.GetComponent<IconDisableButton>().SetButtonInitialState(ButtonStates.Disable);
+        }
+        if (PlayerPrefs.GetInt("Sounds") == 1)
+        {
+            soundsButton.GetComponent<IconDisableButton>().SetButtonInitialState(ButtonStates.Enable);
+        }
+        else
+        {
+            soundsButton.GetComponent<IconDisableButton>().SetButtonInitialState(ButtonStates.Disable);
+        }
+    }
+
+    public void ClickHapticsButton()
+    {
+        if (PlayerPrefs.GetInt("Haptics") == 1)
+        {
+            // Run the click button animation, disable interactible feature until the end of animation
+            // Set button state to disabled
+            hapticsButton.GetComponent<IconDisableButton>().ClickButton(ButtonStates.Disable);
+            // If haptics are turned on => turn them off
+            PlayerPrefs.SetInt("Haptics", 0);
+        }
+        else
+        {
+            // Run the click button animation, disable interactible feature until the end of animation
+            // Set button state to enabled
+            hapticsButton.GetComponent<IconDisableButton>().ClickButton(ButtonStates.Enable);
+            // If haptics are turned off => turn them on
+            PlayerPrefs.SetInt("Haptics", 1);
+        }
+    }
+
+    public void ClickSoundsButton()
+    {
+        if (PlayerPrefs.GetInt("Sounds") == 1)
+        {
+            // Run the click button animation, disable interactible feature until the end of animation
+            // Set button state to disabled
+            soundsButton.GetComponent<IconDisableButton>().ClickButton(ButtonStates.Disable);
+            // If sounds are turned on => turn them off
+            PlayerPrefs.SetInt("Sounds", 0);
+        }
+        else
+        {
+            // Run the click button animation, disable interactible feature until the end of animation
+            // Set button state to enabled
+            soundsButton.GetComponent<IconDisableButton>().ClickButton(ButtonStates.Enable);
+            // If sounds are turned off => turn them on
+            PlayerPrefs.SetInt("Sounds", 1);
+        }
     }
 }

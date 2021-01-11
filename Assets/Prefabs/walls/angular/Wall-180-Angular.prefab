@@ -533,8 +533,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockwise: 1
-  clockLaunch: {fileID: 6582054445392823939}
-  counterClockLaunch: {fileID: 6582054447112735030}
+  clockLaunch: {fileID: 6582054445392823938}
+  counterClockLaunch: {fileID: 6582054447112735029}
 --- !u!1 &6582054445984208216
 GameObject:
   m_ObjectHideFlags: 0
@@ -851,8 +851,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockwise: 0
-  clockLaunch: {fileID: 6582054445392823939}
-  counterClockLaunch: {fileID: 6582054447112735030}
+  clockLaunch: {fileID: 6582054445392823938}
+  counterClockLaunch: {fileID: 6582054447112735029}
 --- !u!1 &6582054446487777581
 GameObject:
   m_ObjectHideFlags: 0

@@ -56,6 +56,7 @@ public class Wall : MonoBehaviour
             if (distance > radius - ballRadius + margin)
             {
                 readyToRotate = true;
+                // Stop the ball movement
                 ball.StopMoving();
                 TeleportBall(ballPosition);
             } else if (readyToRotate)
