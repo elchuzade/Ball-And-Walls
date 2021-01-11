@@ -71,6 +71,8 @@ public class Ball : MonoBehaviour
         {
             MMVibrationManager.Haptic(HapticTypes.RigidImpact);
         }
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.Play();
         Launch(launchVector * initSpeed);
         homeStatus.LaunchBall();
     }
@@ -117,8 +119,20 @@ public class Ball : MonoBehaviour
             StopMoving();
         } else if (collision.gameObject.tag == "Portal")
         {
-            collision.gameObject.GetComponent<Portal>().SuckIntoPortal();
+            collision.GetComponent<Portal>().SuckIntoPortal();
             StopMoving();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Barrier")
+        {
+            AudioSource audio = collision.gameObject.GetComponent<AudioSource>();
+
+            Debug.Log(audio);
+
+            audio.Play();
         }
     }
 
@@ -150,6 +164,9 @@ public class Ball : MonoBehaviour
         ballClick.position = transform.position;
 
         ResetSpeed();
+
+        AudioSource audio = transform.Find("Center").GetComponent<AudioSource>();
+        audio.Play();
 
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 

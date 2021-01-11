@@ -12,6 +12,7 @@ TagManager:
   - Border
   - BallClick
   - Portal
+  - Barrier
   layers:
   - Default
   - TransparentFX

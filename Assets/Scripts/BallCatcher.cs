@@ -141,6 +141,9 @@ public class BallCatcher : MonoBehaviour
                 AdManager.ShowStandardAd(() => { }, () => { }, () => { });
             }
 
+            AudioSource audio = GetComponent<AudioSource>();
+            audio.Play();
+
             MakeDropCoinAngles();
             GetComponent<SpriteRenderer>().enabled = false;
 

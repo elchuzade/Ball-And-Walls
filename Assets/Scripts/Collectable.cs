@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using MoreMountains.NiceVibrations;
+using System.Collections;
 
 public class Collectable : MonoBehaviour
 {
@@ -39,10 +40,20 @@ public class Collectable : MonoBehaviour
                 homeStatus.CollectKey();
             } else if (type == Type.Coin)
             {
+                AudioSource audio2 = GetComponent<AudioSource>();
+                audio2.Play();
+
                 homeStatus.CollectCoin();
             }
-
-            Destroy(gameObject);
+            StartCoroutine(DestroyCollectable(1));
         }
+    }
+
+    private IEnumerator DestroyCollectable(float time)
+    {
+        gameObject.transform.position = new Vector3(-200, -200, -200);
+
+        yield return new WaitForSeconds(time);
+        Destroy(gameObject);
     }
 }

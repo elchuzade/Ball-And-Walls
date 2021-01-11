@@ -43,11 +43,17 @@ public class Portal : MonoBehaviour
 
     public void SuckIntoPortal()
     {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.Play();
+
         catchBall = true;
     }
 
     private void ThrowOutOfTeleport()
     {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.Play();
+
         ball.Launch(PortalOut.transform.up * 30);
     }
 }
