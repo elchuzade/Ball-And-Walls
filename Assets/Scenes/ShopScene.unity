@@ -506,7 +506,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 4400931109895508982, guid: a94919507c5ad496a947cbed4bcde4f8, type: 3}
-  scoreboard: {fileID: 717555301}
   adCoinsAmount: 10
 --- !u!4 &197296923
 Transform:
@@ -1551,11 +1550,11 @@ RectTransform:
   - {fileID: 1017491594}
   - {fileID: 1608952491}
   - {fileID: 1262187490}
+  - {fileID: 1943387270171475009}
   - {fileID: 241752439}
   - {fileID: 1687017068}
   - {fileID: 2027714418}
   - {fileID: 1663529216}
-  - {fileID: 1943387270171475009}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1600,7 +1599,7 @@ PrefabInstance:
     - target: {fileID: 4666451201154667509, guid: e3c779efb781a4aa8bb87b024bc82e83,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4666451201154667509, guid: e3c779efb781a4aa8bb87b024bc82e83,
         type: 3}
@@ -1960,7 +1959,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &682411636
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2862,7 +2861,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &936545974
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3722,7 +3721,7 @@ PrefabInstance:
     - target: {fileID: 2430971185244488177, guid: b8988e09f4dbb4fed87458d0f0597c1d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2430971185244488177, guid: b8988e09f4dbb4fed87458d0f0597c1d,
         type: 3}
@@ -4811,7 +4810,7 @@ PrefabInstance:
     - target: {fileID: 6489641008765246247, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6489641008765246247, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
@@ -5483,11 +5482,6 @@ MonoBehaviour:
   - {fileID: 549608852}
   - {fileID: 1660260753}
   - {fileID: 169504135}
-  leftDot: {fileID: 882867235}
-  middleDot: {fileID: 675173562}
-  rightDot: {fileID: 2122174082}
-  leftLimit: {fileID: 936545973}
-  rightLimit: {fileID: 682411635}
   items: {fileID: 294458251}
 --- !u!114 &1894092043
 MonoBehaviour:
@@ -6630,7 +6624,7 @@ PrefabInstance:
     - target: {fileID: 6489641008765246247, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6489641008765246247, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
@@ -6757,6 +6751,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 447982858}
     m_Modifications:
+    - target: {fileID: 5252764268035813507, guid: 82977d29d6661476d8fec5ebd087a674,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7157165562750059079, guid: 82977d29d6661476d8fec5ebd087a674,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7157165562994690205, guid: 82977d29d6661476d8fec5ebd087a674,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576565387563274322, guid: 82977d29d6661476d8fec5ebd087a674,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8767118985217073954, guid: 82977d29d6661476d8fec5ebd087a674,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -6780,7 +6794,7 @@ PrefabInstance:
     - target: {fileID: 8767118985217073957, guid: 82977d29d6661476d8fec5ebd087a674,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8767118985217073957, guid: 82977d29d6661476d8fec5ebd087a674,
         type: 3}

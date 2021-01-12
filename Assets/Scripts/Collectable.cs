@@ -2,19 +2,25 @@
 using MoreMountains.NiceVibrations;
 using System.Collections;
 
+public enum Type { Key, Coin }
+
 public class Collectable : MonoBehaviour
 {
-    private enum Type { Key, Coin }
+    // Particle effect to show when the object is collected
+    [SerializeField] GameObject collectParticlePrefab;
+    private HomeStatus homeStatus;
 
-    [SerializeField] GameObject collectParticle;
-    HomeStatus homeStatus;
-
+    // Select whether it is a key or coin in the inspector
     [SerializeField] Type type;
 
-    private void Start()
+    void Awake()
     {
         homeStatus = FindObjectOfType<HomeStatus>();
+    }
 
+    void Start()
+    {
+        // If the player has unlocked all of the balls, do not show him keys anymore
         if (type == Type.Key && homeStatus.AllBallsUnlocked())
         {
             Destroy(gameObject);
@@ -23,36 +29,54 @@ public class Collectable : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collider)
     {
+        // If a ball has collided with the collectable item
         if (collider.gameObject.tag == "Ball")
         {
-            GameObject collect = Instantiate(
-                collectParticle, transform.position, Quaternion.identity);
+            // Create a collectParticle instance at the location of collectable item
+            GameObject collectParticle = Instantiate(
+                collectParticlePrefab, transform.position, Quaternion.identity);
 
-            Destroy(collect, 1);
+            // Remove it in a second
+            Destroy(collectParticle, 1);
 
             if (PlayerPrefs.GetInt("Haptics") == 1)
             {
                 MMVibrationManager.Haptic(HapticTypes.SoftImpact);
             }
 
+            // If the item that holds this script was a key add 1 key to player
             if (type == Type.Key)
             {
+                if (PlayerPrefs.GetInt("Sounds") == 1)
+                {
+                    AudioSource audio3 = GetComponent<AudioSource>();
+                    audio3.Play();
+                }
+
                 homeStatus.CollectKey();
-            } else if (type == Type.Coin)
+            }
+            // If the item that holds this script was a coin add 1 coin to player
+            else if (type == Type.Coin)
             {
-                AudioSource audio2 = GetComponent<AudioSource>();
-                audio2.Play();
+                if (PlayerPrefs.GetInt("Sounds") == 1)
+                {
+                    AudioSource audio2 = GetComponent<AudioSource>();
+                    audio2.Play();
+                }
 
                 homeStatus.CollectCoin();
             }
+            // Run all the actions needed for destroying this collectable item after 1 second
             StartCoroutine(DestroyCollectable(1));
         }
     }
 
     private IEnumerator DestroyCollectable(float time)
     {
-        gameObject.transform.position = new Vector3(-200, -200, -200);
+        // Move it outside of the screen so player can not see or interact with it again
+        gameObject.transform.position = new Vector3(-1000, -1000, -1000);
 
+        // wait for some time so that sound effect can be played and destroy it
         yield return new WaitForSeconds(time);
         Destroy(gameObject);
     }

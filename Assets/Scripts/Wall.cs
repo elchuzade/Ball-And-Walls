@@ -3,15 +3,17 @@ using MoreMountains.NiceVibrations;
 
 public class Wall : MonoBehaviour
 {
-    float radius = 52f;
-    float ballRadius = 12f;
-    int angularDirection;
-    bool readyToRotate = false;
-    float margin = 0.0001f; // This is to switch from if to else if in FixedUpdate
+    private float radius = 52f;
+    private float ballRadius = 12f;
+    private int angularDirection;
+    private bool readyToRotate = false;
+    // This is to switch from if to else if in FixedUpdate
+    private float margin = 0.0001f;
 
-    bool wallEntered = false;
-    bool startedRotation = false; // This is to fix the bug of sending to the center
-    bool showCorrectPosition = false;
+    private bool wallEntered = false;
+    // This is to fix the bug of sending to the center
+    private bool startedRotation = false;
+    private bool showCorrectPosition = false;
 
     [SerializeField] GameObject background;
     [SerializeField] GameObject initPosition;
@@ -24,16 +26,15 @@ public class Wall : MonoBehaviour
     [SerializeField] GameObject counterClockAssist;
     [SerializeField] GameObject counterClockAssistLong;
 
-    Vector3 correctPositionCoordinates;
-    Quaternion correctPositionRotation;
+    private Vector3 correctPositionCoordinates;
+    private Quaternion correctPositionRotation;
 
-    Ball ball;
-    HomeStatus homeStatus;
+    private Ball ball;
+    private HomeStatus homeStatus;
 
-    Animator dragAnimator;
+    private Animator dragAnimator;
 
-    //Vector3 mouseTouchToCenter;
-    Vector3 launchPosition;
+    private Vector3 launchPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +47,7 @@ public class Wall : MonoBehaviour
         homeStatus = FindObjectOfType<HomeStatus>();
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         if (ball.entered && wallEntered)
         {

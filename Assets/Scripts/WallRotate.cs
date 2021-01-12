@@ -15,7 +15,7 @@ public class WallRotate : MonoBehaviour
     // Direction to launch the ball based on the wall assiting lines direction
     private int angularDirection;
 
-    private void Start()
+    void Awake()
     {
         clockLaunch = transform.parent.Find("ClockLaunch");
         counterClockLaunch = transform.parent.Find("CounterClockLaunch");

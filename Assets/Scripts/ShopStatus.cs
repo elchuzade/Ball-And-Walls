@@ -1,56 +1,53 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
 public class ShopStatus : MonoBehaviour
 {
     [SerializeField] Player player;
-    [SerializeField] Scoreboard scoreboard;
-    private int[] unlockedBalls;
+    private Scoreboard scoreboard;
+    // Current ball to be selected based on player data
     private int currentBallIndex;
-    Navigator navigator;
+    private Navigator navigator;
+    // Amount of coins that player will receive if he watches ad video
     [SerializeField] int adCoinsAmount;
 
     private GameObject hapticsButton;
     private GameObject soundsButton;
 
-    //TriggerAnimation adsButtonScript;
-    TriggerAnimation playButtonScript;
-    TriggerAnimation getCoinsButtonScript;
+    // Animation to be played when play button is clicked
+    private TriggerAnimation playButtonScript;
+    // Animation to be played when get coins button is clicked
+    private TriggerAnimation getCoinsButtonScript;
 
-    GameObject adCancelBg;
-    GameObject adCancelWarning;
+    // Background of window that pops up if player wants to switch off reward ad
+    private GameObject adCancelBg;
+    // Window with buttons that pops up if player wants to switch off reward ad
+    private GameObject adCancelWarning;
 
-    GameObject adWarningReceiveButton;
-    GameObject adWarningContinueButton;
+    // Continue watching and receive a reward button when player wanted to skip the video
+    private GameObject adWarningReceiveButton;
+    // Reject reward and continue playing game button when player wanted to skip the video
+    private GameObject adWarningContinueButton;
 
-    TriggerAnimation adWarningReceiveButtonScript;
-    TriggerAnimation adWarningContinueButtonScript;
+    // Animation to be played when Receive a reward button is clicked
+    private TriggerAnimation adWarningReceiveButtonScript;
+    // Animation to be played when Continue Playing Game button is clicked
+    private TriggerAnimation adWarningContinueButtonScript;
 
-    bool showedAdCancelWarning = false;
+    // Track if ad cancel warning has already been shown, not to annoy each time showing the same window
+    private bool showedAdCancelWarning = false;
 
-    private void Awake()
+    void Awake()
     {
+        scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
-        player.LoadPlayer();
-        SetUnlockedAndCurrent();
-    }
 
-    void Start()
-    {
         hapticsButton = GameObject.Find("HapticsButton");
         soundsButton = GameObject.Find("SoundsButton");
 
-        // For haptics and sounds
-        SetButtonInitialState();
-
-        scoreboard.SetCoins(player.coins);
-        AdManager.ShowBanner();
-
-        //GameObject adsButtonObject = GameObject.Find("AdsButton");
         GameObject playButtonObject = GameObject.Find("PlayButton");
         GameObject getCoinsButtonObject = GameObject.Find("GetCoinsButton");
-        //adsButtonScript = adsButtonObject.GetComponent<TriggerAnimation>();
+
         playButtonScript = playButtonObject.GetComponent<TriggerAnimation>();
         getCoinsButtonScript = getCoinsButtonObject.GetComponent<TriggerAnimation>();
 
@@ -61,35 +58,58 @@ public class ShopStatus : MonoBehaviour
 
         adWarningReceiveButtonScript = adWarningReceiveButton.GetComponent<TriggerAnimation>();
         adWarningContinueButtonScript = adWarningContinueButton.GetComponent<TriggerAnimation>();
+    }
+
+    void Start()
+    {
+        player.LoadPlayer();
+
+        AdManager.ShowBanner();
+
+        // Set currently selected ball with their frames and backgrounds
+        currentBallIndex = player.currentBallIndex;
+
+        // Set whether haptics and sound buttons are enabled or disabled initially
+        SetButtonInitialState();
+
+        // Set current player coins to the scoreboard
+        scoreboard.SetCoins(player.coins);
 
         // Set ad stuff back to normal as they are shrinked in x axis for visibility by default
         adCancelBg.transform.localScale = new Vector3(1, 1, 1);
         adCancelWarning.transform.localScale = new Vector3(1, 1, 1);
 
+        // Hide ad stuff until the ad is actually skipped by player
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);
     }
 
     public bool CheckUnlockStatus(int index)
     {
-
-        if (unlockedBalls[index] == 1)
+        // Check player data for unlocked balls, if ball with given index is unlocked return true
+        if (player.unlockedBalls[index] == 1)
+        {
             return true;
+        }
 
         return false;
     }
 
     public bool CheckSelectStatus(int index)
     {
+        // Check player data for selected ball, if ball with given index is selected return true
         if (currentBallIndex == index)
+        {
             return true;
+        }
 
         return false;
     }
 
     public bool SelectItem(int index)
     {
-        if (unlockedBalls[index] == 1)
+        // Check if ball is unlocked, select it and save player data
+        if (player.unlockedBalls[index] == 1)
         {
             currentBallIndex = index;
             player.currentBallIndex = currentBallIndex;
@@ -102,106 +122,125 @@ public class ShopStatus : MonoBehaviour
 
     public bool UnlockItem(int index, int priceTag)
     {
-        if (unlockedBalls[index] == 0 && player.coins >= priceTag)
+        // Check if ball is locked and player has enough coins to unlock it return true
+        if (player.unlockedBalls[index] == 0 && player.coins >= priceTag)
         {
+            // Change player coins for ball price
             player.coins -= priceTag;
-            unlockedBalls[index] = 1;
-            player.unlockedBalls = unlockedBalls;
+            // Set this ball index as unlocked in player data
+            player.unlockedBalls[index] = 1;
             player.SavePlayer();
+            // Load player again to access its data
+            player.LoadPlayer();
+            // Update coins in scoreboard based on new status of player coins
             scoreboard.SetCoins(player.coins);
             return true;
         }
         return false;
     }
 
-    private void SetUnlockedAndCurrent()
-    {
-        unlockedBalls = player.unlockedBalls;
-        currentBallIndex = player.currentBallIndex;
-    }
-
-    public void ResetPlayer()
-    {
-        player.ResetPlayer();
-    }
+    // Debugging purpose. Reset all player data
+    //public void ResetPlayer()
+    //{
+    //    player.ResetPlayer();
+    //}
 
     public void CloseShop()
     {
+        // Play the animation of play button clikcing
         playButtonScript.Trigger();
-        StartCoroutine(LoadGameSceneCoroutine());
+        // Approximately when animation is over, load the game scene
+        StartCoroutine(LoadGameSceneCoroutine(0.2f));
     }
 
     public void GetMoreCoins()
     {
+        // Play the animation of get more coins button clikcing
         getCoinsButtonScript.Trigger();
-        StartCoroutine(LoadGetMoreCoins());
+        // Approximately when animation is over, load get more coins ad
+        StartCoroutine(LoadGetMoreCoins(0.2f));
     }
 
-    public void BuyAdsFree()
-    {
-        //adsButtonScript.Trigger();
-    }
+    //public void BuyAdsFree()
+    //{
+    //    adsButtonScript.Trigger();
+    //}
 
-    public IEnumerator LoadGameSceneCoroutine()
+    public IEnumerator LoadGameSceneCoroutine(float time)
     {
-        yield return new WaitForSeconds(0.20f);
+        // Wait for given time and load the game scene
+        yield return new WaitForSeconds(time);
+
         navigator.LoadNextLevel(player.nextLevelIndex);
     }
 
-    public IEnumerator LoadGetMoreCoins()
+    public IEnumerator LoadGetMoreCoins(float time)
     {
-        yield return new WaitForSeconds(0.20f);
+        // Wait for given time and load the ad screen
+        yield return new WaitForSeconds(time);
+
         AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 
     public void ReceiveCoinsButtonClick()
     {
+        // Run animation of clicking receive coins and watch the ad button
         adWarningReceiveButtonScript.Trigger();
 
-        StartCoroutine(ReceiveCoinsButtonCoroutine());
+        // Approximately when animation is finished, load the ad screen
+        StartCoroutine(ReceiveCoinsButtonCoroutine(0.2f));
     }
 
-    public IEnumerator ReceiveCoinsButtonCoroutine()
+    // This is similar to LoadGetMoreCoins. But for consistency, it is better to keep it separately
+    public IEnumerator ReceiveCoinsButtonCoroutine(float time)
     {
-        yield return new WaitForSeconds(0.20f);
+        // Wait for given time and load the ad screen
+        yield return new WaitForSeconds(time);
 
         AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 
     public void ContinuePlayingButtonClick()
     {
+        // Wait for given time and load the ad screen
         adWarningContinueButtonScript.Trigger();
 
-        StartCoroutine(ContinuePlayingButtonCoroutine());
+        StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
     }
 
-    public IEnumerator ContinuePlayingButtonCoroutine()
+    public IEnumerator ContinuePlayingButtonCoroutine(float time)
     {
-        yield return new WaitForSeconds(0.20f);
+        yield return new WaitForSeconds(time);
 
+        // Wait for some time and hide all the ad stuff, since player has cancelled reward and refused to watch the ad
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);
     }
 
     private void GetCoinsCancel()
     {
-
+        // Playe has canceled get extra ccoins video
         if (!showedAdCancelWarning)
         {
+            // If it is the first time, show him a warnigng screen with ad stuff
             adCancelBg.SetActive(true);
             adCancelWarning.SetActive(true);
         }
         else
         {
+            // else hide a warning screen with ad stuff
             adCancelBg.SetActive(false);
             adCancelWarning.SetActive(false);
         }
 
+        // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
         showedAdCancelWarning = true;
     }
 
     private void GetCoinsFail()
     {
+        // If a video for receiving coins fails, hide the warning page about cancelling, not to annoy the player
+        // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
         showedAdCancelWarning = true;
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);
@@ -209,11 +248,15 @@ public class ShopStatus : MonoBehaviour
 
     public void GetCoinsSuccess()
     {
+        // If video has been played suvvessfully till the end give the reward
+        // Increase player coins by ad reward amount
         player.coins += adCoinsAmount;
+        // Update number of coins in scoreboard
         scoreboard.SetCoins(player.coins);
+        // Save player
         player.SavePlayer();
-        player.LoadPlayer();
 
+        // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
         showedAdCancelWarning = true;
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);

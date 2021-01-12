@@ -6,8 +6,6 @@ public enum Directions { North, South, East, West };
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] Player player;
-
     [SerializeField] GameObject startParticlesPrefab;
     [SerializeField] GameObject loseParticlesPrefab;
 
@@ -49,11 +47,14 @@ public class Ball : MonoBehaviour
     // Set a direction for the ball where to move when launched
     [SerializeField] Directions direction;
 
-    private void Start()
+    void Awake()
+    {
+        homeStatus = FindObjectOfType<HomeStatus>();
+    }
+
+    void Start()
     {
         initialPosition = transform.position;
-
-        homeStatus = FindObjectOfType<HomeStatus>();
 
         SetLaunchVector();
     }

@@ -13,9 +13,9 @@ public class IconDisableButton : MonoBehaviour
 
     private bool buttonDisabled;
 
-    TriggerAnimation buttonIconDisabledAnimation;
+    private TriggerAnimation buttonIconDisabledAnimation;
 
-    void Start()
+    void Awake()
     {
         //background = transform.Find("Background").gameObject;
         //frame = transform.Find("Frame").gameObject;
