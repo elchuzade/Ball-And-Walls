@@ -120,6 +120,7 @@ public class HomeStatus : MonoBehaviour
             hintButton.SetActive(false);
         }
 
+       // player.ResetPlayer();
         SetBallPrefab();
         SetBackground();
     }
