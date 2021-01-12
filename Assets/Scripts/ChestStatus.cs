@@ -39,7 +39,7 @@ public class ChestStatus : MonoBehaviour
 
     // TODO Opening chests should not be allowed if you quit the game and relaunch not to bug the game
 
-    List<int> rewards = new List<int>() { 0, 10, 10, 10, 10, 10, 25, 25, 50 };
+    List<int> rewards = new List<int>() { 0, 10, 10, 10, 10, 25, 25, 25, 50 };
     int reward = -1;
     int keys = 3;
     int openedChests = 0;
