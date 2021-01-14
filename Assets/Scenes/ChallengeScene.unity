@@ -198,7 +198,7 @@ Animator:
   m_GameObject: {fileID: 241752438}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f34ec20a05f7241e9ad2a91ba8bc83a4, type: 2}
+  m_Controller: {fileID: 9100000, guid: 274eca7cf14f54978b5b8e30acce6d20, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -582,11 +582,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 447982858}
     m_Modifications:
-    - target: {fileID: 4916752264533179449, guid: 679f069747dd04f2dbc8f832c9fcd432,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: cf44ad4fd975446a7bc0beb3b63203c4, type: 2}
     - target: {fileID: 9202397753390622626, guid: 679f069747dd04f2dbc8f832c9fcd432,
         type: 3}
       propertyPath: m_Pivot.x
@@ -635,17 +630,12 @@ PrefabInstance:
     - target: {fileID: 9202397753390622626, guid: 679f069747dd04f2dbc8f832c9fcd432,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 9202397753390622626, guid: 679f069747dd04f2dbc8f832c9fcd432,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9202397753390622626, guid: 679f069747dd04f2dbc8f832c9fcd432,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 9202397753390622626, guid: 679f069747dd04f2dbc8f832c9fcd432,
         type: 3}
@@ -685,7 +675,7 @@ PrefabInstance:
     - target: {fileID: 9202397753390622626, guid: 679f069747dd04f2dbc8f832c9fcd432,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -160
+      value: -150
       objectReference: {fileID: 0}
     - target: {fileID: 9202397753390622626, guid: 679f069747dd04f2dbc8f832c9fcd432,
         type: 3}
@@ -711,16 +701,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ShopButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 9202397753390622631, guid: 679f069747dd04f2dbc8f832c9fcd432,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 365073484}
-    - target: {fileID: 9202397753390622631, guid: 679f069747dd04f2dbc8f832c9fcd432,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ClickShopButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 679f069747dd04f2dbc8f832c9fcd432, type: 3}
@@ -1019,11 +999,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1581948610182028145, guid: 2008e9231c9f6483dba3ac7d86ccb959,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1581948610182028145, guid: 2008e9231c9f6483dba3ac7d86ccb959,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1082,11 +1057,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1855944310651174387, guid: 2008e9231c9f6483dba3ac7d86ccb959,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 365073484}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2008e9231c9f6483dba3ac7d86ccb959, type: 3}
 --- !u!1001 &1943387269724133981
@@ -1100,7 +1070,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 365073484}
+      objectReference: {fileID: 0}
     - target: {fileID: 1943387268833552824, guid: b6a5813352aa2405db44f5c4d7a1752b,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1464,11 +1434,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 447982858}
     m_Modifications:
-    - target: {fileID: 4847307848492874565, guid: 9e96743e24ed84a2e8efb0f44d3c4c37,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 365073484}
     - target: {fileID: 7667431301201607356, guid: 9e96743e24ed84a2e8efb0f44d3c4c37,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1577,7 +1542,7 @@ PrefabInstance:
     - target: {fileID: 7667431301201607357, guid: 9e96743e24ed84a2e8efb0f44d3c4c37,
         type: 3}
       propertyPath: m_Name
-      value: LeaderboardButton
+      value: LeaderboadButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e96743e24ed84a2e8efb0f44d3c4c37, type: 3}
@@ -1652,12 +1617,12 @@ PrefabInstance:
     - target: {fileID: 6489641008765246247, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 6489641008765246247, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 6489641008765246247, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
@@ -1733,11 +1698,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 365073484}
-    - target: {fileID: 6489641008765246250, guid: c75eab7e54b91492ba3da79a2b7a02e5,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ClickPlayButton
       objectReference: {fileID: 0}
     - target: {fileID: 6489641009287505273, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
@@ -1772,7 +1732,7 @@ PrefabInstance:
     - target: {fileID: 6489641009287505275, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 1862319871
+      value: 1744879359
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6175685583948720734, guid: c75eab7e54b91492ba3da79a2b7a02e5, type: 3}
@@ -1806,14 +1766,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8767118985217073954, guid: 82977d29d6661476d8fec5ebd087a674,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8767118985217073954, guid: 82977d29d6661476d8fec5ebd087a674,
-        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 365073484}
+      objectReference: {fileID: 0}
     - target: {fileID: 8767118985217073954, guid: 82977d29d6661476d8fec5ebd087a674,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName

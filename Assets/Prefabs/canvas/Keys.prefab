@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 1466060766}
   - component: {fileID: 1466060765}
   - component: {fileID: 1466060764}
+  - component: {fileID: 7408685729743239479}
   m_Layer: 5
   m_Name: MoreKeysButton
   m_TagString: Untagged
@@ -206,6 +207,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7408685729743239479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466060762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e2bbe40bf3e24c35a0c20f003f2d11a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1582999570
 GameObject:
   m_ObjectHideFlags: 0

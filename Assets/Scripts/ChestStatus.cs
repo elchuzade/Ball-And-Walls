@@ -15,64 +15,59 @@ public class ChestStatus : MonoBehaviour
     [SerializeField] GameObject[] bestPrizesPrefabs;
     [SerializeField] Transform bestPrize;
 
-    Animator key1animator;
-    Animator key2animator;
-    Animator key3animator;
+    // Zoom animations on keys
+    private Animator key1animator;
+    private Animator key2animator;
+    private Animator key3animator;
 
-    float cameraHeightFactor = 1.44f;
-    bool bestPrizeReceived = false;
-    Navigator navigator;
+    // This is needed because we are mixing canvas and world game object
+    private float cameraHeightFactor = 1.44f;
+    private bool bestPrizeReceived = false;
+    private Navigator navigator;
 
-    TriggerAnimation exitButtonScript;
-    TriggerAnimation moreKeysButtonScript;
+    private TriggerAnimation exitButtonScript;
+    private TriggerAnimation moreKeysButtonScript;
 
-    GameObject adCancelBg;
-    GameObject adCancelWarning;
+    private GameObject adCancelBg;
+    private GameObject adCancelWarning;
 
-    GameObject adWarningReceiveButton;
-    GameObject adWarningContinueButton;
+    private GameObject adWarningReceiveButton;
+    private GameObject adWarningContinueButton;
 
-    TriggerAnimation adWarningReceiveButtonScript;
-    TriggerAnimation adWarningContinueButtonScript;
+    private TriggerAnimation adWarningReceiveButtonScript;
+    private TriggerAnimation adWarningContinueButtonScript;
 
-    bool showedAdCancelWarning = false;
+    private bool showedAdCancelWarning = false;
 
     // TODO Opening chests should not be allowed if you quit the game and relaunch not to bug the game
 
-    List<int> rewards = new List<int>() { 0, 10, 10, 10, 10, 10, 25, 25, 50 };
-    int reward = -1;
-    int keys = 3;
-    int openedChests = 0;
-    int totalReward = 0;
+    private List<int> rewards = new List<int>() { 0, 10, 10, 10, 10, 10, 25, 25, 50 };
+    // This is to indicate a number outside of rewards
+    private int reward = -1;
+    // Initially player gets 3 keys if he enterred a chestroom
+    private int keys = 3;
+    private int openedChests = 0;
+    //Rewards are being added here
+    private int totalReward = 0;
 
-    int bestPrizeIndex;
-    List<int> bestPrizes = new List<int>();
+    // Balls that the player has not unlocked yet
+    private List<int> bestPrizes = new List<int>();
+    // Index of the ball from the list of balls the player has not unlocked yet to offer as the best prize
+    private int bestPrizeIndex;
 
-    private void Start()
+    void Awake()
     {
-        if ((float)Screen.height / Screen.width > 2)
-            cameraHeightFactor = 1.52f;
-
-        Camera.main.orthographicSize = Screen.height / 6;
-        Camera.main.transform.position = new Vector2(Screen.width / 2, Screen.height / cameraHeightFactor);
-
         key1animator = key1.GetComponent<Animator>();
         key2animator = key2.GetComponent<Animator>();
         key3animator = key3.GetComponent<Animator>();
 
         navigator = FindObjectOfType<Navigator>();
-        player.LoadPlayer();
-        scoreboard.SetCoins(player.coins);
-        DrawKeys();
-        AdManager.ShowBanner();
 
         GameObject exitButtonObject = GameObject.Find("ExitButton");
         GameObject moreKeysButtonObject = GameObject.Find("MoreKeysButton");
         moreKeysButtonObject.SetActive(false);
         exitButtonScript = exitButtonObject.GetComponent<TriggerAnimation>();
         moreKeysButtonScript = moreKeysButtonObject.GetComponent<TriggerAnimation>();
-
-        SetBestPrize();
 
         adCancelBg = GameObject.Find("AdCancelBg");
         adCancelWarning = GameObject.Find("ChestAdCancelWarning");
@@ -81,11 +76,35 @@ public class ChestStatus : MonoBehaviour
 
         adWarningReceiveButtonScript = adWarningReceiveButton.GetComponent<TriggerAnimation>();
         adWarningContinueButtonScript = adWarningContinueButton.GetComponent<TriggerAnimation>();
+    }
+
+    void Start()
+    {
+        // Adjust camera zoom for different ratio screens to put the best prize in correct position
+        if ((float)Screen.height / Screen.width > 2)
+        {
+            cameraHeightFactor = 1.52f;
+        }
+        Camera.main.orthographicSize = Screen.height / 6;
+        Camera.main.transform.position = new Vector2(Screen.width / 2, Screen.height / cameraHeightFactor);
+
+        player.LoadPlayer();
+        scoreboard.SetCoins(player.coins);
+        DrawKeys();
+        AdManager.ShowBanner();
+
+        // Choose which of locked balls will be the best prize
+        SetBestPrize();
+
+        // Set ad stuff back to normal as they are shrinked in x axis for visibility by default
+        adCancelBg.transform.localScale = new Vector3(1, 1, 1);
+        adCancelWarning.transform.localScale = new Vector3(1, 1, 1);
 
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);
     }
 
+    // Show no thanks button after all the keys are used
     private IEnumerator OpenPassPhrase()
     {
         key1.GetComponent<Image>().color = new Color32(0, 0, 0, 0);
@@ -106,6 +125,7 @@ public class ChestStatus : MonoBehaviour
         NextLevel();
     }
 
+    // Based on which key is being used to open a chest make it animate
     private void SetKeyAnimation()
     {
         if (keys == 1)
@@ -135,21 +155,23 @@ public class ChestStatus : MonoBehaviour
 
     private void SetBestPrize()
     {
+        // Loop through all unlocked keys and find the ones that are locked
         for (int i = 0; i < player.unlockedBalls.Length; i++)
         {
-            Debug.Log(player.unlockedBalls[i]);
             if (player.unlockedBalls[i] == 0)
             {
                 bestPrizes.Add(i);
             }
         }
 
+        // Get a random number in the range of locked keys and choose the best prize
         bestPrizeIndex = new System.Random().Next(0, bestPrizes.Count);
         GameObject bestPrizeObject = Instantiate(
             bestPrizesPrefabs[bestPrizes[bestPrizeIndex]],
             bestPrize.position,
             Quaternion.identity);
 
+        // Assign that ball to the best prize object to show above chests
         bestPrizeObject.transform.parent = bestPrize;
     }
 
@@ -160,7 +182,7 @@ public class ChestStatus : MonoBehaviour
 
     public void NextLevel()
     {
-        // Load next level
+        // Save all collected coins and best prize if received and Load next level
         player.coins += totalReward;
         scoreboard.SetCoins(player.coins);
         totalReward = 0;
@@ -177,35 +199,48 @@ public class ChestStatus : MonoBehaviour
 
     public int OpenChest()
     {
+        // When opening any chest, get a random index within all rewards and find the corresponsing reward
         System.Random rnd = new System.Random();
 
         reward = rewards[rnd.Next(rewards.Count)]; // Extract reward
 
+        // 0 reward represents the best prize
         if (reward == 0)
+        {
             bestPrizeReceived = true;
+        }
 
+        // Remove that reward from all the rewards list not to repeat the same reward twice
         rewards.Remove(reward); // Remove reward
+        // Remove the key as it has been used
         keys--;
+        // Add the reward to the total rewards
         totalReward += reward;
+        // Increase a count of opened chests, not to exceed 3 in total
         openedChests++;
+        // If all the ads are being watched and all the chests are being opened
         if (openedChests == 9)
         {
+            // Stop all the key animations, as there are no more keys and no more chests, and load the next level
             StopAllKeyAnimations();
             StartCoroutine(LoadNextLevel());
         }
         DrawKeys();
 
+        // If opened chests are 3 or 6 make an ad button available for more keys
         if (openedChests % 3 == 0 && openedChests != 9)
         {
             adsButton.SetActive(true);
             StartCoroutine(OpenPassPhrase());
         }
 
+        // Return a reward value received from the current chest
         return reward;
     }
 
     private void DrawKeys()
     {
+        // Draw the keys that are used in black the rest in yellow color
         key1.GetComponent<Image>().color = new Color32(0, 0, 0, 255);
         key2.GetComponent<Image>().color = new Color32(0, 0, 0, 255);
         key3.GetComponent<Image>().color = new Color32(0, 0, 0, 255);
@@ -217,6 +252,7 @@ public class ChestStatus : MonoBehaviour
         if (keys > 2)
             key3.GetComponent<Image>().color = new Color32(255, 240, 0, 255);
 
+        // Animate the next key to be used
         SetKeyAnimation();
     }
 
@@ -227,26 +263,32 @@ public class ChestStatus : MonoBehaviour
 
     public void GetMoreKeys()
     {
+        // Run the animation of a click of get more keys button and run the ad
         moreKeysButtonScript.Trigger();
-        StartCoroutine(LoadGetMoreKeys());
+        StartCoroutine(LoadGetMoreKeys(0.2f));
     }
 
-    public IEnumerator LoadGetMoreKeys()
+    public IEnumerator LoadGetMoreKeys(float time)
     {
-        yield return new WaitForSeconds(0.20f);
+        // Wait for given time and load the ad
+        yield return new WaitForSeconds(time);
         AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, CloseChest);
     }
 
     private void GetMoreKeysSuccess()
     {
+        // If the ad has been watched till the end, Hide no thanks phrase and get 3 more keys button
         adsButton.SetActive(false);
         passPhrase.SetActive(false);
+        // Reset the keys amount ot 3 and draw them again with animation on the first one
         keys = 3;
         DrawKeys();
 
-        player.SavePlayer();
-        player.LoadPlayer();
+        //player.SavePlayer();
+        //player.LoadPlayer();
 
+        // Incase the success funcion is called from the rewathing the ad after skipping once,
+        // Hide the warning buttons and toggle the variable indicating that the warning has been seen
         showedAdCancelWarning = true;
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);
@@ -254,13 +296,14 @@ public class ChestStatus : MonoBehaviour
 
     public void ClickExitButton()
     {
+        // Trigge rthe click animation on exit button of the chest room top left
         exitButtonScript.Trigger();
-        StartCoroutine(LoadCloseChest());
+        StartCoroutine(LoadCloseChest(0.2f));
     }
 
-    public IEnumerator LoadCloseChest()
+    public IEnumerator LoadCloseChest(float time)
     {
-        yield return new WaitForSeconds(0.20f);
+        yield return new WaitForSeconds(time);
         CloseChest();
     }
 
@@ -269,16 +312,16 @@ public class ChestStatus : MonoBehaviour
         NextLevel();
     }
 
+    // Button that shows watch the ad till the end and receive the gift in the warning of ad cancel
     public void ReceiveKeysButtonClick()
     {
         adWarningReceiveButtonScript.Trigger();
-
-        StartCoroutine(ReceiveKeysButtonCoroutine());
+        StartCoroutine(ReceiveKeysButtonCoroutine(0.2f));
     }
 
-    public IEnumerator ReceiveKeysButtonCoroutine()
+    public IEnumerator ReceiveKeysButtonCoroutine(float time)
     {
-        yield return new WaitForSeconds(0.20f);
+        yield return new WaitForSeconds(time);
 
         AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, GetKeysFail);
     }
@@ -287,20 +330,20 @@ public class ChestStatus : MonoBehaviour
     {
         adWarningContinueButtonScript.Trigger();
 
-        StartCoroutine(ContinuePlayingButtonCoroutine());
+        StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
     }
 
-    public IEnumerator ContinuePlayingButtonCoroutine()
+    public IEnumerator ContinuePlayingButtonCoroutine(float time)
     {
-        yield return new WaitForSeconds(0.20f);
+        yield return new WaitForSeconds(time);
 
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);
     }
 
+    // Incase ad has been cancelled, show the warning screen
     private void GetKeysCancel()
     {
-
         if (!showedAdCancelWarning)
         {
             adCancelBg.SetActive(true);
@@ -315,6 +358,7 @@ public class ChestStatus : MonoBehaviour
         showedAdCancelWarning = true;
     }
 
+    // Incase ad failed for some network issues or whatever
     private void GetKeysFail()
     {
         showedAdCancelWarning = true;

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3003342057807705599}
   - component: {fileID: 5199553906988299046}
   - component: {fileID: 1808249998678421614}
+  - component: {fileID: 2162137384342846501}
   m_Layer: 5
   m_Name: HintButton
   m_TagString: Untagged
@@ -164,6 +165,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2162137384342846501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3003342057807705569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e2bbe40bf3e24c35a0c20f003f2d11a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3790955224049027333
 GameObject:
   m_ObjectHideFlags: 0

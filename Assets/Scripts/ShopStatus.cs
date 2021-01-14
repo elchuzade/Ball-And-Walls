@@ -13,11 +13,8 @@ public class ShopStatus : MonoBehaviour
 
     private GameObject hapticsButton;
     private GameObject soundsButton;
-
-    // Animation to be played when play button is clicked
-    private TriggerAnimation playButtonScript;
-    // Animation to be played when get coins button is clicked
-    private TriggerAnimation getCoinsButtonScript;
+    private GameObject playButton;
+    private GameObject getCoinsButton;
 
     // Background of window that pops up if player wants to switch off reward ad
     private GameObject adCancelBg;
@@ -45,11 +42,8 @@ public class ShopStatus : MonoBehaviour
         hapticsButton = GameObject.Find("HapticsButton");
         soundsButton = GameObject.Find("SoundsButton");
 
-        GameObject playButtonObject = GameObject.Find("PlayButton");
-        GameObject getCoinsButtonObject = GameObject.Find("GetCoinsButton");
-
-        playButtonScript = playButtonObject.GetComponent<TriggerAnimation>();
-        getCoinsButtonScript = getCoinsButtonObject.GetComponent<TriggerAnimation>();
+        playButton = GameObject.Find("PlayButton");
+        getCoinsButton = GameObject.Find("GetCoinsButton");
 
         adCancelBg = GameObject.Find("AdCancelBg");
         adCancelWarning = GameObject.Find("ShopAdCancelWarning");
@@ -148,7 +142,9 @@ public class ShopStatus : MonoBehaviour
     public void CloseShop()
     {
         // Play the animation of play button clikcing
-        playButtonScript.Trigger();
+        playButton.GetComponent<TriggerAnimation>().Trigger();
+        // Disable button for the period of click animation, then enable again
+        playButton.GetComponent<IconButton>().ClickButton();
         // Approximately when animation is over, load the game scene
         StartCoroutine(LoadGameSceneCoroutine(0.2f));
     }
@@ -156,15 +152,12 @@ public class ShopStatus : MonoBehaviour
     public void GetMoreCoins()
     {
         // Play the animation of get more coins button clikcing
-        getCoinsButtonScript.Trigger();
+        getCoinsButton.GetComponent<TriggerAnimation>().Trigger();
+        // Disable button for the period of click animation, then enable again
+        getCoinsButton.GetComponent<IconButton>().ClickButton();
         // Approximately when animation is over, load get more coins ad
         StartCoroutine(LoadGetMoreCoins(0.2f));
     }
-
-    //public void BuyAdsFree()
-    //{
-    //    adsButtonScript.Trigger();
-    //}
 
     public IEnumerator LoadGameSceneCoroutine(float time)
     {
@@ -186,7 +179,6 @@ public class ShopStatus : MonoBehaviour
     {
         // Run animation of clicking receive coins and watch the ad button
         adWarningReceiveButtonScript.Trigger();
-
         // Approximately when animation is finished, load the ad screen
         StartCoroutine(ReceiveCoinsButtonCoroutine(0.2f));
     }
@@ -196,7 +188,7 @@ public class ShopStatus : MonoBehaviour
     {
         // Wait for given time and load the ad screen
         yield return new WaitForSeconds(time);
-
+        // Load the ad screen
         AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 
@@ -204,7 +196,7 @@ public class ShopStatus : MonoBehaviour
     {
         // Wait for given time and load the ad screen
         adWarningContinueButtonScript.Trigger();
-
+        // Approximately when animation is finished, load the ad screen
         StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
     }
 

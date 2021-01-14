@@ -40,6 +40,12 @@ public class IconDisableButton : MonoBehaviour
         }
     }
 
+    // This function will return true if the trigger animation is complete
+    public bool GetButtonEnabled()
+    {
+        return !buttonDisabled;
+    }
+
     // Run this function when button is just clicked
     public void ClickButton(ButtonStates buttonState)
     {
