@@ -118,7 +118,6 @@ public class HomeStatus : MonoBehaviour
         {
             hintButton.SetActive(false);
         }
-
         // Set the ball based on which ball index is selected in player data
         SetBallPrefab();
         // Set the background based on the ball
