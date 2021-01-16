@@ -719,8 +719,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockwise: 1
-  clockLaunch: {fileID: 5924786992011983792}
-  counterClockLaunch: {fileID: 5924786990505270343}
 --- !u!1 &5924786991860491605
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,8 +798,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockwise: 0
-  clockLaunch: {fileID: 5924786992011983792}
-  counterClockLaunch: {fileID: 5924786990505270343}
 --- !u!1 &5924786991871977561
 GameObject:
   m_ObjectHideFlags: 0

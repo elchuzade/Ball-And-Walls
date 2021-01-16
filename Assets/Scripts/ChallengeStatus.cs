@@ -1,9 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+using System;
 
 public class ChallengeStatus : MonoBehaviour
 {
+    public class ChallengeWall
+    {
+        public string type;
+        public string color;
+        public string position;
+        public string rotation;
+    }
+
+    public class ChallengeBarrier
+    {
+        public string type;
+        public string color;
+        public string position;
+        public string rotation;
+    }
+
+    public class ChallengePortalIn
+    {
+        public string type;
+        public string color;
+        public string position;
+        public string rotation;
+    }
+
+    public class ChallengePortalOut
+    {
+        public string type;
+        public string color;
+        public string position;
+        public string rotation;
+    }
+
+    public class ChallengeCoin
+    {
+        public string position;
+    }
+
     [SerializeField] GameObject angular_135;
     [SerializeField] GameObject angular_180;
     [SerializeField] GameObject angular_225;
@@ -53,35 +92,33 @@ public class ChallengeStatus : MonoBehaviour
     // Type will be a Red-Green or a Blue-Yellow to show which type color pair of portals to place
     private List<(string type, Vector3 position, Vector3 rotation)> portalIns = new List<(string type, Vector3 position, Vector3 rotation)>();
     private List<(string type, Vector3 position, Vector3 rotation)> portalOuts = new List<(string type, Vector3 position, Vector3 rotation)>();
-    private List<(string type, Vector3 position, Vector3 rotation)> walls = new List<(string type, Vector3 position, Vector3 rotation)>();
-    private List<(string type, Vector3 position, Vector3 rotation)> barriers = new List<(string type, Vector3 position, Vector3 rotation)>();
+    private List<(string type, Color32 color, Vector3 position, Vector3 rotation)> walls = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
+    private List<(string type, Color32 color, Vector3 position, Vector3 rotation)> barriers = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
 
-    private (string type, Vector3 position, Vector3 rotation)[] mockWalls =
-    {
-        ("Angular180", new Vector3(616, 979.8f, 0), new Vector3(0, 0, -135.525f)),
-        ("Angular180", new Vector3(258, 1025, 0), new Vector3(0, 0, -90)),
-        ("Angular135", new Vector3(291, 503, 0), new Vector3(0, 0, 175.685f)),
-        ("Angular180", new Vector3(338.3f, 702, 0), new Vector3(0, 0, 90)),
-        ("Angular135", new Vector3(407.7f, 891.8f, 0), new Vector3(0, 0, 42))
-        //("Horizontal270", new Vector3(407.7f, 891.8f, 0), new Vector3(0, 0, 42)),
-        //("Vertical225", new Vector3(407.7f, 891.8f, 0), new Vector3(0, 0, 42))
-    };
-    private (string type, Vector3 position, Vector3 rotation)[] mockBarriers =
-    {
-        ("Barrier150", new Vector3(242, 789, 0), new Vector3(0, 0, -51.883f)),
-        ("Barrier300", new Vector3(587.5f, 174.3615f, 0), new Vector3(0, 0, 0)),
-        ("Barrier300", new Vector3(498.5f, 255.5f, 0), new Vector3(0, 0, -90)),
-        ("Barrier300", new Vector3(412.3f, 171.231f, 0), new Vector3(0, 0, 0)),
-        ("Barrier150", new Vector3(641, 540, 0), new Vector3(0, 0, -179.684f)),
-        ("Barrier200", new Vector3(577.5f, 774, 0), new Vector3(0, 0, -90)),
-        ("Barrier200", new Vector3(35, 567, 0), new Vector3(0, 0, -7.424f)),
-        ("Barrier250", new Vector3(433.8f, 309.2f, 0), new Vector3(0, 0, -50)),
-        ("Barrier250", new Vector3(133.6338f, 1037, 0), new Vector3(0, 0, 0)),
-        ("Barrier250", new Vector3(133.6338f, 909, 0), new Vector3(0, 0, 0)),
-        ("Barrier250", new Vector3(561.8f, 310.2f, 0), new Vector3(0, 0, 50)),
-        ("Barrier300", new Vector3(89.65347f, 126.8252f, 0), new Vector3(0, 0, -90.43301f)),
-        ("Barrier300", new Vector3(87.84814f, 302.0439f, 0), new Vector3(0, 0, -90.43301f))
-    };
+    //private (string type, Color32 color, Vector3 position, Vector3 rotation)[] mockWalls =
+    //{
+    //    ("Angular180", new Color32(255, 0, 0, 255), new Vector3(616, 979.8f, 0), new Vector3(0, 0, -135.525f)),
+    //    ("Angular180", new Color32(255, 0, 0, 255), new Vector3(258, 1025, 0), new Vector3(0, 0, -90)),
+    //    ("Angular135", new Color32(255, 0, 0, 255), new Vector3(291, 503, 0), new Vector3(0, 0, 175.685f)),
+    //    ("Angular180", new Color32(255, 0, 0, 255), new Vector3(338.3f, 702, 0), new Vector3(0, 0, 90)),
+    //    ("Angular135", new Color32(255, 0, 0, 255), new Vector3(407.7f, 891.8f, 0), new Vector3(0, 0, 42))
+    //};
+    //private (string type, Vector3 position, Vector3 rotation)[] mockBarriers =
+    //{
+    //    ("Barrier150", new Vector3(242, 789, 0), new Vector3(0, 0, -51.883f)),
+    //    ("Barrier300", new Vector3(587.5f, 174.3615f, 0), new Vector3(0, 0, 0)),
+    //    ("Barrier300", new Vector3(498.5f, 255.5f, 0), new Vector3(0, 0, -90)),
+    //    ("Barrier300", new Vector3(412.3f, 171.231f, 0), new Vector3(0, 0, 0)),
+    //    ("Barrier150", new Vector3(641, 540, 0), new Vector3(0, 0, -179.684f)),
+    //    ("Barrier200", new Vector3(577.5f, 774, 0), new Vector3(0, 0, -90)),
+    //    ("Barrier200", new Vector3(35, 567, 0), new Vector3(0, 0, -7.424f)),
+    //    ("Barrier250", new Vector3(433.8f, 309.2f, 0), new Vector3(0, 0, -50)),
+    //    ("Barrier250", new Vector3(133.6338f, 1037, 0), new Vector3(0, 0, 0)),
+    //    ("Barrier250", new Vector3(133.6338f, 909, 0), new Vector3(0, 0, 0)),
+    //    ("Barrier250", new Vector3(561.8f, 310.2f, 0), new Vector3(0, 0, 50)),
+    //    ("Barrier300", new Vector3(89.65347f, 126.8252f, 0), new Vector3(0, 0, -90.43301f)),
+    //    ("Barrier300", new Vector3(87.84814f, 302.0439f, 0), new Vector3(0, 0, -90.43301f))
+    //};
     private Vector3[] mockCoins =
     {
         new Vector3(572.6772f, 858.2982f, 0),
@@ -121,29 +158,31 @@ public class ChallengeStatus : MonoBehaviour
 
     void Start()
     {
-        PopulateMockWalls();
-        PopulateMockBarriers();
+        //PopulateMockWalls();
+        //PopulateMockBarriers();
         PopulateMockCoins();
         PopulateMockPortals();
+
+        SendData();
     }
 
-    private void PopulateMockWalls()
-    {
-        for (int i = 0; i < mockWalls.Length; i++)
-        {
-            walls.Add(mockWalls[i]);
-        }
-        DrawWalls();
-    }
+    //private void PopulateMockWalls()
+    //{
+    //    for (int i = 0; i < mockWalls.Length; i++)
+    //    {
+    //        walls.Add(mockWalls[i]);
+    //    }
+    //    DrawWalls();
+    //}
 
-    private void PopulateMockBarriers()
-    {
-        for (int i = 0; i < mockBarriers.Length; i++)
-        {
-            barriers.Add(mockBarriers[i]);
-        }
-        DrawBarriers();
-    }
+    //private void PopulateMockBarriers()
+    //{
+    //    for (int i = 0; i < mockBarriers.Length; i++)
+    //    {
+    //        barriers.Add(mockBarriers[i]);
+    //    }
+    //    DrawBarriers();
+    //}
 
     private void PopulateMockCoins()
     {
@@ -176,78 +215,12 @@ public class ChallengeStatus : MonoBehaviour
     {
         walls.ForEach(item =>
         {
-            if (item.type == "Angular135")
-            {
-                // Create and place walls from angular-135 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(angular_135, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Angular180")
-            {
-                // Create and place walls from angular-180 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(angular_135, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Angular225")
-            {
-                // Create and place walls from angular-225 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(angular_135, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Angular270")
-            {
-                // Create and place walls from angular-270 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(angular_135, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Horizontal135")
-            {
-                // Create and place walls from horizontal-135 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(horizontal_135, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Horizontal180")
-            {
-                // Create and place walls from horizontal-180 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(horizontal_180, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Horizontal225")
-            {
-                // Create and place walls from horizontal-225 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(horizontal_225, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Horizontal270")
-            {
-                // Create and place walls from horizontal-270 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(horizontal_270, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Vertical135")
-            {
-                // Create and place walls from vertical-135 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(vertical_135, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Vertical180")
-            {
-                // Create and place walls from vertical-180 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(vertical_180, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Vertical225")
-            {
-                // Create and place walls from vertical-225 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(vertical_225, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
-            else if (item.type == "Vertical270")
-            {
-                // Create and place walls from vertical-270 prefab based on position and rotation given by the server
-                GameObject wall = Instantiate(vertical_270, item.position, Quaternion.Euler(item.rotation));
-                wall.transform.SetParent(wallsParent.transform);
-            }
+            // Create and place walls from angular-135 prefab based on position and rotation given by the server
+            GameObject wall = Instantiate(GetWallPrefabFromType(item.type), item.position, Quaternion.Euler(item.rotation));
+            // Put the wall into Walls folder
+            wall.transform.SetParent(wallsParent.transform);
+            // Change its color based on the server data
+            wall.GetComponent<SpriteRenderer>().color = item.color;
         });
     }
 
@@ -255,30 +228,12 @@ public class ChallengeStatus : MonoBehaviour
     {
         barriers.ForEach(item =>
         {
-            if (item.type == "Barrier150")
-            {
-                // Create and place barriers from barrier-150 prefab based on position and rotation given by the server adding parent position
-                GameObject barrier = Instantiate(barrier_150, item.position, Quaternion.Euler(item.rotation));
-                barrier.transform.SetParent(barriersParent.transform);
-            }
-            else if (item.type == "Barrier200")
-            {
-                // Create and place barriers from barrier-200 prefab based on position and rotation given by the server adding parent position
-                GameObject barrier = Instantiate(barrier_200, item.position, Quaternion.Euler(item.rotation));
-                barrier.transform.SetParent(barriersParent.transform);
-            }
-            else if (item.type == "Barrier250")
-            {
-                // Create and place barriers from barrier-250 prefab based on position and rotation given by the server adding parent position
-                GameObject barrier = Instantiate(barrier_250, item.position, Quaternion.Euler(item.rotation));
-                barrier.transform.SetParent(barriersParent.transform);
-            }
-            else if (item.type == "Barrier300")
-            {
-                // Create and place barriers from barrier-300 prefab based on position and rotation given by the server adding parent position
-                GameObject barrier = Instantiate(barrier_300, item.position, Quaternion.Euler(item.rotation));
-                barrier.transform.SetParent(barriersParent.transform);
-            }
+            // Create and place barriers from barrier-300 prefab based on position and rotation given by the server
+            GameObject barrier = Instantiate(GetBarrierPrefabFromType(item.type), item.position, Quaternion.Euler(item.rotation));
+            // Put the barrier into Barriers folder
+            barrier.transform.SetParent(barriersParent.transform);
+            // Change its color based on the server data
+            barrier.GetComponent<SpriteRenderer>().color = item.color;
         });
     }
 
@@ -329,5 +284,195 @@ public class ChallengeStatus : MonoBehaviour
                 }
             }
         }
+    }
+
+    // This function will take in stringified json file that represents vector 3 and return actual vector 3
+    private Vector3 JsonStringToVector3(string jsonData)
+    {
+        // jsonData is expected to be of format (0.123, -534.234, 3123)
+        // Remove all spaces between coordinates and split data with commas to get x y and z coordinates
+        string[] values = jsonData.Trim(' ').Split(',');
+
+        // If the jsonData format is correct and trim and split worked well then we should receive an array of 3 values
+        if (values.Length == 3)
+        {
+            return new Vector3(float.Parse(values[0]), float.Parse(values[1]), float.Parse(values[2]));
+        }
+
+        Debug.Log("Error parsing jsonData to Vector3: " + jsonData);
+        return new Vector3(0, 0, 0);
+    }
+
+    // This function will take in stringified json file that represents vector 3 and return actual vector 3
+    private Color32 JsonStringToColor32(string jsonData)
+    {
+        // jsonData is expected to be of format (142, 0, 231, 255). RGBA, positive less than 256
+        // Remove all spaces between coordinates and split data with commas to get r g b and a values
+        string[] values = jsonData.Trim(' ').Split(',');
+
+        // If the jsonData format is correct and trim and split worked well then we should receive an array of 4 values
+        if (values.Length == 4)
+        {
+            // Parse them from strings into integers and then into bytes, as Color32 accepts bytes only
+            return new Color32((byte)Int32.Parse(values[0]), (byte)Int32.Parse(values[1]), (byte)Int32.Parse(values[2]), (byte)Int32.Parse(values[3]));
+        }
+
+        Debug.Log("Error parsing jsonData to Color32: " + jsonData);
+        return new Color32(0, 0, 0, 0);
+    }
+
+    private void SendData()
+    {
+        string challengeurl = "http://localhost:5001/1/v1/challenge";
+
+        StartCoroutine(GetAdLinkCoroutine(challengeurl));
+    }
+
+    IEnumerator GetAdLinkCoroutine(string uri)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            // Request and wait for the desired page.
+            yield return webRequest.SendWebRequest();
+
+            string[] pages = uri.Split('/');
+            int page = pages.Length - 1;
+
+            if (webRequest.isNetworkError)
+            {
+                Debug.Log(pages[page] + ": Error: " + webRequest.error);
+            }
+            else
+            {
+                //Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                PopulateData(webRequest.downloadHandler.text);
+            }
+        }
+    }
+
+    private void PopulateData(string jsonData)
+    {
+        // Extracting walls array json from overall data
+        string[] wallsJson = JsonHelper.GetJsonObjectArray(jsonData, "walls");
+        PopulateWallsData(wallsJson);
+
+        // Extracting walls array json from overall data
+        string[] barriersJson = JsonHelper.GetJsonObjectArray(jsonData, "barriers");
+        PopulateBarriersData(barriersJson);
+
+    }
+
+    private void PopulateWallsData(string[] wallsJson)
+    {
+        // Populating walls for each wallJson inside walls json
+        for (int i = 0; i < wallsJson.Length; i++)
+        {
+            // Parsing walls json into walls class object
+            ChallengeWall wallInfo = JsonUtility.FromJson<ChallengeWall>(wallsJson[i]);
+
+            // Creating tuple that a game level would understand
+            // Changing color string position string and rotation string to Color32 and Vector3
+            (string type, Color32 color, Vector3 position, Vector3 rotation) wallObject =
+                (wallInfo.type, JsonStringToColor32(wallInfo.color), JsonStringToVector3(wallInfo.position), JsonStringToVector3(wallInfo.rotation));
+
+            // Adding newly parsed and foramtter wall to the walls list to draw on the map
+            walls.Add(wallObject);
+        }
+
+        DrawWalls();
+    }
+
+    private void PopulateBarriersData(string[] barriersJson)
+    {
+        // Populating barriers for each barrierJson inside walls json
+        for (int i = 0; i < barriersJson.Length; i++)
+        {
+            // Parsing walls json into walls class object
+            ChallengeWall barriersInfo = JsonUtility.FromJson<ChallengeWall>(barriersJson[i]);
+
+            // Creating tuple that a game level would understand
+            // Changing color string position string and rotation string to Color32 and Vector3
+            (string type, Color32 color, Vector3 position, Vector3 rotation) barrierObject =
+                (barriersInfo.type, JsonStringToColor32(barriersInfo.color), JsonStringToVector3(barriersInfo.position), JsonStringToVector3(barriersInfo.rotation));
+
+            // Adding newly parsed and foramtter wall to the walls list to draw on the map
+            barriers.Add(barrierObject);
+        }
+
+        DrawBarriers();
+    }
+
+    private GameObject GetBarrierPrefabFromType(string type)
+    {
+        if (type == "Barrier150")
+        {
+            return barrier_150;
+        }
+        else if (type == "Barrier200")
+        {
+            return barrier_200;
+        }
+        else if (type == "Barrier250")
+        {
+            return barrier_250;
+        }
+        else if (type == "Barrier300")
+        {
+            return barrier_300;
+        }
+        return null;
+    }
+
+    private GameObject GetWallPrefabFromType(string type)
+    {
+        if (type == "Angular135")
+        {
+            return angular_135;
+        }
+        else if (type == "Angular180")
+        {
+            return angular_180;
+        }
+        else if (type == "Angular225")
+        {
+            return angular_225;
+        }
+        else if (type == "Angular270")
+        {
+            return angular_270;
+        }
+        else if (type == "Horizontal135")
+        {
+            return horizontal_135;
+        }
+        else if (type == "Horizontal180")
+        {
+            return horizontal_180;
+        }
+        else if (type == "Horizontal225")
+        {
+            return horizontal_225;
+        }
+        else if (type == "Horizontal270")
+        {
+            return horizontal_270;
+        }
+        else if (type == "Vertical135")
+        {
+            return vertical_135;
+        }
+        else if (type == "Vertical180")
+        {
+            return vertical_180;
+        }
+        else if (type == "Vertical225")
+        {
+            return vertical_225;
+        }
+        else if (type == "Vertical270")
+        {
+            return vertical_270;
+        }
+        return null;
     }
 }
