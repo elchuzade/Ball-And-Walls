@@ -82,6 +82,9 @@ public class HomeStatus : MonoBehaviour
 
         adWarningReceiveButtonScript = adWarningReceiveButton.GetComponent<TriggerAnimation>();
         adWarningContinueButtonScript = adWarningContinueButton.GetComponent<TriggerAnimation>();
+
+        player.coins = 10000;
+        player.SavePlayer();
     }
 
     void Start()

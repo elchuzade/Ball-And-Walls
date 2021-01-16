@@ -156,7 +156,8 @@ public class ChestStatus : MonoBehaviour
     private void SetBestPrize()
     {
         // Loop through all unlocked keys and find the ones that are locked
-        for (int i = 0; i < player.unlockedBalls.Length; i++)
+        // -3 from Length is implemented in order to remove last three balls from the bestPrize list
+        for (int i = 0; i < player.unlockedBalls.Length - 3; i++)
         {
             if (player.unlockedBalls[i] == 0)
             {
