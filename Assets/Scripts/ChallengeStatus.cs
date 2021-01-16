@@ -136,7 +136,7 @@ public class ChallengeStatus : MonoBehaviour
     {
         //PopulateMockWalls();
         //PopulateMockBarriers();
-        PopulateMockCoins();
+        //PopulateMockCoins();
         PopulateMockPortals();
 
         SendData();
@@ -160,14 +160,14 @@ public class ChallengeStatus : MonoBehaviour
     //    DrawBarriers();
     //}
 
-    private void PopulateMockCoins()
-    {
-        for (int i = 0; i < mockCoins.Length; i++)
-        {
-            coins.Add(mockCoins[i]);
-        }
-        DrawCoins();
-    }
+    //private void PopulateMockCoins()
+    //{
+    //    for (int i = 0; i < mockCoins.Length; i++)
+    //    {
+    //        coins.Add(mockCoins[i]);
+    //    }
+    //    DrawCoins();
+    //}
 
     private void PopulateMockPortals()
     {
