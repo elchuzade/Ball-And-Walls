@@ -18,4 +18,14 @@ public class Navigator : MonoBehaviour
     {
         SceneManager.LoadScene("ChestScene");
     }
+
+    public void LoadChallengeScene()
+    {
+        SceneManager.LoadScene("ChallengeScene");
+    }
+
+    public void LoadLeaderboardScene()
+    {
+        SceneManager.LoadScene("LeaderboardScene");
+    }
 }

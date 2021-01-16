@@ -83,4 +83,10 @@ public class Portal : MonoBehaviour
         // Launch the ball in the direction of the teleport with the teleport release speed
         ball.Launch(PortalOut.transform.up * releaseSpeed);
     }
+
+    // This is to set portal out from the script for Challenge levels
+    public void SetPortalOut(GameObject portal)
+    {
+        PortalOut = portal;
+    }
 }
