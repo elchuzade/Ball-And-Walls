@@ -22,18 +22,9 @@ public class ChallengeStatus : MonoBehaviour
         public string rotation;
     }
 
-    public class ChallengePortalIn
+    public class ChallengePortal
     {
         public string type;
-        public string color;
-        public string position;
-        public string rotation;
-    }
-
-    public class ChallengePortalOut
-    {
-        public string type;
-        public string color;
         public string position;
         public string rotation;
     }
@@ -95,35 +86,6 @@ public class ChallengeStatus : MonoBehaviour
     private List<(string type, Color32 color, Vector3 position, Vector3 rotation)> walls = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
     private List<(string type, Color32 color, Vector3 position, Vector3 rotation)> barriers = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
 
-    //private Vector3[] mockCoins =
-    //{
-    //    new Vector3(572.6772f, 858.2982f, 0),
-    //    new Vector3(637.932f, 389.8024f, 0),
-    //    new Vector3(184.495f, 864.991f, 0),
-    //    new Vector3(221.3054f, 384.7828f, 0),
-    //    new Vector3(356.8345f, 388.1292f, 0),
-    //    new Vector3(505.7493f, 547.0831f, 0),
-    //    new Vector3(154.3774f, 550.4295f, 0)
-    //};
-    private (string type, Vector3 position, Vector3 rotation)[] mockPortalIns =
-    {
-        ("Blue-Yellow", new Vector3(220.3657f, 816.3812f, 0), new Vector3(0, 0, 217.637f)),
-        ("Blue-Yellow", new Vector3(576.7657f, 804.6249f, 0), new Vector3(0, 0, 180)),
-        ("Blue-Yellow", new Vector3(411.2657f, 336.1812f, 0), new Vector3(0, 0, -140.186f)),
-        ("Red-Green", new Vector3(68.24689f, 876.3812f, 0), new Vector3(0, 0, -180)),
-        ("Blue-Yellow", new Vector3(166.3657f, 334.3812f, 0), new Vector3(0, 0, 140.239f)),
-        ("Red-Green", new Vector3(81.58411f, 164.9251f, 0), new Vector3(0, 0, 180))
-    };
-    private (string type, Vector3 position, Vector3 rotation)[] mockPortalOuts =
-    {
-        ("Blue-Yellow", new Vector3(606, 542, 0), new Vector3(0, 0, 91.189f)),
-        ("Blue-Yellow", new Vector3(66.36572f, 561.3812f, 0), new Vector3(0, 0, -99.08801f)),
-        ("Blue-Yellow", new Vector3(69.02356f, 1069.381f, 0), new Vector3(0, 0, 180)),
-        ("Red-Green", new Vector3(589.0657f, 335.6812f, 0), new Vector3(0, 0, -40.624f)),
-        ("Blue-Yellow", new Vector3(81.58411f, 266.5785f, 0), new Vector3(0, 0, 180)),
-        ("Red-Green", new Vector3(498.4164f, 224.0699f, 0), new Vector3(0, 0, 180))
-    };
-
     void Awake()
     {
         barriersParent = GameObject.Find("Barriers");    
@@ -134,57 +96,7 @@ public class ChallengeStatus : MonoBehaviour
 
     void Start()
     {
-        //PopulateMockWalls();
-        //PopulateMockBarriers();
-        //PopulateMockCoins();
-        PopulateMockPortals();
-
         SendData();
-    }
-
-    //private void PopulateMockWalls()
-    //{
-    //    for (int i = 0; i < mockWalls.Length; i++)
-    //    {
-    //        walls.Add(mockWalls[i]);
-    //    }
-    //    DrawWalls();
-    //}
-
-    //private void PopulateMockBarriers()
-    //{
-    //    for (int i = 0; i < mockBarriers.Length; i++)
-    //    {
-    //        barriers.Add(mockBarriers[i]);
-    //    }
-    //    DrawBarriers();
-    //}
-
-    //private void PopulateMockCoins()
-    //{
-    //    for (int i = 0; i < mockCoins.Length; i++)
-    //    {
-    //        coins.Add(mockCoins[i]);
-    //    }
-    //    DrawCoins();
-    //}
-
-    private void PopulateMockPortals()
-    {
-        // Length of portal ins must be equal to length of portals out, so every portal in has its own portal out
-        // They should also be ordered, so for every index of portal in there is an index of portal out to connect
-        if(mockPortalIns.Length == mockPortalOuts.Length)
-        {
-            for (int i = 0; i < mockPortalIns.Length; i++)
-            {
-                portalIns.Add(mockPortalIns[i]);
-            }
-            for (int i = 0; i < mockPortalOuts.Length; i++)
-            {
-                portalOuts.Add(mockPortalOuts[i]);
-            }
-        }
-        DrawPortals();
     }
 
     private void DrawWalls()
@@ -233,31 +145,15 @@ public class ChallengeStatus : MonoBehaviour
             for (int i = 0; i < portalIns.Count; i++)
             {
                 // If portal in is of type Blue-Yellow, create that combination
-                if (portalIns[i].type == "Blue-Yellow")
-                {
-                    // Create portal in of type blue
-                    GameObject portalIn = Instantiate(portalInBlueYellow, portalIns[i].position, Quaternion.Euler(portalIns[i].rotation));
-                    // Create portal out of type yellow
-                    GameObject portalOut = Instantiate(portalOutBlueYellow, portalOuts[i].position, Quaternion.Euler(portalOuts[i].rotation));
-                    // Connect portal out to portal in
-                    portalIn.GetComponent<Portal>().SetPortalOut(portalOut);
-                    // Move both portals to Portals game object in the game scene
-                    portalIn.transform.SetParent(portalsParent.transform);
-                    portalIn.transform.SetParent(portalsParent.transform);
-                }
-                // otherwise create combination of Red-Green portals
-                else if (portalIns[i].type == "Red-Green")
-                {
-                    // Create portal in of type red
-                    GameObject portalIn = Instantiate(portalInRedGreen, portalIns[i].position, Quaternion.Euler(portalIns[i].rotation));
-                    // Create portal out of type green
-                    GameObject portalOut = Instantiate(portalOutRedGreen, portalOuts[i].position, Quaternion.Euler(portalOuts[i].rotation));
-                    // Connect portal out to portal in
-                    portalIn.GetComponent<Portal>().SetPortalOut(portalOut);
-                    // Move both portals to Portals game object in the game scene
-                    portalIn.transform.SetParent(portalsParent.transform);
-                    portalIn.transform.SetParent(portalsParent.transform);
-                }
+                // Create portal in of type given in data sent from server
+                GameObject portalIn = Instantiate(GetPortalPrefabFromType(portalIns[i].type).Item1, portalIns[i].position, Quaternion.Euler(portalIns[i].rotation));
+                // Create portal out of type given in data sent from server
+                GameObject portalOut = Instantiate(GetPortalPrefabFromType(portalOuts[i].type).Item2, portalOuts[i].position, Quaternion.Euler(portalOuts[i].rotation));
+                // Connect portal out to portal in
+                portalIn.GetComponent<Portal>().SetPortalOut(portalOut);
+                // Move both portals to Portals game object in the game scene
+                portalIn.transform.SetParent(portalsParent.transform);
+                portalOut.transform.SetParent(portalsParent.transform);
             }
         }
     }
@@ -332,10 +228,18 @@ public class ChallengeStatus : MonoBehaviour
         string[] wallsJson = JsonHelper.GetJsonObjectArray(jsonData, "walls");
         PopulateWallsData(wallsJson);
 
-        // Extracting walls array json from overall data
+        // Extracting barriers array json from overall data
         string[] barriersJson = JsonHelper.GetJsonObjectArray(jsonData, "barriers");
         PopulateBarriersData(barriersJson);
 
+        // Extracting portals in and portals out array json from overall data
+        string[] portalInsJson = JsonHelper.GetJsonObjectArray(jsonData, "portalIns");
+        string[] portalOutsJson = JsonHelper.GetJsonObjectArray(jsonData, "portalOuts");
+        PopulatePortalsData(portalInsJson, portalOutsJson);
+
+        // Extracting coins array json from overall data
+        string[] coinsJson = JsonHelper.GetJsonObjectArray(jsonData, "coins");
+        PopulateCoinsData(coinsJson);
     }
 
     private void PopulateWallsData(string[] wallsJson)
@@ -363,8 +267,8 @@ public class ChallengeStatus : MonoBehaviour
         // Populating barriers for each barrierJson inside walls json
         for (int i = 0; i < barriersJson.Length; i++)
         {
-            // Parsing walls json into walls class object
-            ChallengeWall barriersInfo = JsonUtility.FromJson<ChallengeWall>(barriersJson[i]);
+            // Parsing barriers json into barriers class object
+            ChallengeBarrier barriersInfo = JsonUtility.FromJson<ChallengeBarrier>(barriersJson[i]);
 
             // Creating tuple that a game level would understand
             // Changing color string position string and rotation string to Color32 and Vector3
@@ -376,6 +280,72 @@ public class ChallengeStatus : MonoBehaviour
         }
 
         DrawBarriers();
+    }
+
+    private void PopulatePortalsData(string[] portalInsJson, string[] portalOutsJson)
+    {
+        // Length of portal ins must be equal to length of portals out, so every portal in has its own portal out
+        // They should also be ordered, so for every index of portal in there is an index of portal out to connect
+        if (portalInsJson.Length == portalOutsJson.Length)
+        {
+            for (int i = 0; i < portalInsJson.Length; i++)
+            {
+                // Parsing portalIns json into portalIn class object
+                ChallengePortal portalInsInfo = JsonUtility.FromJson<ChallengePortal>(portalInsJson[i]);
+
+                // Creating tuple that a game level would understand
+                // Changing position string and rotation string to Vector3
+                (string type, Vector3 position, Vector3 rotation) portalInsObject =
+                    (portalInsInfo.type, JsonStringToVector3(portalInsInfo.position), JsonStringToVector3(portalInsInfo.rotation));
+                
+                portalIns.Add(portalInsObject);
+            }
+            for (int i = 0; i < portalOutsJson.Length; i++)
+            {
+                // Parsing portalOuts json into portalIn class object
+                ChallengePortal portalOutsInfo = JsonUtility.FromJson<ChallengePortal>(portalOutsJson[i]);
+
+                // Creating tuple that a game level would understand
+                // Changing position string and rotation string to Vector3
+                (string type, Vector3 position, Vector3 rotation) portalOutsObject =
+                    (portalOutsInfo.type, JsonStringToVector3(portalOutsInfo.position), JsonStringToVector3(portalOutsInfo.rotation));
+
+                portalOuts.Add(portalOutsObject);
+            }
+        }
+
+        DrawPortals();
+    }
+
+    private void PopulateCoinsData(string[] coinsJson)
+    {
+        // Populating barriers for each barrierJson inside walls json
+        for (int i = 0; i < coinsJson.Length; i++)
+        {
+            // Parsing coins json into coins class object
+            ChallengeCoin coinsInfo = JsonUtility.FromJson<ChallengeCoin>(coinsJson[i]);
+
+            // Creating tuple that a game level would understand
+            Vector3 coinsObject = JsonStringToVector3(coinsInfo.position);
+
+            // Adding newly parsed and foramtter wall to the walls list to draw on the map
+            coins.Add(coinsObject);
+        }
+
+        DrawCoins();
+    }
+
+    private (GameObject, GameObject) GetPortalPrefabFromType(string type)
+    {
+        if (type == "BlueYellow")
+        {
+            return (portalInBlueYellow, portalOutBlueYellow);
+        }
+        else if (type == "RedGreen")
+        {
+            return (portalInRedGreen, portalOutRedGreen);
+        }
+        return (null, null);
     }
 
     private GameObject GetBarrierPrefabFromType(string type)
