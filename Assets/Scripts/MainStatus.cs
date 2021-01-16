@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using UnityEngine.UI;
 //using System.Collections.Generic;
 
 public class MainStatus : MonoBehaviour
@@ -12,6 +13,11 @@ public class MainStatus : MonoBehaviour
     private GameObject playButton;
     private GameObject shopButton;
     private TV tv;
+    private GameObject tvLight;
+    private GameObject tvSwitch;
+    private bool switchIsOn;
+
+    private float switchTurnSpeed = 2f;
 
     [SerializeField] Player player;
     private Navigator navigator;
@@ -33,6 +39,8 @@ public class MainStatus : MonoBehaviour
         leaderboardButton = GameObject.Find("LeaderboardButton");
         playButton = GameObject.Find("PlayButton");
         shopButton = GameObject.Find("ShopButton");
+        tvLight = GameObject.Find("Light");
+        tvSwitch = GameObject.Find("Switch");
     }
 
     void Start()
@@ -44,6 +52,37 @@ public class MainStatus : MonoBehaviour
 
         // Send data stuff
         SendData();
+    }
+
+    void Update()
+    {
+        // -0.6 is off position, 0 is on position
+        if (switchIsOn && tvSwitch.transform.rotation.z > -0.6)
+        {
+            // Turn switch clockwise
+            tvSwitch.transform.Rotate(new Vector3(0, 0, -switchTurnSpeed));
+        }
+    }
+
+    // Turn on the light and rotate the switch
+    private void SwitchOnLightOn()
+    {
+        // Run the switch on animation, if switch is at off state
+        if (!switchIsOn)
+        {
+            switchIsOn = true;
+        }
+        // Turn lights on to green
+        tvLight.GetComponent<Image>().color = new Color32(0, 255, 0, 255);
+    }
+
+    // Turn on the light and rotate the switch
+    private void SwitchOffLightOff()
+    {
+        // Turn switch to off state
+        switchIsOn = false;
+        // Turn lights on to red
+        tvLight.GetComponent<Image>().color = new Color32(255, 0, 0, 255);
     }
 
     // Set initial states of haptics and sounds buttons based on player prefs
@@ -222,6 +261,7 @@ public class MainStatus : MonoBehaviour
 
     IEnumerator GetAdLinkCoroutine(string uri)
     {
+        yield return new WaitForSeconds(3);
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
             // Request and wait for the desired page.
@@ -232,13 +272,16 @@ public class MainStatus : MonoBehaviour
 
             if (webRequest.isNetworkError)
             {
+                SwitchOffLightOff();
                 Debug.Log(pages[page] + ": Error: " + webRequest.error);
             }
             else
             {
+                SwitchOnLightOn();
                 Debug.Log(webRequest.downloadHandler.text);
                 tv.SetAdLink(webRequest.downloadHandler.text);
-                //Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                tv.transform.Find("ScreenAnimation").gameObject.SetActive(false);
+                Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
             }
         }
     }
