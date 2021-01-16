@@ -249,7 +249,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Levels/Level-78.unity
     guid: 48b613546570947c38ca5b977c8bf17c
   - enabled: 1
-    path: Assets/Scenes/Levels/Level-79.unity
+    path: Assets/Scenes/ChallengeLevels/Challenge_Level-6.unity
     guid: bf42c9b3e1d304102a48a04ea17b83fe
   - enabled: 1
     path: Assets/Scenes/Levels/Level-80.unity
