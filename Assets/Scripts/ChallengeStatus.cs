@@ -95,40 +95,16 @@ public class ChallengeStatus : MonoBehaviour
     private List<(string type, Color32 color, Vector3 position, Vector3 rotation)> walls = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
     private List<(string type, Color32 color, Vector3 position, Vector3 rotation)> barriers = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
 
-    //private (string type, Color32 color, Vector3 position, Vector3 rotation)[] mockWalls =
+    //private Vector3[] mockCoins =
     //{
-    //    ("Angular180", new Color32(255, 0, 0, 255), new Vector3(616, 979.8f, 0), new Vector3(0, 0, -135.525f)),
-    //    ("Angular180", new Color32(255, 0, 0, 255), new Vector3(258, 1025, 0), new Vector3(0, 0, -90)),
-    //    ("Angular135", new Color32(255, 0, 0, 255), new Vector3(291, 503, 0), new Vector3(0, 0, 175.685f)),
-    //    ("Angular180", new Color32(255, 0, 0, 255), new Vector3(338.3f, 702, 0), new Vector3(0, 0, 90)),
-    //    ("Angular135", new Color32(255, 0, 0, 255), new Vector3(407.7f, 891.8f, 0), new Vector3(0, 0, 42))
+    //    new Vector3(572.6772f, 858.2982f, 0),
+    //    new Vector3(637.932f, 389.8024f, 0),
+    //    new Vector3(184.495f, 864.991f, 0),
+    //    new Vector3(221.3054f, 384.7828f, 0),
+    //    new Vector3(356.8345f, 388.1292f, 0),
+    //    new Vector3(505.7493f, 547.0831f, 0),
+    //    new Vector3(154.3774f, 550.4295f, 0)
     //};
-    //private (string type, Vector3 position, Vector3 rotation)[] mockBarriers =
-    //{
-    //    ("Barrier150", new Vector3(242, 789, 0), new Vector3(0, 0, -51.883f)),
-    //    ("Barrier300", new Vector3(587.5f, 174.3615f, 0), new Vector3(0, 0, 0)),
-    //    ("Barrier300", new Vector3(498.5f, 255.5f, 0), new Vector3(0, 0, -90)),
-    //    ("Barrier300", new Vector3(412.3f, 171.231f, 0), new Vector3(0, 0, 0)),
-    //    ("Barrier150", new Vector3(641, 540, 0), new Vector3(0, 0, -179.684f)),
-    //    ("Barrier200", new Vector3(577.5f, 774, 0), new Vector3(0, 0, -90)),
-    //    ("Barrier200", new Vector3(35, 567, 0), new Vector3(0, 0, -7.424f)),
-    //    ("Barrier250", new Vector3(433.8f, 309.2f, 0), new Vector3(0, 0, -50)),
-    //    ("Barrier250", new Vector3(133.6338f, 1037, 0), new Vector3(0, 0, 0)),
-    //    ("Barrier250", new Vector3(133.6338f, 909, 0), new Vector3(0, 0, 0)),
-    //    ("Barrier250", new Vector3(561.8f, 310.2f, 0), new Vector3(0, 0, 50)),
-    //    ("Barrier300", new Vector3(89.65347f, 126.8252f, 0), new Vector3(0, 0, -90.43301f)),
-    //    ("Barrier300", new Vector3(87.84814f, 302.0439f, 0), new Vector3(0, 0, -90.43301f))
-    //};
-    private Vector3[] mockCoins =
-    {
-        new Vector3(572.6772f, 858.2982f, 0),
-        new Vector3(637.932f, 389.8024f, 0),
-        new Vector3(184.495f, 864.991f, 0),
-        new Vector3(221.3054f, 384.7828f, 0),
-        new Vector3(356.8345f, 388.1292f, 0),
-        new Vector3(505.7493f, 547.0831f, 0),
-        new Vector3(154.3774f, 550.4295f, 0)
-    };
     private (string type, Vector3 position, Vector3 rotation)[] mockPortalIns =
     {
         ("Blue-Yellow", new Vector3(220.3657f, 816.3812f, 0), new Vector3(0, 0, 217.637f)),
