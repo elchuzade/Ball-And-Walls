@@ -62,7 +62,9 @@ public class ChallengeStatus : MonoBehaviour
         ("Angular180", new Vector3(258, 1025, 0), new Vector3(0, 0, -90)),
         ("Angular135", new Vector3(291, 503, 0), new Vector3(0, 0, 175.685f)),
         ("Angular180", new Vector3(338.3f, 702, 0), new Vector3(0, 0, 90)),
-        ("Angular135", new Vector3(407.7f, 891.8f, 0), new Vector3(0, 0, 42))
+        ("Angular135", new Vector3(407.7f, 891.8f, 0), new Vector3(0, 0, 42)),
+        ("Horizontal270", new Vector3(407.7f, 891.8f, 0), new Vector3(0, 0, 42)),
+        ("Vertical225", new Vector3(407.7f, 891.8f, 0), new Vector3(0, 0, 42))
     };
     private (string type, Vector3 position, Vector3 rotation)[] mockBarriers =
     {
@@ -256,25 +258,25 @@ public class ChallengeStatus : MonoBehaviour
             if (item.type == "Barrier150")
             {
                 // Create and place barriers from barrier-150 prefab based on position and rotation given by the server adding parent position
-                GameObject barrier = Instantiate(barrier_150, item.position + barriersParent.transform.position, Quaternion.Euler(item.rotation));
+                GameObject barrier = Instantiate(barrier_150, item.position, Quaternion.Euler(item.rotation));
                 barrier.transform.SetParent(barriersParent.transform);
             }
             else if (item.type == "Barrier200")
             {
                 // Create and place barriers from barrier-200 prefab based on position and rotation given by the server adding parent position
-                GameObject barrier = Instantiate(barrier_200, item.position + barriersParent.transform.position, Quaternion.Euler(item.rotation));
+                GameObject barrier = Instantiate(barrier_200, item.position, Quaternion.Euler(item.rotation));
                 barrier.transform.SetParent(barriersParent.transform);
             }
             else if (item.type == "Barrier250")
             {
                 // Create and place barriers from barrier-250 prefab based on position and rotation given by the server adding parent position
-                GameObject barrier = Instantiate(barrier_250, item.position + barriersParent.transform.position, Quaternion.Euler(item.rotation));
+                GameObject barrier = Instantiate(barrier_250, item.position, Quaternion.Euler(item.rotation));
                 barrier.transform.SetParent(barriersParent.transform);
             }
             else if (item.type == "Barrier300")
             {
                 // Create and place barriers from barrier-300 prefab based on position and rotation given by the server adding parent position
-                GameObject barrier = Instantiate(barrier_300, item.position + barriersParent.transform.position, Quaternion.Euler(item.rotation));
+                GameObject barrier = Instantiate(barrier_300, item.position, Quaternion.Euler(item.rotation));
                 barrier.transform.SetParent(barriersParent.transform);
             }
         });
