@@ -7,7 +7,7 @@ using MoreMountains.NiceVibrations;
 public class BallCatcher : MonoBehaviour
 {
     // List of words to show when level is passed
-    private string[] winWords = { "Congrats!", "Excellent!", "Good Job!", "Perfect!", "Amazing!", "Superb!", "Great!", "Wonderful!", "Brilliant" };
+    private string[] winWords = { "Congrats!", "Excellent!", "Good Job!", "Perfect!", "Amazing!", "Superb!", "Great!", "Wonderful!", "Brilliant!" };
 
     private Navigator navigator;
     private HomeStatus homeStatus;
