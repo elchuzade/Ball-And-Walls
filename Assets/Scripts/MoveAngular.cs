@@ -84,7 +84,7 @@ public class MoveAngular : MonoBehaviour
         if (!homeStatus.GetBallLaunched() && !GetComponent<Wall>().GetHintTouched())
         {
             // Make the wall color back to light
-            GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+            GetComponent<SpriteRenderer>().color = GetComponent<Wall>().GetInitialColor();
 
             touching = false;
         }

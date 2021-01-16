@@ -28,7 +28,6 @@ public class MoveHorizontal : MonoBehaviour
     void Awake()
     {
         homeStatus = FindObjectOfType<HomeStatus>();
-        initialPosition = transform.Find("InitialPosition").gameObject;
     }
 
     void Start()
@@ -108,7 +107,7 @@ public class MoveHorizontal : MonoBehaviour
         // If ball is not launched yet and hint is not used and mouse is not touched any more, make color darker
         if (!homeStatus.GetBallLaunched() && !GetComponent<Wall>().GetHintTouched())
         {
-            GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+            GetComponent<SpriteRenderer>().color = GetComponent<Wall>().GetInitialColor();
 
             touching = false;
         }

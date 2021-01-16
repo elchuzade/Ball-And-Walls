@@ -20,6 +20,9 @@ public class Wall : MonoBehaviour
     // A variable to toggle when hint is used and correct position of a wall is exposed
     private bool showCorrectPosition = false;
 
+    // This is to save default color incase it was assigned via script, to return to, when finger is released
+    private Color32 initialColor;
+
     [SerializeField] GameObject background;
     [SerializeField] GameObject initPosition;
     [SerializeField] GameObject arrow;
@@ -50,6 +53,7 @@ public class Wall : MonoBehaviour
         dragAnimator = GetComponent<Animator>();
         ball = FindObjectOfType<Ball>();
         homeStatus = FindObjectOfType<HomeStatus>();
+        initialColor = GetComponent<SpriteRenderer>().color;
     }
 
     void Start()
@@ -262,5 +266,17 @@ public class Wall : MonoBehaviour
     public void UpdateCorrectRotation(Quaternion _correctRotation)
     {
         correctPosition.transform.rotation = _correctRotation;
+    }
+
+    public Color32 GetInitialColor()
+    {
+        return initialColor;
+    }
+
+    // This is to save color for challenge levels, since the color is being assigned after the object is created,
+    // we need to resave initial color for using when finger is released
+    public void SaveInitialColor()
+    {
+        initialColor = GetComponent<SpriteRenderer>().color;
     }
 }

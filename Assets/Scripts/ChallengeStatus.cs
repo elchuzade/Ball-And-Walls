@@ -109,6 +109,7 @@ public class ChallengeStatus : MonoBehaviour
             wall.transform.SetParent(wallsParent.transform);
             // Change its color based on the server data
             wall.GetComponent<SpriteRenderer>().color = item.color;
+            wall.GetComponent<Wall>().SaveInitialColor();
         });
     }
 
