@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public enum ButtonStates { Disable, Enable };
+//public enum ButtonStates { Disable, Enable };
 
 public class IconDisableButton : MonoBehaviour
 {
@@ -67,21 +67,21 @@ public class IconDisableButton : MonoBehaviour
         buttonIconDisabledAnimation.Trigger();
     }
 
-    // Run this function when click animation is over
-    public void ClickButtonComplete()
-    {
-        if (buttonDisabled)
-        {
-            // Disable button by adding cross line
-            // When disabling button we first run animation then remove cross line
-            disable.SetActive(true);
-            // Toggle button
-            buttonDisabled = !buttonDisabled;
-        }
+    //// Run this function when click animation is over
+    //public void ClickButtonComplete()
+    //{
+    //    if (buttonDisabled)
+    //    {
+    //        // Disable button by adding cross line
+    //        // When disabling button we first run animation then remove cross line
+    //        disable.SetActive(true);
+    //        // Toggle button
+    //        buttonDisabled = !buttonDisabled;
+    //    }
 
-        // Make button clickable after half a second
-        StartCoroutine(ActivateButton(0.5f));
-    }
+    //    // Make button clickable after half a second
+    //    StartCoroutine(ActivateButton(0.5f));
+    //}
 
     private IEnumerator ActivateButton(float time)
     {

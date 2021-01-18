@@ -4,30 +4,32 @@ using MoreMountains.NiceVibrations;
 
 public class MoveHorizontal : MonoBehaviour
 {
-    private GameObject initialPosition;
-    // Shuffle is used to indicate if the wall should be shuffled or stay fixed
-    private bool shuffle;
-    // Snap vertically to 10 pixels
-    private int step = 10; // Snap vertically to 10 pixels
-    // Distance to which the wall can be moved before it hits the limits
-    private int moveDistance = 100;
-    // Indicate if player is touching this wall at this time so the rotation can take place
-    private bool touching = false;
-    // Coordinates from the mouse to the center of the wall when player touches the wall to rotate
-    private Vector3 touchMouseToCenter;
 
-    private HomeStatus homeStatus;
+    GameObject initialPosition;
+    // Shuffle is used to indicate if the wall should be shuffled or stay fixed
+    bool shuffle;
+    // Snap vertically to 10 pixels
+    int step = 10; // Snap vertically to 10 pixels
+    // Distance to which the wall can be moved before it hits the limits
+    int moveDistance = 100;
+    // Indicate if player is touching this wall at this time so the rotation can take place
+    bool touching = false;
+    // Coordinates from the mouse to the center of the wall when player touches the wall to rotate
+    Vector3 touchMouseToCenter;
+
+    HomeStatus homeStatus;
 
     // Position at which the wall was designed, to show after the hint button is clicked
-    private Vector3 hintPosition;
+    Vector3 hintPosition;
 
     // Limits of the screen space incase shuffle moves the wall outside of them
-    private int upClampLimit = 195;
-    private int downClampLimit = 555;
+    int upClampLimit = 195;
+    int downClampLimit = 555;
 
     void Awake()
     {
         homeStatus = FindObjectOfType<HomeStatus>();
+        initialPosition = transform.Find("InitialPosition").gameObject;
     }
 
     void Start()
@@ -64,7 +66,8 @@ public class MoveHorizontal : MonoBehaviour
         // Take the movement directing stick outside of the wall so when the wall is moved stick does not move with it
         // Combine all sticks in a single component as children of InitialPositions gameObject
         GameObject initialPositions = GameObject.Find("InitialPositions");
-        initialPosition.transform.SetParent(initialPositions.transform, true);
+
+        initialPosition.transform.SetParent(initialPositions.transform);
 
         // Save the correct position of the wall in the wall script that is attached to the same object
         GetComponent<Wall>().UpdateCorrectPosition(hintPosition);

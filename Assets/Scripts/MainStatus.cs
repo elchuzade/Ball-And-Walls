@@ -2,25 +2,24 @@
 using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.UI;
-//using System.Collections.Generic;
 
 public class MainStatus : MonoBehaviour
 {
-    private GameObject hapticsButton;
-    private GameObject soundsButton;
-    private GameObject challengeButton;
-    private GameObject leaderboardButton;
-    private GameObject playButton;
-    private GameObject shopButton;
-    private TV tv;
-    private GameObject tvLight;
-    private GameObject tvSwitch;
-    private bool switchIsOn;
+    GameObject hapticsButton;
+    GameObject soundsButton;
+    GameObject challengeButton;
+    GameObject leaderboardButton;
+    GameObject playButton;
+    GameObject shopButton;
+    TV tv;
+    GameObject tvLight;
+    GameObject tvSwitch;
+    bool switchIsOn;
 
-    private float switchTurnSpeed = 2f;
+    float switchTurnSpeed = 2;
 
     [SerializeField] Player player;
-    private Navigator navigator;
+    Navigator navigator;
 
     // To send player data to server
     private class PlayerJson
@@ -90,100 +89,115 @@ public class MainStatus : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("Haptics") == 1)
         {
-            hapticsButton.GetComponent<IconDisableButton>().SetButtonInitialState(ButtonStates.Enable);
+            hapticsButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
         }
         else
         {
-            hapticsButton.GetComponent<IconDisableButton>().SetButtonInitialState(ButtonStates.Disable);
+            hapticsButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Disable);
         }
         if (PlayerPrefs.GetInt("Sounds") == 1)
         {
-            soundsButton.GetComponent<IconDisableButton>().SetButtonInitialState(ButtonStates.Enable);
+            soundsButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
         }
         else
         {
-            soundsButton.GetComponent<IconDisableButton>().SetButtonInitialState(ButtonStates.Disable);
+            soundsButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Disable);
         }
     }
 
     public void ClickHapticsButton()
     {
-        if (PlayerPrefs.GetInt("Haptics") == 1)
+        if (hapticsButton.GetComponent<Button>().IsInteractable())
         {
-            // Run the click button animation, disable interactible feature until the end of animation
-            // Set button state to disabled
-            hapticsButton.GetComponent<IconDisableButton>().ClickButton(ButtonStates.Disable);
-            // If haptics are turned on => turn them off
-            PlayerPrefs.SetInt("Haptics", 0);
-        }
-        else
-        {
-            // Run the click button animation, disable interactible feature until the end of animation
-            // Set button state to enabled
-            hapticsButton.GetComponent<IconDisableButton>().ClickButton(ButtonStates.Enable);
-            // If haptics are turned off => turn them on
-            PlayerPrefs.SetInt("Haptics", 1);
+            if (PlayerPrefs.GetInt("Haptics") == 1)
+            {
+                // Run the click button animation
+                hapticsButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+                // Set button state to disabled
+                hapticsButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Disable);
+                // If haptics are turned on => turn them off
+                PlayerPrefs.SetInt("Haptics", 0);
+            }
+            else
+            {
+                // Run the click button animation
+                hapticsButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+                // Set button state to enabled
+                hapticsButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
+                // If haptics are turned off => turn them on
+                PlayerPrefs.SetInt("Haptics", 1);
+            }
         }
     }
 
     public void ClickSoundsButton()
     {
-        if (PlayerPrefs.GetInt("Sounds") == 1)
+        if (soundsButton.GetComponent<Button>().IsInteractable())
         {
-            // Run the click button animation, disable interactible feature until the end of animation
-            // Set button state to disabled
-            soundsButton.GetComponent<IconDisableButton>().ClickButton(ButtonStates.Disable);
-            // If sounds are turned on => turn them off
-            PlayerPrefs.SetInt("Sounds", 0);
-        }
-        else
-        {
-            // Run the click button animation, disable interactible feature until the end of animation
-            // Set button state to enabled
-            soundsButton.GetComponent<IconDisableButton>().ClickButton(ButtonStates.Enable);
-            // If sounds are turned off => turn them on
-            PlayerPrefs.SetInt("Sounds", 1);
+            if (PlayerPrefs.GetInt("Sounds") == 1)
+            {
+                // Run the click button animation
+                soundsButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+                // Set button state to disabled
+                soundsButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Disable);
+                // If sounds are turned on => turn them off
+                PlayerPrefs.SetInt("Sounds", 0);
+            }
+            else
+            {
+                // Run the click button animation
+                soundsButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+                // Set button state to enabled
+                soundsButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
+                // If sounds are turned off => turn them on
+                PlayerPrefs.SetInt("Sounds", 1);
+            }
         }
     }
 
     public void ClickChallengeButton()
     {
-        // Play the animation of challenge button clikcing
-        challengeButton.GetComponent<TriggerAnimation>().Trigger();
-        // Disable button for the period of click animation, then enable again
-        challengeButton.GetComponent<IconButton>().ClickButton();
-        // Approximately when animation is over, load the challenge scene
-        StartCoroutine(LoadChallengeSceneCoroutine(0.2f));
+        if (challengeButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run the trigger button animation and disable button for its duration
+            challengeButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is over, load the challenge scene
+            StartCoroutine(LoadChallengeSceneCoroutine(0.2f));
+        }
     }
 
     public void ClickLeaderboardButton()
     {
-        // Play the animation of leaderboard button clikcing
-        leaderboardButton.GetComponent<TriggerAnimation>().Trigger();
-        // Disable button for the period of click animation, then enable again
-        leaderboardButton.GetComponent<IconButton>().ClickButton();
-        // Approximately when animation is over, load the leaderboard scene
-        StartCoroutine(LoadLeaderboardSceneCoroutine(0.2f));
+        if (leaderboardButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run the trigger button animation and disable button for its duration
+            leaderboardButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is over, load the leaderboard scene
+            StartCoroutine(LoadLeaderboardSceneCoroutine(0.2f));
+        }
     }
 
     public void ClickPlayButton()
     {
-        // Play the animation of play button clikcing
-        playButton.GetComponent<TriggerAnimation>().Trigger();
-        // Disable button for the period of click animation, then enable again
-        playButton.GetComponent<IconButton>().ClickButton();
-        // Approximately when animation is over, load the game scene
-        StartCoroutine(LoadGameSceneCoroutine(0.2f));
+        if (playButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run the trigger button animation and disable button for its duration
+            playButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is over, load the game scene
+            StartCoroutine(LoadGameSceneCoroutine(0.2f));
+        }
     }
 
+    // If shop button is interactable, run the click animation and load the shop scene
     public void ClickShopButton()
     {
-        // Play the animation of play button clikcing
-        shopButton.GetComponent<TriggerAnimation>().Trigger();
-        // Disable button for the period of click animation, then enable again
-        shopButton.GetComponent<IconButton>().ClickButton();
-        // Approximately when animation is over, load the game scene
-        StartCoroutine(LoadShopSceneCoroutine(0.2f));
+        if (shopButton.GetComponent<Button>().IsInteractable())
+        {
+            // Disable button for the period of click animation, then enable again
+            shopButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is over, load the game scene
+            StartCoroutine(LoadShopSceneCoroutine(0.2f));
+        }
     }
 
     public IEnumerator LoadGameSceneCoroutine(float time)

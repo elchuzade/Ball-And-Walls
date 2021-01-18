@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine;
+using UnityEngine.iOS;
 
 public class LeaderboardStatus : MonoBehaviour
 {
@@ -18,9 +20,14 @@ public class LeaderboardStatus : MonoBehaviour
     private GameObject bronzeName;
 
     private Navigator navigator;
+
+    private TriggerAnimation exitButtonScript;
+
     private GameObject leaderboardScrollContent;
 
     private GameObject leaderboardScrollbar;
+
+    private TouchScreenKeyboard keyboard;
 
     // To send player data to server
     private class PlayerJson
@@ -65,10 +72,12 @@ public class LeaderboardStatus : MonoBehaviour
     {
         leaderboardScrollContent = GameObject.Find("LeaderboardScrollContent");
         leaderboardScrollbar = GameObject.Find("LeaderboardScrollbar");
-
+        navigator = FindObjectOfType<Navigator>();
         goldName = GameObject.Find("GoldName");
         silverName = GameObject.Find("SilverName");
         bronzeName = GameObject.Find("BronzeName");
+        GameObject exitButtonObject = GameObject.Find("ExitButton");
+        exitButtonScript = exitButtonObject.GetComponent<TriggerAnimation>();
     }
 
     void Start()
@@ -321,7 +330,36 @@ public class LeaderboardStatus : MonoBehaviour
         return false;
     }
 
-    private void SendData()
+    // TEST UNITY INPUT FIELD
+
+    // Typed in something
+    public void OnValueChange ()
+    {
+        Debug.Log("typed");
+    }
+
+    // Touched the input field
+    public void OnSelect()
+    {
+        Debug.Log("touched");
+    }
+
+    // Close Leadersboard Scene
+    public void ClickExitButton()
+    {
+        // Trigge rthe click animation on exit button of the chest room top left
+        exitButtonScript.Trigger();
+        StartCoroutine(LoadCloseLeadersboard(0.2f));
+    }
+
+    public IEnumerator LoadCloseLeadersboard(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        navigator.LoadMainScene();
+    }
+
+    public void SendData()
     {
         PlayerData newPlayer = new PlayerData(player);
 

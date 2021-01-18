@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-//using UnityEngine.UI;
+using UnityEngine.UI;
 
 public class HomeStatus : MonoBehaviour
 {
@@ -21,9 +21,9 @@ public class HomeStatus : MonoBehaviour
     [SerializeField] GameObject VerticalPointer;
     [SerializeField] GameObject AngularPointer;
     [SerializeField] GameObject HorizontalPointer;
-    private bool showedFocus = false;
-    private bool showedPointer = false;
-    private int tutorialStep = 0;
+    bool showedFocus = false;
+    bool showedPointer = false;
+    int tutorialStep = 0;
 
     // Background Sprites
     [SerializeField] Sprite table;
@@ -32,38 +32,37 @@ public class HomeStatus : MonoBehaviour
     [SerializeField] Sprite words;
 
     // Canvas objects
-    private GameObject gameBackground;
-    private GameObject hintButton;
-    private GameObject shopButton;
-    private GameObject resetButton;
-    private GameObject forwardButton;
-    private GameObject ballDirectionArrow;
-    private Scoreboard scoreboard;
+    GameObject gameBackground;
+    GameObject hintButton;
+    GameObject homeButton;
+    GameObject resetButton;
+    GameObject forwardButton;
+    GameObject ballDirectionArrow;
+    Scoreboard scoreboard;
 
-    private Ball ball;
+    Ball ball;
 
-    private Navigator navigator;
+    Navigator navigator;
 
     // Ad cancel warning stuff
-    private GameObject adCancelBg;
-    private GameObject adCancelWarning;
-    private GameObject adWarningReceiveButton;
-    private GameObject adWarningContinueButton;
-    private TriggerAnimation adWarningReceiveButtonScript;
-    private TriggerAnimation adWarningContinueButtonScript;
-    private bool showedAdCancelWarning = false;
+    GameObject adCancelBg;
+    GameObject adCancelWarning;
+    GameObject adWarningReceiveButton;
+    GameObject adWarningContinueButton;
+
+    bool showedAdCancelWarning = false;
 
     // Status of ball being launched or not, for other scripts to access
-    private bool ballLaunched;
-    private int keys = 0;
-    private int coins = 0;
+    bool ballLaunched;
+    int keys = 0;
+    int coins = 0;
 
     void Awake()
     {
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
         hintButton = GameObject.Find("HintButton");
-        shopButton = GameObject.Find("ShopButton");
+        homeButton = GameObject.Find("HomeButton");
         resetButton = GameObject.Find("ResetButton");
         forwardButton = GameObject.Find("ForwardButton");
         ballDirectionArrow = GameObject.Find("BallDirectionArrow");
@@ -79,16 +78,13 @@ public class HomeStatus : MonoBehaviour
 
         navigator = FindObjectOfType<Navigator>();
         ball = FindObjectOfType<Ball>();
-
-        adWarningReceiveButtonScript = adWarningReceiveButton.GetComponent<TriggerAnimation>();
-        adWarningContinueButtonScript = adWarningContinueButton.GetComponent<TriggerAnimation>();
-
-        player.coins = 10000;
-        player.SavePlayer();
     }
 
     void Start()
     {
+        forwardButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
+        SetButtonFunctions();
+
         AdManager.ShowBanner();
         // Hide the white plane that is there for helping design the level on canvas
         GameObject.Find("GamePlane").SetActive(false);
@@ -97,9 +93,6 @@ public class HomeStatus : MonoBehaviour
         forwardButton.SetActive(false);
         adCancelBg.SetActive(false);
         adCancelWarning.SetActive(false);
-
-        // Make a forward button enabled when level just loaded
-        forwardButton.GetComponent<IconDisableButton>().SetButtonInitialState(ButtonStates.Enable);
 
         // Change the camera zoom based on the screen ration, for very tall or very wide screens
         if ((float)Screen.height / Screen.width > 2)
@@ -127,6 +120,14 @@ public class HomeStatus : MonoBehaviour
         SetBackground();
     }
 
+    private void SetButtonFunctions()
+    {
+        homeButton.GetComponent<Button>().onClick.AddListener(() => ClickHomeButton());
+        hintButton.GetComponent<Button>().onClick.AddListener(() => ClickHintButton());
+        resetButton.GetComponent<Button>().onClick.AddListener(() => ClickResetButton());
+        forwardButton.GetComponent<Button>().onClick.AddListener(() => ClickForwardButton());
+    }
+
     public bool GetShuffle()
     {
         // Return if the walls on the level should be shuffled, accessed by each wall
@@ -139,10 +140,13 @@ public class HomeStatus : MonoBehaviour
 
     public void ReceiveHintButtonClick()
     {
-        // Run animation of clicking receive coins and watch the ad button
-        adWarningReceiveButtonScript.Trigger();
-        // Approximately when animation is finished, load the ad screen
-        StartCoroutine(ReceiveHintButtonCoroutine(0.2f));
+        if (adWarningReceiveButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run animation of clicking receive coins and watch the ad button
+            adWarningReceiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is finished, load the ad screen
+            StartCoroutine(ReceiveHintButtonCoroutine(0.2f));
+        }
     }
 
     public IEnumerator ReceiveHintButtonCoroutine(float time)
@@ -155,10 +159,13 @@ public class HomeStatus : MonoBehaviour
 
     public void ContinuePlayingButtonClick()
     {
-        // Wait for given time and load the ad screen
-        adWarningContinueButtonScript.Trigger();
-        // Approximately when animation is finished, load the ad screen
-        StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
+        if (adWarningContinueButton.GetComponent<Button>().IsInteractable())
+        {
+            // Wait for given time and load the ad screen
+            adWarningContinueButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is finished, load the ad screen
+            StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
+        }
     }
 
     public IEnumerator ContinuePlayingButtonCoroutine(float time)
@@ -178,13 +185,14 @@ public class HomeStatus : MonoBehaviour
         ballPrefab.transform.SetParent(ball.gameObject.transform);
     }
 
-    public void UseHint()
+    public void ClickHintButton()
     {
-        // Run the hint button click animation
-        hintButton.GetComponent<TriggerAnimation>().Trigger();
-        hintButton.GetComponent<IconButton>().ClickButton();
-
-        StartCoroutine(HintButtonCoroutine(0.2f));
+        if (hintButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run button click animation and show the hint ad window
+            hintButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            StartCoroutine(HintButtonCoroutine(0.2f));
+        }
     }
 
     public IEnumerator HintButtonCoroutine(float time)
@@ -268,7 +276,7 @@ public class HomeStatus : MonoBehaviour
 
         // hide hint and shop button when the ball is in movement, those should be access when ball is idle
         hintButton.SetActive(false);
-        shopButton.SetActive(false);
+        homeButton.SetActive(false);
         // Hide arrow that shows where the ball will move when launched
         ballDirectionArrow.SetActive(false);
     }
@@ -313,14 +321,14 @@ public class HomeStatus : MonoBehaviour
         return keys;
     }
 
-    public void ResetButtonClick()
+    public void ClickResetButton()
     {
-        // Run the reset button click animation
-        resetButton.GetComponent<TriggerAnimation>().Trigger();
-        resetButton.GetComponent<IconButton>().ClickButton();
-
-        // Reset the ball
-        StartCoroutine(ResetButtonCoroutine(0.2f));
+        if (resetButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run the button click animation and reset the level
+            resetButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            StartCoroutine(ResetButtonCoroutine(0.2f));
+        }
     }
 
     public IEnumerator ResetButtonCoroutine(float time)
@@ -338,23 +346,24 @@ public class HomeStatus : MonoBehaviour
         forwardButton.SetActive(false);
     }
 
-    public void ForwardButtonClick()
+    public void ClickForwardButton()
     {
-        // If the forward button has not been clicked yet, run the click animation
-        if (forwardButton.GetComponent<IconDisableButton>().GetButtonEnabled())
+        if (forwardButton.GetComponent<Button>().IsInteractable())
         {
-            forwardButton.GetComponent<TriggerAnimation>().Trigger();
+            // Run the button click animation and accelerate the ball
+            forwardButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Show disable cross on the button when clicked
+            forwardButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Disable);
+            StartCoroutine(ForwardButtonCoroutine(0.2f));
         }
-        // Disable the forward button icon as it is to be used only once per level
-        forwardButton.GetComponent<IconDisableButton>().ClickButton(ButtonStates.Disable);
-
-        StartCoroutine(ForwardButtonCoroutine(0.2f));
     }
 
     public IEnumerator ForwardButtonCoroutine(float time)
     {
         // WAit for given time and run the ball's forward function that will accelerate the ball speed
         yield return new WaitForSeconds(time);
+        // Make button not clickable any more until level reset or passed
+        forwardButton.GetComponent<Button>().interactable = false;
         ball.ForwardBall();
     }
 
@@ -364,6 +373,9 @@ public class HomeStatus : MonoBehaviour
         resetButton.SetActive(false);
         forwardButton.SetActive(false);
 
+        forwardButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
+        forwardButton.GetComponent<Button>().interactable = true;
+
         // Seet ball to idle state
         ballLaunched = false;
         // Show the ball direction arrow again
@@ -371,25 +383,26 @@ public class HomeStatus : MonoBehaviour
         // If it is not a tutorial level, show the shop and hint buttons
         if (player.nextLevelIndex > 4)
         {
-            shopButton.SetActive(true);
+            homeButton.SetActive(true);
             hintButton.SetActive(true);
         }
     }
 
-    public void LoadShopScene()
+    public void ClickHomeButton()
     {
-        // Run the shop button click animation and load the shop scene
-        shopButton.GetComponent<TriggerAnimation>().Trigger();
-        shopButton.GetComponent<IconButton>().ClickButton();
-
-        StartCoroutine(LoadShopSceneCoroutine(0.2f));
+        if (homeButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run the button click animation and load the home scene
+            homeButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            StartCoroutine(LoadHomeSceneCoroutine(0.2f));
+        }
     }
 
-    public IEnumerator LoadShopSceneCoroutine(float time)
+    public IEnumerator LoadHomeSceneCoroutine(float time)
     {
         // Wait for given time for animation to finish and load the shop scene
         yield return new WaitForSeconds(time);
-        navigator.LoadShop();
+        navigator.LoadMainScene();
     }
     
     // Tutorial stuff
@@ -535,6 +548,15 @@ public class HomeStatus : MonoBehaviour
         {
             gameBackground.GetComponent<SpriteRenderer>().sprite = table;
         }
+    }
+
+    // Disable all buttons when level is passed
+    public void DisableAllButtons()
+    {
+        resetButton.GetComponent<Button>().interactable = false;
+        homeButton.GetComponent<Button>().interactable = false;
+        forwardButton.GetComponent<Button>().interactable = false;
+        hintButton.GetComponent<Button>().interactable = false;
     }
 
     private void SetBackground()

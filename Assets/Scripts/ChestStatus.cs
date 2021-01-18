@@ -21,39 +21,37 @@ public class ChestStatus : MonoBehaviour
     private Animator key3animator;
 
     // This is needed because we are mixing canvas and world game object
-    private float cameraHeightFactor = 1.44f;
-    private bool bestPrizeReceived = false;
-    private Navigator navigator;
+    float cameraHeightFactor = 1.44f;
+    bool bestPrizeReceived = false;
+    Navigator navigator;
 
-    private TriggerAnimation exitButtonScript;
-    private TriggerAnimation moreKeysButtonScript;
+    GameObject exitButton;
+    GameObject moreKeysButton;
+    GameObject passPhraseButton;
 
-    private GameObject adCancelBg;
-    private GameObject adCancelWarning;
+    GameObject adCancelBg;
+    GameObject adCancelWarning;
 
-    private GameObject adWarningReceiveButton;
-    private GameObject adWarningContinueButton;
+    GameObject adWarningReceiveButton;
+    GameObject adWarningContinueButton;
 
-    private TriggerAnimation adWarningReceiveButtonScript;
-    private TriggerAnimation adWarningContinueButtonScript;
-
-    private bool showedAdCancelWarning = false;
+    bool showedAdCancelWarning = false;
 
     // TODO Opening chests should not be allowed if you quit the game and relaunch not to bug the game
 
-    private List<int> rewards = new List<int>() { 0, 10, 10, 10, 10, 10, 25, 25, 50 };
+    List<int> rewards = new List<int>() { 0, 10, 10, 10, 10, 10, 25, 25, 50 };
     // This is to indicate a number outside of rewards
-    private int reward = -1;
+    int reward = -1;
     // Initially player gets 3 keys if he enterred a chestroom
-    private int keys = 3;
-    private int openedChests = 0;
+    int keys = 3;
+    int openedChests = 0;
     //Rewards are being added here
-    private int totalReward = 0;
+    int totalReward = 0;
 
     // Balls that the player has not unlocked yet
-    private List<int> bestPrizes = new List<int>();
+    List<int> bestPrizes = new List<int>();
     // Index of the ball from the list of balls the player has not unlocked yet to offer as the best prize
-    private int bestPrizeIndex;
+    int bestPrizeIndex;
 
     void Awake()
     {
@@ -63,23 +61,21 @@ public class ChestStatus : MonoBehaviour
 
         navigator = FindObjectOfType<Navigator>();
 
-        GameObject exitButtonObject = GameObject.Find("ExitButton");
-        GameObject moreKeysButtonObject = GameObject.Find("MoreKeysButton");
-        moreKeysButtonObject.SetActive(false);
-        exitButtonScript = exitButtonObject.GetComponent<TriggerAnimation>();
-        moreKeysButtonScript = moreKeysButtonObject.GetComponent<TriggerAnimation>();
+        exitButton = GameObject.Find("ExitButton");
+        moreKeysButton = GameObject.Find("MoreKeysButton");
+        passPhraseButton = GameObject.Find("PassPhrase");
 
         adCancelBg = GameObject.Find("AdCancelBg");
         adCancelWarning = GameObject.Find("ChestAdCancelWarning");
         adWarningReceiveButton = GameObject.Find("AdWarningReceiveButton");
         adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
-
-        adWarningReceiveButtonScript = adWarningReceiveButton.GetComponent<TriggerAnimation>();
-        adWarningContinueButtonScript = adWarningContinueButton.GetComponent<TriggerAnimation>();
     }
 
     void Start()
     {
+        moreKeysButton.SetActive(false);
+        passPhraseButton.SetActive(false);
+
         // Adjust camera zoom for different ratio screens to put the best prize in correct position
         if ((float)Screen.height / Screen.width > 2)
         {
@@ -262,14 +258,35 @@ public class ChestStatus : MonoBehaviour
         return keys;
     }
 
+    public void ClickPassPhrase()
+    {
+        // Run the animation of a click of get more keys button and run the ad
+        if (passPhraseButton.GetComponent<Button>().IsInteractable())
+        {
+            passPhraseButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            StartCoroutine(LoadPassPhraseCoroutine(0.2f));
+        }
+    }
+
+    public IEnumerator LoadPassPhraseCoroutine(float time)
+    {
+        // Wait for given time and load the ad
+        yield return new WaitForSeconds(time);
+
+        NextLevel();
+    }
+
     public void GetMoreKeys()
     {
         // Run the animation of a click of get more keys button and run the ad
-        moreKeysButtonScript.Trigger();
-        StartCoroutine(LoadGetMoreKeys(0.2f));
+        if (moreKeysButton.GetComponent<Button>().IsInteractable())
+        {
+            moreKeysButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            StartCoroutine(LoadGetMoreKeysCoroutine(0.2f));
+        }
     }
 
-    public IEnumerator LoadGetMoreKeys(float time)
+    public IEnumerator LoadGetMoreKeysCoroutine(float time)
     {
         // Wait for given time and load the ad
         yield return new WaitForSeconds(time);
@@ -285,9 +302,6 @@ public class ChestStatus : MonoBehaviour
         keys = 3;
         DrawKeys();
 
-        //player.SavePlayer();
-        //player.LoadPlayer();
-
         // Incase the success funcion is called from the rewathing the ad after skipping once,
         // Hide the warning buttons and toggle the variable indicating that the warning has been seen
         showedAdCancelWarning = true;
@@ -297,9 +311,13 @@ public class ChestStatus : MonoBehaviour
 
     public void ClickExitButton()
     {
-        // Trigge rthe click animation on exit button of the chest room top left
-        exitButtonScript.Trigger();
-        StartCoroutine(LoadCloseChest(0.2f));
+        if (exitButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run the trigger button animation and disable button for its duration
+            exitButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is over, load level scene
+            StartCoroutine(LoadCloseChest(0.2f));
+        }
     }
 
     public IEnumerator LoadCloseChest(float time)
@@ -316,8 +334,13 @@ public class ChestStatus : MonoBehaviour
     // Button that shows watch the ad till the end and receive the gift in the warning of ad cancel
     public void ReceiveKeysButtonClick()
     {
-        adWarningReceiveButtonScript.Trigger();
-        StartCoroutine(ReceiveKeysButtonCoroutine(0.2f));
+        if (adWarningReceiveButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run animation of clicking receive coins and watch the ad button
+            adWarningReceiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is finished, load the ad screen
+            StartCoroutine(ReceiveKeysButtonCoroutine(0.2f));
+        }
     }
 
     public IEnumerator ReceiveKeysButtonCoroutine(float time)
@@ -329,9 +352,13 @@ public class ChestStatus : MonoBehaviour
 
     public void ContinuePlayingButtonClick()
     {
-        adWarningContinueButtonScript.Trigger();
-
-        StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
+        if (adWarningContinueButton.GetComponent<Button>().IsInteractable())
+        {
+            // Wait for given time and load the ad screen
+            adWarningContinueButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is finished, load the ad screen
+            StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
+        }
     }
 
     public IEnumerator ContinuePlayingButtonCoroutine(float time)

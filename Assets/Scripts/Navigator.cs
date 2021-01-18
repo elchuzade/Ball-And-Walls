@@ -28,4 +28,9 @@ public class Navigator : MonoBehaviour
     {
         SceneManager.LoadScene("LeaderboardScene");
     }
+
+    public void LoadMainScene()
+    {
+        SceneManager.LoadScene("MainScene");
+    }
 }

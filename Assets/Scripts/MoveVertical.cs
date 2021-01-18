@@ -4,26 +4,26 @@ using MoreMountains.NiceVibrations;
 
 public class MoveVertical : MonoBehaviour
 {
-    private GameObject initialPosition;
+    GameObject initialPosition;
     // Shuffle is used to indicate if the wall should be shuffled or stay fixed
-    private bool shuffle;
+    bool shuffle;
     // Snap vertically to 10 pixels
-    private int step = 10;
+    int step = 10;
     // Distance to which the wall can be moved before it hits the limits
-    private int moveDistance = 100;
+    int moveDistance = 100;
     // Indicate if player is touching this wall at this time so the rotation can take place
-    private bool touching = false;
+    bool touching = false;
     // Coordinates from the mouse to the center of the wall when player touches the wall to rotate
-    private Vector3 touchMouseToCenter;
+    Vector3 touchMouseToCenter;
 
-    private HomeStatus homeStatus;
+    HomeStatus homeStatus;
 
     // Position at which the wall was designed, to show after the hint button is clicked
-    private Vector3 hintPosition;
+    Vector3 hintPosition;
 
     // Limits of the screen space incase shuffle moves the wall outside of them
-    private int leftClampLimit = 260;
-    private int rightClampLimit = 940;
+    int leftClampLimit = 260;
+    int rightClampLimit = 940;
 
     void Awake()
     {

@@ -151,7 +151,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "If you skip this Ad,\n you will not\nreceive coins"
+  m_Text: 'If you skip this Ad,
+
+    you will not
+
+    receive coins'
 --- !u!1 &2430971185244488179
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +181,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2430971185244488179}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 1, z: 1}
   m_Children:
@@ -249,18 +253,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2430971184145098354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8913570843069480275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01860f6101ec74c97b06a84e697bb9bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &2430971184536942426
 Animator:
   serializedVersion: 3
@@ -280,18 +272,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2430971184536942427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8913570843494870136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01860f6101ec74c97b06a84e697bb9bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2430971184145098357
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -299,11 +279,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2430971185244488177}
     m_Modifications:
+    - target: {fileID: 4686510391635304901, guid: c75eab7e54b91492ba3da79a2b7a02e5,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 440
+      objectReference: {fileID: 0}
+    - target: {fileID: 4686510391635304901, guid: c75eab7e54b91492ba3da79a2b7a02e5,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6489641008724666560, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 67cc61a79d6bc422386c6c2b2642adbb,
+      objectReference: {fileID: 21300000, guid: b69b25153d1b04f43878a4034d06bd97,
         type: 3}
     - target: {fileID: 6489641008724666591, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
@@ -469,7 +459,7 @@ PrefabInstance:
     - target: {fileID: 6489641009287505275, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_text
-      value: continue  playing
+      value: miss the chance
       objectReference: {fileID: 0}
     - target: {fileID: 6489641009287505275, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
@@ -481,6 +471,12 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4278238975
       objectReference: {fileID: 0}
+    - target: {fileID: 7656187544138765546, guid: c75eab7e54b91492ba3da79a2b7a02e5,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2b4b9caa76c8c48728f2987dceb8ccc3,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 6175685583948720734, guid: c75eab7e54b91492ba3da79a2b7a02e5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c75eab7e54b91492ba3da79a2b7a02e5, type: 3}
@@ -503,11 +499,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2430971185244488177}
     m_Modifications:
+    - target: {fileID: 4686510391635304901, guid: c75eab7e54b91492ba3da79a2b7a02e5,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 440
+      objectReference: {fileID: 0}
+    - target: {fileID: 4686510391635304901, guid: c75eab7e54b91492ba3da79a2b7a02e5,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6489641008724666560, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 67cc61a79d6bc422386c6c2b2642adbb,
+      objectReference: {fileID: 21300000, guid: b69b25153d1b04f43878a4034d06bd97,
         type: 3}
     - target: {fileID: 6489641008724666591, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
@@ -643,7 +649,7 @@ PrefabInstance:
     - target: {fileID: 6489641008765246250, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReceiveHintButtonClick
+      value: ReceiveCoinsButtonClick
       objectReference: {fileID: 0}
     - target: {fileID: 6489641009287505273, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
@@ -680,6 +686,12 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4278238975
       objectReference: {fileID: 0}
+    - target: {fileID: 7656187544138765546, guid: c75eab7e54b91492ba3da79a2b7a02e5,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2b4b9caa76c8c48728f2987dceb8ccc3,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 6175685583948720734, guid: c75eab7e54b91492ba3da79a2b7a02e5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c75eab7e54b91492ba3da79a2b7a02e5, type: 3}
