@@ -336,6 +336,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 447982858}
     m_Modifications:
+    - target: {fileID: 271587140078077488, guid: f5768be1f707c45848703167ea32ffa2,
+        type: 3}
+      propertyPath: type
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 369968280395015893, guid: f5768be1f707c45848703167ea32ffa2,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -3785,6 +3790,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShopAdCancelWarning
       objectReference: {fileID: 0}
+    - target: {fileID: 4111598819176342320, guid: b8988e09f4dbb4fed87458d0f0597c1d,
+        type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4111598819518378523, guid: b8988e09f4dbb4fed87458d0f0597c1d,
+        type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8913570843069480287, guid: b8988e09f4dbb4fed87458d0f0597c1d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -6142,6 +6157,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 447982858}
     m_Modifications:
+    - target: {fileID: 1780010635640571205, guid: c75eab7e54b91492ba3da79a2b7a02e5,
+        type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6489641008765246246, guid: c75eab7e54b91492ba3da79a2b7a02e5,
         type: 3}
       propertyPath: m_Name
@@ -6386,6 +6406,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3775628553764511827, guid: 3560d052d11794f4ba2eff4a03d495e3,
+        type: 3}
+      propertyPath: type
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3560d052d11794f4ba2eff4a03d495e3, type: 3}

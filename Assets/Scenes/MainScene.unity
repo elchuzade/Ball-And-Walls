@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 316e1e04a7a3249888eea2f2ebe7f980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  type: 1
 --- !u!95 &241752443
 Animator:
   serializedVersion: 3
@@ -238,7 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 316e1e04a7a3249888eea2f2ebe7f980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
+  type: 0
 --- !u!1 &365073483
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,7 +566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 316e1e04a7a3249888eea2f2ebe7f980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
+  type: 0
 --- !u!224 &684626505 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1581948610182028145, guid: 2008e9231c9f6483dba3ac7d86ccb959,
@@ -1062,7 +1062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 316e1e04a7a3249888eea2f2ebe7f980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
+  type: 0
 --- !u!1001 &1581948609767409976
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1313,7 +1313,7 @@ PrefabInstance:
     - target: {fileID: 5831370571671557186, guid: b6a5813352aa2405db44f5c4d7a1752b,
         type: 3}
       propertyPath: type
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6a5813352aa2405db44f5c4d7a1752b, type: 3}
@@ -1898,8 +1898,14 @@ PrefabInstance:
     - target: {fileID: 1673384277823144703, guid: 82977d29d6661476d8fec5ebd087a674,
         type: 3}
       propertyPath: type
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7157165562750059077, guid: 82977d29d6661476d8fec5ebd087a674,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e2e75b75decd0493d994c9a7f5482d87,
+        type: 3}
     - target: {fileID: 8767118985217073954, guid: 82977d29d6661476d8fec5ebd087a674,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2015,6 +2021,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: SoundsButton
       objectReference: {fileID: 0}
+    - target: {fileID: 8795591301473410450, guid: 82977d29d6661476d8fec5ebd087a674,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2f8a24ce8e16f43b7bd89b1d0ca92f6b,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82977d29d6661476d8fec5ebd087a674, type: 3}
 --- !u!1001 &8324370079737982901
