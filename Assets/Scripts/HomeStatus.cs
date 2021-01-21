@@ -56,6 +56,7 @@ public class HomeStatus : MonoBehaviour
     bool ballLaunched;
     int keys = 0;
     int coins = 0;
+    int diamonds = 0;
 
     void Awake()
     {
@@ -104,9 +105,10 @@ public class HomeStatus : MonoBehaviour
 
         player.LoadPlayer();
 
-        // Set initial keys coins and canvas values
+        // Set initial keys coins diamonds and canvas values
         keys = player.keys;
         scoreboard.SetCoins(player.coins + coins);
+        scoreboard.SetDiamonds(player.diamonds + diamonds);
         scoreboard.SetKeys(keys);
 
         // Hide shop and hint in tutorial levels
@@ -126,6 +128,9 @@ public class HomeStatus : MonoBehaviour
         hintButton.GetComponent<Button>().onClick.AddListener(() => ClickHintButton());
         resetButton.GetComponent<Button>().onClick.AddListener(() => ClickResetButton());
         forwardButton.GetComponent<Button>().onClick.AddListener(() => ClickForwardButton());
+
+        adWarningReceiveButton.GetComponent<Button>().onClick.AddListener(() => ReceiveHintButtonClick());
+        adWarningContinueButton.GetComponent<Button>().onClick.AddListener(() => ContinuePlayingButtonClick());
     }
 
     public bool GetShuffle()
@@ -311,9 +316,21 @@ public class HomeStatus : MonoBehaviour
         scoreboard.SetCoins(player.coins + coins);
     }
 
+    public void CollectDiamonds()
+    {
+        // If a ball collides with a coin add it to the level keys and to the scoreboard in canvas
+        diamonds++;
+        scoreboard.SetCoins(player.diamonds + diamonds);
+    }
+
     public int GetCoins()
     {
         return coins;
+    }
+
+    public int GetDiamonds()
+    {
+        return diamonds;
     }
 
     public int GetKeys()

@@ -3,16 +3,37 @@ using UnityEngine.UI;
 
 public class Scoreboard : MonoBehaviour
 {
-    [SerializeField] Text coins;
-    [SerializeField] GameObject key1;
-    [SerializeField] GameObject key2;
-    [SerializeField] GameObject key3;
+    Text coins;
+    Text diamonds;
+    GameObject key1;
+    GameObject key2;
+    GameObject key3;
+
+    void Awake()
+    {
+        coins = transform.Find("TotalCoins").Find("Text").GetComponent<Text>();
+        diamonds = transform.Find("TotalDiamonds").Find("Text").GetComponent<Text>();
+
+        if (transform.Find("Keys"))
+        {
+            key1 = transform.Find("Keys").Find("Key-1").gameObject;
+            key2 = transform.Find("Keys").Find("Key-2").gameObject;
+            key3 = transform.Find("Keys").Find("Key-3").gameObject;
+        }
+    }
 
     public void SetCoins(int _coins)
     {
         // Setting up the number of coins provided to the function converting it to string
         coins.text = _coins.ToString();
     }
+
+    public void SetDiamonds(int _diamonds)
+    {
+        // Setting up the number of coins provided to the function converting it to string
+        diamonds.text = _diamonds.ToString();
+    }
+
 
     public void SetKeys(int _keys)
     {
