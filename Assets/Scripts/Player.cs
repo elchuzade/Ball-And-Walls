@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
     public int[] unlockedBalls = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     public int currentBallIndex = 0;
     public int coins = 0;
+    public int diamonds = 0;
     public int keys = 0;
     public int nextLevelIndex = 1;
 
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour
         currentBallIndex = 0;
         coins = 0;
         keys = 0;
+        diamonds = 0;
         nextLevelIndex = 1;
         SaveSystem.SavePlayer(this);
     }
@@ -36,6 +38,7 @@ public class Player : MonoBehaviour
         currentBallIndex = data.currentBallIndex;
         coins = data.coins;
         keys = data.keys;
+        diamonds = data.diamonds;
         nextLevelIndex = data.nextLevelIndex;
     }
 }
