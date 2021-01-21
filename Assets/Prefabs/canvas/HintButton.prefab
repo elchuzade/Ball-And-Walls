@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 3003342057807705599}
   - component: {fileID: 5199553906988299046}
   - component: {fileID: 1808249998678421614}
-  - component: {fileID: 2162137384342846501}
+  - component: {fileID: 6590224219810073465}
   m_Layer: 5
   m_Name: HintButton
   m_TagString: Untagged
@@ -167,7 +167,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: UseHint
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -208,7 +208,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2162137384342846501
+--- !u!114 &6590224219810073465
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -217,9 +217,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3003342057807705569}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e2bbe40bf3e24c35a0c20f003f2d11a, type: 3}
+  m_Script: {fileID: 11500000, guid: 316e1e04a7a3249888eea2f2ebe7f980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
 --- !u!1 &3790955224049027333
 GameObject:
   m_ObjectHideFlags: 0

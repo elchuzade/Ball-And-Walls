@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 using System;
 
@@ -92,6 +93,7 @@ public class ChallengeStatus : MonoBehaviour
         wallsParent = GameObject.Find("Walls");
         coinsParent = GameObject.Find("Coins");
         portalsParent = GameObject.Find("Portals");
+
     }
 
     void Start()
@@ -245,95 +247,107 @@ public class ChallengeStatus : MonoBehaviour
 
     private void PopulateWallsData(string[] wallsJson)
     {
-        // Populating walls for each wallJson inside walls json
-        for (int i = 0; i < wallsJson.Length; i++)
+        if (wallsJson != null)
         {
-            // Parsing walls json into walls class object
-            ChallengeWall wallInfo = JsonUtility.FromJson<ChallengeWall>(wallsJson[i]);
+            // Populating walls for each wallJson inside walls json
+            for (int i = 0; i < wallsJson.Length; i++)
+            {
+                // Parsing walls json into walls class object
+                ChallengeWall wallInfo = JsonUtility.FromJson<ChallengeWall>(wallsJson[i]);
 
-            // Creating tuple that a game level would understand
-            // Changing color string position string and rotation string to Color32 and Vector3
-            (string type, Color32 color, Vector3 position, Vector3 rotation) wallObject =
-                (wallInfo.type, JsonStringToColor32(wallInfo.color), JsonStringToVector3(wallInfo.position), JsonStringToVector3(wallInfo.rotation));
+                // Creating tuple that a game level would understand
+                // Changing color string position string and rotation string to Color32 and Vector3
+                (string type, Color32 color, Vector3 position, Vector3 rotation) wallObject =
+                    (wallInfo.type, JsonStringToColor32(wallInfo.color), JsonStringToVector3(wallInfo.position), JsonStringToVector3(wallInfo.rotation));
 
-            // Adding newly parsed and foramtter wall to the walls list to draw on the map
-            walls.Add(wallObject);
+                // Adding newly parsed and foramtter wall to the walls list to draw on the map
+                walls.Add(wallObject);
+            }
+
+            DrawWalls();
         }
-
-        DrawWalls();
     }
 
     private void PopulateBarriersData(string[] barriersJson)
     {
-        // Populating barriers for each barrierJson inside walls json
-        for (int i = 0; i < barriersJson.Length; i++)
+        if (barriersJson != null)
         {
-            // Parsing barriers json into barriers class object
-            ChallengeBarrier barriersInfo = JsonUtility.FromJson<ChallengeBarrier>(barriersJson[i]);
+            // Populating barriers for each barrierJson inside walls json
+            for (int i = 0; i < barriersJson.Length; i++)
+            {
+                // Parsing barriers json into barriers class object
+                ChallengeBarrier barriersInfo = JsonUtility.FromJson<ChallengeBarrier>(barriersJson[i]);
 
-            // Creating tuple that a game level would understand
-            // Changing color string position string and rotation string to Color32 and Vector3
-            (string type, Color32 color, Vector3 position, Vector3 rotation) barrierObject =
-                (barriersInfo.type, JsonStringToColor32(barriersInfo.color), JsonStringToVector3(barriersInfo.position), JsonStringToVector3(barriersInfo.rotation));
+                // Creating tuple that a game level would understand
+                // Changing color string position string and rotation string to Color32 and Vector3
+                (string type, Color32 color, Vector3 position, Vector3 rotation) barrierObject =
+                    (barriersInfo.type, JsonStringToColor32(barriersInfo.color), JsonStringToVector3(barriersInfo.position), JsonStringToVector3(barriersInfo.rotation));
 
-            // Adding newly parsed and foramtter wall to the walls list to draw on the map
-            barriers.Add(barrierObject);
+                // Adding newly parsed and foramtter wall to the walls list to draw on the map
+                barriers.Add(barrierObject);
+            }
+
+            DrawBarriers();
         }
-
-        DrawBarriers();
     }
 
     private void PopulatePortalsData(string[] portalInsJson, string[] portalOutsJson)
     {
-        // Length of portal ins must be equal to length of portals out, so every portal in has its own portal out
-        // They should also be ordered, so for every index of portal in there is an index of portal out to connect
-        if (portalInsJson.Length == portalOutsJson.Length)
+        if (portalInsJson != null && portalOutsJson != null)
         {
-            for (int i = 0; i < portalInsJson.Length; i++)
+            // Length of portal ins must be equal to length of portals out, so every portal in has its own portal out
+            // They should also be ordered, so for every index of portal in there is an index of portal out to connect
+            if (portalInsJson.Length == portalOutsJson.Length)
             {
-                // Parsing portalIns json into portalIn class object
-                ChallengePortal portalInsInfo = JsonUtility.FromJson<ChallengePortal>(portalInsJson[i]);
+                for (int i = 0; i < portalInsJson.Length; i++)
+                {
+                    // Parsing portalIns json into portalIn class object
+                    ChallengePortal portalInsInfo = JsonUtility.FromJson<ChallengePortal>(portalInsJson[i]);
 
-                // Creating tuple that a game level would understand
-                // Changing position string and rotation string to Vector3
-                (string type, Vector3 position, Vector3 rotation) portalInsObject =
-                    (portalInsInfo.type, JsonStringToVector3(portalInsInfo.position), JsonStringToVector3(portalInsInfo.rotation));
-                
-                portalIns.Add(portalInsObject);
+                    // Creating tuple that a game level would understand
+                    // Changing position string and rotation string to Vector3
+                    (string type, Vector3 position, Vector3 rotation) portalInsObject =
+                        (portalInsInfo.type, JsonStringToVector3(portalInsInfo.position), JsonStringToVector3(portalInsInfo.rotation));
+
+                    portalIns.Add(portalInsObject);
+                }
+                for (int i = 0; i < portalOutsJson.Length; i++)
+                {
+                    // Parsing portalOuts json into portalIn class object
+                    ChallengePortal portalOutsInfo = JsonUtility.FromJson<ChallengePortal>(portalOutsJson[i]);
+
+                    // Creating tuple that a game level would understand
+                    // Changing position string and rotation string to Vector3
+                    (string type, Vector3 position, Vector3 rotation) portalOutsObject =
+                        (portalOutsInfo.type, JsonStringToVector3(portalOutsInfo.position), JsonStringToVector3(portalOutsInfo.rotation));
+
+                    portalOuts.Add(portalOutsObject);
+                }
             }
-            for (int i = 0; i < portalOutsJson.Length; i++)
-            {
-                // Parsing portalOuts json into portalIn class object
-                ChallengePortal portalOutsInfo = JsonUtility.FromJson<ChallengePortal>(portalOutsJson[i]);
 
-                // Creating tuple that a game level would understand
-                // Changing position string and rotation string to Vector3
-                (string type, Vector3 position, Vector3 rotation) portalOutsObject =
-                    (portalOutsInfo.type, JsonStringToVector3(portalOutsInfo.position), JsonStringToVector3(portalOutsInfo.rotation));
-
-                portalOuts.Add(portalOutsObject);
-            }
+            DrawPortals();
         }
-
-        DrawPortals();
     }
 
     private void PopulateCoinsData(string[] coinsJson)
     {
-        // Populating barriers for each barrierJson inside walls json
-        for (int i = 0; i < coinsJson.Length; i++)
+        if (coinsJson != null)
         {
-            // Parsing coins json into coins class object
-            ChallengeCoin coinsInfo = JsonUtility.FromJson<ChallengeCoin>(coinsJson[i]);
+            // Populating barriers for each barrierJson inside walls json
+            for (int i = 0; i < coinsJson.Length; i++)
+            {
+                // Parsing coins json into coins class object
+                ChallengeCoin coinsInfo = JsonUtility.FromJson<ChallengeCoin>(coinsJson[i]);
 
-            // Creating tuple that a game level would understand
-            Vector3 coinsObject = JsonStringToVector3(coinsInfo.position);
+                // Creating tuple that a game level would understand
+                Vector3 coinsObject = JsonStringToVector3(coinsInfo.position);
 
-            // Adding newly parsed and foramtter wall to the walls list to draw on the map
-            coins.Add(coinsObject);
+                // Adding newly parsed and foramtter wall to the walls list to draw on the map
+                coins.Add(coinsObject);
+            }
+
+            DrawCoins();
         }
-
-        DrawCoins();
     }
 
     private (GameObject, GameObject) GetPortalPrefabFromType(string type)

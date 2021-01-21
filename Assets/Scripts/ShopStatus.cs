@@ -4,7 +4,7 @@ using System.Collections;
 
 public class ShopStatus : MonoBehaviour
 {
-    [SerializeField] Player player;
+    Player player;
     Scoreboard scoreboard;
     // Current ball to be selected based on player data
     int currentBallIndex;
@@ -30,6 +30,8 @@ public class ShopStatus : MonoBehaviour
 
     void Awake()
     {
+        player = FindObjectOfType<Player>();
+
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
 
@@ -54,6 +56,8 @@ public class ShopStatus : MonoBehaviour
 
         // Set current player coins to the scoreboard
         scoreboard.SetCoins(player.coins);
+        // Set current player diamonds to the scoreboard
+        scoreboard.SetCoins(player.diamonds);
 
         // Set ad stuff back to normal as they are shrinked in x axis for visibility by default
         adCancelBg.transform.localScale = new Vector3(1, 1, 1);

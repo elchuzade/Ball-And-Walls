@@ -5,13 +5,14 @@ using System.Collections;
 
 public class ChestStatus : MonoBehaviour
 {
+    Player player;
     [SerializeField] GameObject key1;
     [SerializeField] GameObject key2;
     [SerializeField] GameObject key3;
     [SerializeField] GameObject adsButton;
     [SerializeField] GameObject passPhrase;
-    [SerializeField] Scoreboard scoreboard;    
-    [SerializeField] Player player;
+    Scoreboard scoreboard;    
+    
     [SerializeField] GameObject[] bestPrizesPrefabs;
     [SerializeField] Transform bestPrize;
 
@@ -55,6 +56,9 @@ public class ChestStatus : MonoBehaviour
 
     void Awake()
     {
+        player = FindObjectOfType<Player>();
+        scoreboard = FindObjectOfType<Scoreboard>();
+
         key1animator = key1.GetComponent<Animator>();
         key2animator = key2.GetComponent<Animator>();
         key3animator = key3.GetComponent<Animator>();
@@ -86,6 +90,7 @@ public class ChestStatus : MonoBehaviour
 
         player.LoadPlayer();
         scoreboard.SetCoins(player.coins);
+        scoreboard.SetDiamonds(player.diamonds);
         DrawKeys();
         AdManager.ShowBanner();
 

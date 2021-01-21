@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class HomeStatus : MonoBehaviour
 {
-    [SerializeField] Player player;
+    Player player;
     // This is to indicate that the wall on this level should be shuffled
     [SerializeField] bool shuffle = true;
 
@@ -60,6 +60,7 @@ public class HomeStatus : MonoBehaviour
 
     void Awake()
     {
+        player = FindObjectOfType<Player>();
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
         hintButton = GameObject.Find("HintButton");

@@ -9,6 +9,11 @@ public class Player : MonoBehaviour
     public int keys = 0;
     public int nextLevelIndex = 1;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void SavePlayer()
     {
         SaveSystem.SavePlayer(this);
