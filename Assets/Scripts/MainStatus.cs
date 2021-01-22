@@ -180,6 +180,6 @@ public class MainStatus : MonoBehaviour
         // Wait for given time and load the leaderboard scene
         yield return new WaitForSeconds(time);
 
-        navigator.LoadChallengeScene();
+        navigator.LoadLeaderboardScene();
     }
 }

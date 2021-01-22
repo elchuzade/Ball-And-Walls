@@ -1261,7 +1261,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a8a5c8ca9fc94e6aac480b047836956, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 4400931109895508982, guid: a94919507c5ad496a947cbed4bcde4f8, type: 3}
   shuffle: 1
   walls: {fileID: 1522686290}
   balls:

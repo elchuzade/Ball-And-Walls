@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine;
-using UnityEngine.iOS;
 
 public class LeaderboardStatus : MonoBehaviour
 {
@@ -26,8 +24,6 @@ public class LeaderboardStatus : MonoBehaviour
     private GameObject leaderboardScrollContent;
 
     private GameObject leaderboardScrollbar;
-
-    private TouchScreenKeyboard keyboard;
 
     // To send player data to server
     private class PlayerJson
