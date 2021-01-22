@@ -7,23 +7,49 @@ using UnityEngine.UI;
 
 public class LeaderboardStatus : MonoBehaviour
 {
+    Player player;
+    Navigator navigator;
+
+    // This one should be based on indexes
+    [SerializeField] Sprite[] ballSprites;
+    // Single line of leadersboard
     [SerializeField] GameObject leaderboardItemPrefab;
-    [SerializeField] Player player;
-    [SerializeField] Sprite goldCrown;
-    [SerializeField] Sprite silverCrown;
-    [SerializeField] Sprite bronzeCrown;
 
-    private GameObject goldName;
-    private GameObject silverName;
-    private GameObject bronzeName;
+    GameObject goldName;
+    GameObject silverName;
+    GameObject bronzeName;
 
-    private Navigator navigator;
+    GameObject goldBall;
+    GameObject silverBall;
+    GameObject bronzeBall;
 
-    private TriggerAnimation exitButtonScript;
+    // This is for saving the name before it has been changed, so receive diamonds
+    GameObject changeNameGetDiamondsButton;
+    // This is for saving the name after it has been changed
+    GameObject changeNameSaveButton;
+    // This is for closing the change name window by tapping anywhere outside
+    GameObject changeNameCloseButton;
+    // This is the window
+    GameObject changeName;
+    // Close the leaderboard window
+    GameObject exitButton;
+    GameObject changeNameCanvasButton;
+    
+    GameObject leaderboardScrollContent;
 
-    private GameObject leaderboardScrollContent;
+    GameObject leaderboardScrollbar;
 
-    private GameObject leaderboardScrollbar;
+    // To point at change name button
+    GameObject arrow;
+
+    // The object where the name typed into the field is held
+    GameObject inputField;
+
+    // This is to see if the diamonds should be given, fetch this from server
+    bool nameIsChanged;
+
+    // Name of the player to change when typing, this will be changed to name if the server sends name changed bool true
+    string playerName;
 
     // To send player data to server
     private class PlayerJson
@@ -32,54 +58,99 @@ public class LeaderboardStatus : MonoBehaviour
         public PlayerData playerData;
     }
 
-    private (string name, int rank)[] topMock = {
-        ("Player-100001", 1),
-        ("Player-100002", 2),
-        ("Player-100003", 3),
-        ("Player-100004", 4),
-        ("Player-100005", 5),
-        ("Player-100006", 6),
-        ("Player-100007", 7),
-        ("Player-100008", 8),
-        ("Player-100009", 9),
-        ("Player-100010", 10)
+    private (string name, int rank, int ballIndex)[] topMock = {
+        ("Player-100001", 1, 3),
+        ("Player-100002", 2, 1),
+        ("Player-100003", 3, 6),
+        ("Player-100004", 4, 4),
+        ("Player-100005", 5, 3),
+        ("Player-100006", 6, 7),
+        ("Player-100007", 7, 25),
+        ("Player-100008", 8, 23),
+        ("Player-100009", 9, 31),
+        ("Player-100010", 10, 19)
     };
 
-    private (string name, int rank)[] beforeMock = {
-        ("Player-100188", 188),
-        ("Player-100189", 189),
-        ("Player-100190", 190)
+    private (string name, int rank, int ballIndex)[] beforeMock = {
+        ("Player-100188", 188, 30),
+        ("Player-100189", 189, 34),
+        ("Player-100190", 190, 15)
     };
 
-    private (string name, int rank)[] afterMock = {
-        ("Player-100192", 192),
-        ("Player-100193", 193),
-        ("Player-100194", 194)
+    private (string name, int rank, int ballIndex)[] afterMock = {
+        ("Player-100192", 192, 21),
+        ("Player-100193", 193, 22),
+        ("Player-100194", 194, 29)
     };
 
-    private (string name, int rank) youMock = ("Kamran", 191);
+    private (string name, int rank, int ballIndex) youMock = ("Kamran", 191, 33);
 
-    private List<(string name, int rank)> before = new List<(string name, int rank)>();
-    private List<(string name, int rank)> after = new List<(string name, int rank)>();
-    private List<(string name, int rank)> top = new List<(string name, int rank)>();
-    private (string name, int rank) you;
+    private List<(string name, int rank, int ballIndex)> before = new List<(string name, int rank, int ballIndex)>();
+    private List<(string name, int rank, int ballIndex)> after = new List<(string name, int rank, int ballIndex)>();
+    private List<(string name, int rank, int ballIndex)> top = new List<(string name, int rank, int ballIndex)>();
+    private (string name, int rank, int ballIndex) you;
 
     void Awake()
     {
+        player = FindObjectOfType<Player>();
+        navigator = FindObjectOfType<Navigator>();
+
+        arrow = GameObject.Find("Arrow");
+        inputField = GameObject.Find("InputField");
+        goldBall = GameObject.Find("GoldBall");
+        silverBall = GameObject.Find("SilverBall");
+        bronzeBall = GameObject.Find("BronzeBall");
+
+        changeNameGetDiamondsButton = GameObject.Find("GetDiamondsButton");
+        changeNameSaveButton = GameObject.Find("SaveButton");
+
+        changeName = GameObject.Find("ChangeName");
+        changeNameCloseButton = GameObject.Find("CloseButton");
         leaderboardScrollContent = GameObject.Find("LeaderboardScrollContent");
         leaderboardScrollbar = GameObject.Find("LeaderboardScrollbar");
-        navigator = FindObjectOfType<Navigator>();
         goldName = GameObject.Find("GoldName");
         silverName = GameObject.Find("SilverName");
         bronzeName = GameObject.Find("BronzeName");
-        GameObject exitButtonObject = GameObject.Find("ExitButton");
-        exitButtonScript = exitButtonObject.GetComponent<TriggerAnimation>();
+        exitButton = GameObject.Find("ExitButton");
+        changeNameCanvasButton = GameObject.Find("EditButton");
     }
 
     void Start()
     {
+        // Hide point arrow until server has replied
+        arrow.SetActive(false);
+
+        // Fetch data from server and choose the button to show
+        if (nameIsChanged)
+        {
+            // The name sent from the server
+            playerName = "BlaBla";
+            changeNameGetDiamondsButton.SetActive(false);
+        } else
+        {
+            arrow.SetActive(true);
+            changeNameSaveButton.SetActive(false);
+        }
+        var input = inputField.GetComponent<InputField>();
+        input.onEndEdit.AddListener(SubmitName);  // This also works
+
+        // Widen name input field and hide it
+        changeName.transform.localScale = new Vector3(1, 1, 1);
+        changeName.SetActive(false);
+
+        SetButtonFunctions();
+
         PopulateMockData();
         BuildUpList();
+    }
+
+    private void SetButtonFunctions()
+    {
+        // Set edit button function and close edit window button
+        changeNameCanvasButton.GetComponent<Button>().onClick.AddListener(() => ClickChangeNameButton());
+        changeNameCloseButton.GetComponent<Button>().onClick.AddListener(() => CloseChangeName());
+        changeNameSaveButton.GetComponent<Button>().onClick.AddListener(() => ClickSaveName());
+        changeNameGetDiamondsButton.GetComponent<Button>().onClick.AddListener(() => ClickGetDiamonds());
     }
 
     private void ScrollListToPlayer()
@@ -197,41 +268,31 @@ public class LeaderboardStatus : MonoBehaviour
                     ShowYourEntryFrame(leaderboardItem);
                 }
 
-                // If the rank is in top 3, hide rank component and show icon component
-                if (item.rank < 4)
-                {
-                    leaderboardItem.transform.Find("Icon").gameObject.SetActive(true);
-                    leaderboardItem.transform.Find("Rank").gameObject.SetActive(false);
-                }
-                // Set icon for crown component based on the rank
-                if (item.rank == 1)
-                {
-                    // Show golden crown
-                    leaderboardItem.transform.Find("Icon").GetComponent<Image>().sprite = goldCrown;
-                    // Zoom in the golden crown
-                    leaderboardItem.transform.Find("Icon").localScale = new Vector3(1.2f, 1.2f, 1.2f);
-                    // Set Rank 1 player on the podium
-                    goldName.GetComponent<TextMeshProUGUI>().text = item.name;
-                } else if (item.rank == 2)
-                {
-                    // Show silver crown
-                    leaderboardItem.transform.Find("Icon").GetComponent<Image>().sprite = silverCrown;
-                    // Set Rank 2 player on the podium
-                    silverName.GetComponent<TextMeshProUGUI>().text = item.name;
-                } else if (item.rank == 3)
-                {
-                    // Show bronze crown
-                    leaderboardItem.transform.Find("Icon").GetComponent<Image>().sprite = bronzeCrown;
-                    // Zoom out the bronze crown
-                    leaderboardItem.transform.Find("Icon").localScale = new Vector3(0.8f, 0.8f, 0.8f);
-                    // Set Rank 3 player on the podium
-                    bronzeName.GetComponent<TextMeshProUGUI>().text = item.name;
-                }
-
                 // Set its name component text mesh pro value to name from top list
                 leaderboardItem.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.name;
                 // Set its rank component text mesh pro value to rank from top list converted to string
                 leaderboardItem.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = item.rank.ToString();
+                // Set its ball icon based on data from server and indexes of balls
+                leaderboardItem.transform.Find("Ball").GetComponent<Image>().sprite = ballSprites[item.ballIndex];
+            } else
+            {
+                if (item.rank == 1)
+                {
+                    // Set golden podium
+                    goldName.GetComponent<TextMeshProUGUI>().text = item.name;
+                    goldBall.GetComponent<Image>().sprite = ballSprites[item.ballIndex];
+                }
+                else if (item.rank == 2)
+                {
+                    // Set silver podium
+                    silverName.GetComponent<TextMeshProUGUI>().text = item.name;
+                    silverBall.GetComponent<Image>().sprite = ballSprites[item.ballIndex];
+                } else
+                {
+                    // Set bronze podium
+                    bronzeName.GetComponent<TextMeshProUGUI>().text = item.name;
+                    bronzeBall.GetComponent<Image>().sprite = ballSprites[item.ballIndex];
+                }
             }
         });
 
@@ -248,10 +309,7 @@ public class LeaderboardStatus : MonoBehaviour
             GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
             // Set its parent to be scroll content, for scroll functionality to work properly
             leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
-            // Set its name component text mesh pro value to name from top list
-            leaderboardItem.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.name;
-            // Set its rank component text mesh pro value to rank from top list converted to string
-            leaderboardItem.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = item.rank.ToString();
+            SetItemEntry(leaderboardItem, item);
         });
 
         // Create your entry item only if your rank is not in top ten
@@ -267,10 +325,7 @@ public class LeaderboardStatus : MonoBehaviour
             GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
             // Set its parent to be scroll content, for scroll functionality to work properly
             leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
-            // Set its name component text mesh pro value to name from top list
-            leaderboardItem.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.name;
-            // Set its rank component text mesh pro value to rank from top list converted to string
-            leaderboardItem.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = item.rank.ToString();
+            SetItemEntry(leaderboardItem, item);
         });
 
         CreateTrippleDotsEntry();
@@ -289,6 +344,8 @@ public class LeaderboardStatus : MonoBehaviour
         leaderboardItem.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = "...";
         // Set its rank component text mesh pro value to ...
         leaderboardItem.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = "...";
+        // Set its ball icon based on data from server and indexes of balls
+        leaderboardItem.transform.Find("Ball").gameObject.SetActive(false);
     }
 
     private void CreateYourEntry()
@@ -299,18 +356,23 @@ public class LeaderboardStatus : MonoBehaviour
         leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
         // Show frame around your entry
         ShowYourEntryFrame(leaderboardItem);
+        SetItemEntry(leaderboardItem, you);
+    }
+
+    private void SetItemEntry(GameObject item, (string name, int rank, int ballIndex) value)
+    {
         // Set its name component text mesh pro value to your name
-        leaderboardItem.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = you.name;
+        item.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = value.name;
         // Set its rank component text mesh pro value to your rank
-        leaderboardItem.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = you.rank.ToString();
+        item.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = value.rank.ToString();
+        // Set its ball icon based on data from server and indexes of balls
+        item.transform.Find("Ball").GetComponent<Image>().sprite = ballSprites[value.ballIndex];
     }
 
     private void ShowYourEntryFrame(GameObject item)
     {
         // Show leaderboard frame for your entry
         item.transform.Find("Frame").gameObject.SetActive(true);
-        // Show edit button for changing name
-        item.transform.Find("Edit").gameObject.SetActive(true);
     }
 
     // Loop through the list of players ranked after you and see if iven data exists
@@ -326,33 +388,79 @@ public class LeaderboardStatus : MonoBehaviour
         return false;
     }
 
-    // TEST UNITY INPUT FIELD
-
-    // Typed in something
-    public void OnValueChange ()
+    // Take text inside input field
+    private void SubmitName(string value)
     {
-        Debug.Log("typed");
-    }
-
-    // Touched the input field
-    public void OnSelect()
-    {
-        Debug.Log("touched");
+        // Take the text and pass it to the post request
+        Debug.Log(value);
     }
 
     // Close Leadersboard Scene
     public void ClickExitButton()
     {
-        // Trigge rthe click animation on exit button of the chest room top left
-        exitButtonScript.Trigger();
-        StartCoroutine(LoadCloseLeadersboard(0.2f));
+        if (exitButton.GetComponent<Button>().IsInteractable())
+        {
+            // Trigge rthe click animation on exit button of the chest room top left
+            exitButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            StartCoroutine(LoadCloseLeadersboardCoroutine(0.2f));
+        }
     }
 
-    public IEnumerator LoadCloseLeadersboard(float time)
+    // Close Leadersboard Scene
+    public void ClickChangeNameButton()
+    {
+        if (changeNameCanvasButton.GetComponent<Button>().IsInteractable())
+        {
+            // Trigge rthe click animation on exit button of the chest room top left
+            changeNameCanvasButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            StartCoroutine(LoadChangeNameCoroutine(0.2f));
+        }
+    }
+
+    public IEnumerator LoadChangeNameCoroutine(float time)
+    {
+        yield return new WaitForSeconds(time);
+        changeName.SetActive(!changeName.activeSelf);
+    }
+
+    public IEnumerator LoadCloseLeadersboardCoroutine(float time)
     {
         yield return new WaitForSeconds(time);
 
         navigator.LoadMainScene();
+    }
+
+    public void ClickSaveName()
+    {
+        // When name is changed and save button is shown
+        if (changeNameSaveButton.GetComponent<Button>().IsInteractable())
+        {
+            changeNameSaveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            StartCoroutine(LoadSaveNameCoroutine(0.2f));
+        }
+    }
+
+    public void ClickGetDiamonds()
+    {
+        if (changeNameGetDiamondsButton.GetComponent<Button>().IsInteractable())
+        {
+            changeNameGetDiamondsButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            StartCoroutine(LoadGetDiamondsCoroutine(0.2f));
+        }
+    }
+
+    public IEnumerator LoadSaveNameCoroutine(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        SaveName();
+    }
+
+    public IEnumerator LoadGetDiamondsCoroutine(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        GetDiamonds();
     }
 
     public void SendData()
@@ -370,6 +478,24 @@ public class LeaderboardStatus : MonoBehaviour
         string json = JsonUtility.ToJson(playerJson);
 
         StartCoroutine(PostRequestCoroutine(url, json));
+    }
+
+    // This is for invisible button that covers the rest of the screen when modal is open
+    public void CloseChangeName()
+    {
+        changeName.SetActive(false);
+    }
+
+    // Save name and get 3 diamonds
+    public void SaveName()
+    {
+        Debug.Log("Save Name");
+    }
+
+    // Save name and get 3 diamonds
+    public void GetDiamonds()
+    {
+        Debug.Log("Get Diamonds");
     }
 
     private IEnumerator PostRequestCoroutine(string url, string json)
