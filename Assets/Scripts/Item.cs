@@ -5,22 +5,29 @@ using MoreMountains.NiceVibrations;
 // Item in the shop
 public class Item : MonoBehaviour
 {
-    private ShopStatus shopStatus;
+    ShopStatus shopStatus;
     // Text field under the item icon
     [SerializeField] Text price;
     // Item name from sprite
     string ballName;
-    // Actual price of an item to be charged
+    // Actual coins price of an item to be charged
     [SerializeField] int priceTag;
+    // Actual diamonds price of an item to be charged
+    [SerializeField] int diamondTag;
     // Frame around an item that shows when an item is selected
     [SerializeField] GameObject SelectedFrame;
     // Frame around an icon that shows when item is locked
     [SerializeField] GameObject LockedFrame;
+    // Coin and Diamon icons
+    GameObject coin;
+    GameObject diamond;
 
     void Awake()
     {
         // This finds a script of ShopStatus, can be used if there is only one item that holds this script
         shopStatus = FindObjectOfType<ShopStatus>();
+        coin = transform.Find("LockedFrame").Find("Coin").gameObject;
+        diamond = transform.Find("LockedFrame").Find("Diamond").gameObject;
     }
 
     void Start()
@@ -43,18 +50,26 @@ public class Item : MonoBehaviour
         }
         // Set price of an item. Siince price text is a child of a locked frame object,
         // it is not visible when item is unlocked
-        price.text = priceTag.ToString();
+        if (diamondTag > 0)
+        {
+            price.text = diamondTag.ToString();
+            coin.SetActive(false);
+        } else
+        {
+            price.text = priceTag.ToString();
+            diamond.SetActive(false);
+        }
+        CheckSelectFrame();
     }
 
-    void Update()
+    public void CheckSelectFrame()
     {
-        // TODO: come up with a better method of shopping in other games, update this one too
-        // For each item check if the item has been selected at this frame
         if (shopStatus.CheckSelectStatus(ballName))
         {
             // Show selected frame
             SelectedFrame.SetActive(true);
-        } else
+        }
+        else
         {
             // Hide selected frame
             SelectedFrame.SetActive(false);
@@ -63,13 +78,26 @@ public class Item : MonoBehaviour
 
     public void UnlockItem()
     {
-        // Try to unlock the item in player data based on its index and price
-        if (shopStatus.UnlockItem(ballName, priceTag))
+        if (diamondTag > 0)
         {
-            // If player had enough money then remove the unlock frame
-            LockedFrame.SetActive(false);
-            // Show selected frame on this item
-            SelectItem();
+            // Try to unlock the item in player data based on its index and price
+            if (shopStatus.UnlockDiamondItem(ballName, diamondTag))
+            {
+                // If player had enough money then remove the unlock frame
+                LockedFrame.SetActive(false);
+                // Show selected frame on this item
+                SelectItem();
+            }
+        } else
+        {
+            // Try to unlock the item in player data based on its index and price
+            if (shopStatus.UnlockItem(ballName, priceTag))
+            {
+                // If player had enough money then remove the unlock frame
+                LockedFrame.SetActive(false);
+                // Show selected frame on this item
+                SelectItem();
+            }
         }
     }
 

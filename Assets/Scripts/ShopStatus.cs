@@ -26,7 +26,10 @@ public class ShopStatus : MonoBehaviour
     GameObject adCancelWarning;
 
     // Track if ad cancel warning has already been shown, not to annoy each time showing the same window
-    private bool showedAdCancelWarning = false;
+    bool showedAdCancelWarning = false;
+
+    // All itemsa are held here
+    GameObject items;
 
     void Awake()
     {
@@ -45,21 +48,23 @@ public class ShopStatus : MonoBehaviour
         adCancelWarning = GameObject.Find("ShopAdCancelWarning");
         adWarningReceiveButton = GameObject.Find("AdWarningReceiveButton");
         adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
+
+        items = GameObject.Find("Items");
+
+        player.LoadPlayer();
+
+        // Set currently selected ball with their frames and backgrounds
+        currentBallName = player.currentBallName;
     }
 
     void Start()
     {
-        player.LoadPlayer();
-
         AdManager.ShowBanner();
-
-        // Set currently selected ball with their frames and backgrounds
-        currentBallName = player.currentBallName;
 
         // Set current player coins to the scoreboard
         scoreboard.SetCoins(player.coins);
         // Set current player diamonds to the scoreboard
-        scoreboard.SetCoins(player.diamonds);
+        scoreboard.SetDiamonds(player.diamonds);
 
         // Set ad stuff back to normal as they are shrinked in x axis for visibility by default
         adCancelBg.transform.localScale = new Vector3(1, 1, 1);
@@ -100,6 +105,12 @@ public class ShopStatus : MonoBehaviour
             currentBallName = ballName;
             player.currentBallName = currentBallName;
             player.SavePlayer();
+
+            // Remove the select frame from previous item and place in new item
+            for (int i = 0; i < items.transform.childCount; i++)
+            {
+                items.transform.GetChild(i).GetComponent<Item>().CheckSelectFrame();
+            }
             return true;
         }
 
@@ -113,6 +124,31 @@ public class ShopStatus : MonoBehaviour
         {
             // Change player coins for ball price
             player.coins -= priceTag;
+            // Set this ball index as unlocked in player data
+            player.unlockedBalls.Add(ballName);
+            player.SavePlayer();
+            // Load player again to access its data
+            player.LoadPlayer();
+            // Update coins in scoreboard based on new status of player coins
+            scoreboard.SetCoins(player.coins);
+
+            // Remove the select frame from previous item and place in new item
+            for (int i = 0; i < items.transform.childCount; i++)
+            {
+                items.transform.GetChild(i).GetComponent<Item>().CheckSelectFrame();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public bool UnlockDiamondItem(string ballName, int diamondTag)
+    {
+        // Check if ball is locked and player has enough coins to unlock it return true
+        if (!player.unlockedBalls.Contains(ballName) && player.diamonds >= diamondTag)
+        {
+            // Change player coins for ball price
+            player.diamonds -= diamondTag;
             // Set this ball index as unlocked in player data
             player.unlockedBalls.Add(ballName);
             player.SavePlayer();

@@ -9,12 +9,15 @@ public class ChestStatus : MonoBehaviour
         { "abbox", "atom", "basketball", "beach", "bomb",
         "bowling", "burger", "button", "candy", "coin", "cookie",
         "darts", "default", "disco", "donut", "eye", "flower",
-        "football", "gear", "hypnose", "inyan", "meteor", "pokemon",
+        "football", "gear", "hypnose", "yinyang", "meteor", "pokemon",
         "pool", "pumpkin", "radiation", "saturn", "smile", "snowball",
         "sun", "tennis", "virus", "volleyball", "watermelon", "wheel" };
 
     public List<string> allBestPrizeBalls = new List<string>()
-        { "basketball", "beach", "bomb", "bowling", "burger", "button", "candy", "coin", "cookie", "darts", "default", "donut", "flower", "football", "gear", "inyan", "pokemon", "pool", "pumpkin", "saturn", "smile", "snowball", "tennis", "virus", "volleyball", "watermelon", "wheel" };
+        { "basketball", "beach", "bomb", "bowling", "burger", "button",
+        "coin", "cookie", "darts", "default", "donut", "flower",
+        "football", "gear", "yinyang", "pokemon", "pool", "pumpkin",
+        "saturn", "smile", "snowball", "tennis", "volleyball", "watermelon" };
 
     Player player;
     [SerializeField] GameObject key1;

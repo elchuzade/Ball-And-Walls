@@ -35,9 +35,9 @@ public class Player : MonoBehaviour
     {
         unlockedBalls = new List<string>() { "default" };
         currentBallName = "default";
-        coins = 0;
+        coins = 56789;
         keys = 0;
-        diamonds = 0;
+        diamonds = 987;
         nextLevelIndex = 1;
         SaveSystem.SavePlayer(this);
     }

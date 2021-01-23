@@ -60,8 +60,8 @@ public class BallCatcher : MonoBehaviour
 
     void Start()
     {
-        // Assing random number to amount of coins to drop from 5 to 10
-        dropCoinsAmount = Random.Range(5, 11); 
+        // Assing random number to amount of coins to drop from 7 to 13
+        dropCoinsAmount = Random.Range(7, 14); 
     }
 
     void FixedUpdate()
