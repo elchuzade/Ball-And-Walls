@@ -4,10 +4,11 @@ using UnityEngine;
 public class LoadStatus : MonoBehaviour
 {
     Navigator navigator;
-    [SerializeField] Player player;
+    Player player;
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
         navigator = FindObjectOfType<Navigator>();
         player.LoadPlayer();
         StartCoroutine(LoadGame());

@@ -103,8 +103,8 @@ public class LeaderboardStatus : MonoBehaviour
 
         changeNameGetDiamondsButton = GameObject.Find("GetDiamondsButton");
         changeNameSaveButton = GameObject.Find("SaveButton");
-
         changeName = GameObject.Find("ChangeName");
+        // Invisible button behind change name window
         changeNameCloseButton = GameObject.Find("CloseButton");
         leaderboardScrollContent = GameObject.Find("LeaderboardScrollContent");
         leaderboardScrollbar = GameObject.Find("LeaderboardScrollbar");
@@ -151,6 +151,8 @@ public class LeaderboardStatus : MonoBehaviour
         changeNameCloseButton.GetComponent<Button>().onClick.AddListener(() => CloseChangeName());
         changeNameSaveButton.GetComponent<Button>().onClick.AddListener(() => ClickSaveName());
         changeNameGetDiamondsButton.GetComponent<Button>().onClick.AddListener(() => ClickGetDiamonds());
+
+        exitButton.GetComponent<Button>().onClick.AddListener(() => ClickExitButton());
     }
 
     private void ScrollListToPlayer()

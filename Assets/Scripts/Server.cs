@@ -12,7 +12,9 @@ public class Server : MonoBehaviour
         public PlayerData playerData;
     }
 
-    [SerializeField] Player player;
+    public static Server instance;
+
+    Player player;
     TV tv;
     GameObject tvLight;
     GameObject tvSwitch;
@@ -22,7 +24,19 @@ public class Server : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        player = FindObjectOfType<Player>();
+
+        // Singleton
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         tv = FindObjectOfType<TV>();
         tvLight = GameObject.Find("Light");
         tvSwitch = GameObject.Find("Switch");
@@ -71,9 +85,9 @@ public class Server : MonoBehaviour
 
         //string url = "https://abboxgames.com/1/v1/save";
 
-        //string url = "http://localhost:5001/1/v1/save";
+        string url = "http://localhost:5001/v1/players";
 
-        string adurl = "http://localhost:5001/1/v1/adlink";
+        //string adurl = "http://localhost:5001/1/v1/adlink";
 
         PlayerJson playerJson = new PlayerJson();
         playerJson.playerId = SystemInfo.deviceUniqueIdentifier;
@@ -81,9 +95,9 @@ public class Server : MonoBehaviour
 
         string json = JsonUtility.ToJson(playerJson);
 
-        //StartCoroutine(PostRequestCoroutine(url, json));
+        StartCoroutine(PostRequestCoroutine(url, json));
 
-        StartCoroutine(GetAdLinkCoroutine(adurl));
+        //StartCoroutine(GetAdLinkCoroutine(adurl));
     }
 
     public IEnumerator PostRequestCoroutine(string url, string json)

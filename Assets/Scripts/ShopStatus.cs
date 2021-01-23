@@ -7,7 +7,7 @@ public class ShopStatus : MonoBehaviour
     Player player;
     Scoreboard scoreboard;
     // Current ball to be selected based on player data
-    int currentBallIndex;
+    string currentBallName;
     Navigator navigator;
     // Amount of coins that player will receive if he watches ad video
     [SerializeField] int adCoinsAmount;
@@ -32,6 +32,8 @@ public class ShopStatus : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
 
+        player.ResetPlayer();
+
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
 
@@ -52,7 +54,7 @@ public class ShopStatus : MonoBehaviour
         AdManager.ShowBanner();
 
         // Set currently selected ball with their frames and backgrounds
-        currentBallIndex = player.currentBallIndex;
+        currentBallName = player.currentBallName;
 
         // Set current player coins to the scoreboard
         scoreboard.SetCoins(player.coins);
@@ -68,10 +70,10 @@ public class ShopStatus : MonoBehaviour
         adCancelWarning.SetActive(false);
     }
 
-    public bool CheckUnlockStatus(int index)
+    public bool CheckUnlockStatus(string ballName)
     {
-        // Check player data for unlocked balls, if ball with given index is unlocked return true
-        if (player.unlockedBalls[index] == 1)
+        // Check player data for unlocked balls, if ball with given name is unlocked return true
+        if (player.unlockedBalls.Contains(ballName))
         {
             return true;
         }
@@ -79,10 +81,10 @@ public class ShopStatus : MonoBehaviour
         return false;
     }
 
-    public bool CheckSelectStatus(int index)
+    public bool CheckSelectStatus(string ballName)
     {
-        // Check player data for selected ball, if ball with given index is selected return true
-        if (currentBallIndex == index)
+        // Check player data for selected ball, if ball with given name is selected return true
+        if (currentBallName == ballName)
         {
             return true;
         }
@@ -90,13 +92,13 @@ public class ShopStatus : MonoBehaviour
         return false;
     }
 
-    public bool SelectItem(int index)
+    public bool SelectItem(string ballName)
     {
         // Check if ball is unlocked, select it and save player data
-        if (player.unlockedBalls[index] == 1)
+        if (player.unlockedBalls.Contains(ballName))
         {
-            currentBallIndex = index;
-            player.currentBallIndex = currentBallIndex;
+            currentBallName = ballName;
+            player.currentBallName = currentBallName;
             player.SavePlayer();
             return true;
         }
@@ -104,15 +106,15 @@ public class ShopStatus : MonoBehaviour
         return false;
     }
 
-    public bool UnlockItem(int index, int priceTag)
+    public bool UnlockItem(string ballName, int priceTag)
     {
         // Check if ball is locked and player has enough coins to unlock it return true
-        if (player.unlockedBalls[index] == 0 && player.coins >= priceTag)
+        if (!player.unlockedBalls.Contains(ballName) && player.coins >= priceTag)
         {
             // Change player coins for ball price
             player.coins -= priceTag;
             // Set this ball index as unlocked in player data
-            player.unlockedBalls[index] = 1;
+            player.unlockedBalls.Add(ballName);
             player.SavePlayer();
             // Load player again to access its data
             player.LoadPlayer();

@@ -13,12 +13,14 @@ public class MainStatus : MonoBehaviour
     GameObject shopButton;
 
 
-    [SerializeField] Player player;
+    Player player;
     Navigator navigator;
 
     void Awake()
     {
+        player = FindObjectOfType<Player>();
         navigator = FindObjectOfType<Navigator>();
+
         hapticsButton = GameObject.Find("HapticsButton");
         soundsButton = GameObject.Find("SoundsButton");
         challengeButton = GameObject.Find("ChallengeButton");
@@ -139,9 +141,9 @@ public class MainStatus : MonoBehaviour
         }
     }
 
-    // If shop button is interactable, run the click animation and load the shop scene
     public void ClickShopButton()
     {
+        // If shop button is interactable, run the click animation and load the shop scene
         if (shopButton.GetComponent<Button>().IsInteractable())
         {
             // Disable button for the period of click animation, then enable again

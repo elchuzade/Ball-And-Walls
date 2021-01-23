@@ -5,6 +5,17 @@ using System.Collections;
 
 public class ChestStatus : MonoBehaviour
 {
+    public List<string> allBalls = new List<string>()
+        { "abbox", "atom", "basketball", "beach", "bomb",
+        "bowling", "burger", "button", "candy", "coin", "cookie",
+        "darts", "default", "disco", "donut", "eye", "flower",
+        "football", "gear", "hypnose", "inyan", "meteor", "pokemon",
+        "pool", "pumpkin", "radiation", "saturn", "smile", "snowball",
+        "sun", "tennis", "virus", "volleyball", "watermelon", "wheel" };
+
+    public List<string> allBestPrizeBalls = new List<string>()
+        { "basketball", "beach", "bomb", "bowling", "burger", "button", "candy", "coin", "cookie", "darts", "default", "donut", "flower", "football", "gear", "inyan", "pokemon", "pool", "pumpkin", "saturn", "smile", "snowball", "tennis", "virus", "volleyball", "watermelon", "wheel" };
+
     Player player;
     [SerializeField] GameObject key1;
     [SerializeField] GameObject key2;
@@ -50,9 +61,10 @@ public class ChestStatus : MonoBehaviour
     int totalReward = 0;
 
     // Balls that the player has not unlocked yet
-    List<int> bestPrizes = new List<int>();
-    // Index of the ball from the list of balls the player has not unlocked yet to offer as the best prize
-    int bestPrizeIndex;
+    List<string> bestPrizes = new List<string>();
+
+    // Name of the best prize ball
+    string bestPrizeName;
 
     void Awake()
     {
@@ -156,30 +168,48 @@ public class ChestStatus : MonoBehaviour
 
     private void SetBestPrize()
     {
-        // Loop through all unlocked keys and find the ones that are locked
-        // -3 from Length is implemented in order to remove last three balls from the bestPrize list
-        for (int i = 0; i < player.unlockedBalls.Length - 3; i++)
+        // Check from all possible best prizes for the ones that are not unlocked by the player
+        for (int i = 0; i < allBestPrizeBalls.Count; i++)
         {
-            if (player.unlockedBalls[i] == 0)
+            if (!player.unlockedBalls.Contains(allBestPrizeBalls[i]))
             {
-                bestPrizes.Add(i);
+                bestPrizes.Add(allBestPrizeBalls[i]);
             }
         }
 
         // Get a random number in the range of locked keys and choose the best prize
-        bestPrizeIndex = new System.Random().Next(0, bestPrizes.Count);
-        GameObject bestPrizeObject = Instantiate(
-            bestPrizesPrefabs[bestPrizes[bestPrizeIndex]],
-            bestPrize.position,
-            Quaternion.identity);
+        int bestPrizeIndex = new System.Random().Next(0, bestPrizes.Count);
 
-        // Assign that ball to the best prize object to show above chests
-        bestPrizeObject.transform.parent = bestPrize;
+        bestPrizeName = bestPrizes[bestPrizeIndex];
+
+        for (int i = 0; i < bestPrizesPrefabs.Length; i++)
+        {
+            if (bestPrizesPrefabs[i]
+                .transform.Find("Icon")
+                .GetComponent<SpriteRenderer>().sprite.name == bestPrizeName)
+            {
+                GameObject bestPrizeObject = Instantiate(
+                    bestPrizesPrefabs[i], bestPrize.position, Quaternion.identity);
+
+                // Assign that ball to the best prize object to show above chests
+                bestPrizeObject.transform.parent = bestPrize;
+            }
+        }
+
+
+
     }
 
     public Sprite GetBestPrizeSprite()
     {
-        return bestPrizesPrefabs[bestPrizes[bestPrizeIndex]].GetComponent<SpriteRenderer>().sprite;
+        for (int i = 0; i < bestPrizesPrefabs.Length; i++)
+        {
+            if (bestPrizesPrefabs[i].GetComponent<SpriteRenderer>().sprite.name == bestPrizeName)
+            {
+                return bestPrizesPrefabs[i].GetComponent<SpriteRenderer>().sprite;
+            }
+        }
+        return null;
     }
 
     public void NextLevel()
@@ -191,8 +221,8 @@ public class ChestStatus : MonoBehaviour
 
         if (bestPrizeReceived)
         {
-            player.unlockedBalls[bestPrizes[bestPrizeIndex]] = 1;
-            player.currentBallIndex = bestPrizes[bestPrizeIndex];
+            player.unlockedBalls.Add(bestPrizeName);
+            player.currentBallName = bestPrizeName;
         }
         
         player.SavePlayer();

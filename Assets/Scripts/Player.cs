@@ -1,17 +1,29 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour
 {
-    public int[] unlockedBalls = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    public int currentBallIndex = 0;
+    public List<string> unlockedBalls = new List<string>() { "default" };
+    public string currentBallName = "default";
     public int coins = 0;
     public int diamonds = 0;
     public int keys = 0;
     public int nextLevelIndex = 1;
 
+    public static Player instance;
+
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        // Singleton
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void SavePlayer()
@@ -21,8 +33,8 @@ public class Player : MonoBehaviour
 
     public void ResetPlayer()
     {
-        unlockedBalls = new int[] { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        currentBallIndex = 0;
+        unlockedBalls = new List<string>() { "default" };
+        currentBallName = "default";
         coins = 0;
         keys = 0;
         diamonds = 0;
@@ -40,7 +52,7 @@ public class Player : MonoBehaviour
         }
 
         unlockedBalls = data.unlockedBalls;
-        currentBallIndex = data.currentBallIndex;
+        currentBallName = data.currentBallName;
         coins = data.coins;
         keys = data.keys;
         diamonds = data.diamonds;

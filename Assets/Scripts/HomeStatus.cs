@@ -25,6 +25,9 @@ public class HomeStatus : MonoBehaviour
     bool showedPointer = false;
     int tutorialStep = 0;
 
+    // This should be changed as new balls are being added
+    int totalBallsAmount = 36;
+
     // Background Sprites
     [SerializeField] Sprite table;
     [SerializeField] Sprite space;
@@ -185,10 +188,18 @@ public class HomeStatus : MonoBehaviour
 
     private void SetBallPrefab()
     {
-        // Instantiate a ball from all balls array and player data ball index, set its parent to ballStuff
-        GameObject ballPrefab = Instantiate(balls[player.currentBallIndex], ball.transform.position, ball.transform.rotation);
+        for (int i = 0; i < balls.Length; i++)
+        {
+            // Get sprite name from sprite renderer because it is in the game
+            if (balls[i].GetComponent<SpriteRenderer>().sprite.name == player.currentBallName)
+            {
+                // Instantiate a ball from all balls array and player data ball index, set its parent to ballStuff
+                GameObject ballPrefab = Instantiate(balls[i], ball.transform.position, ball.transform.rotation);
 
-        ballPrefab.transform.SetParent(ball.gameObject.transform);
+                ballPrefab.transform.SetParent(ball.gameObject.transform);
+                break;
+            }
+        }
     }
 
     public void ClickHintButton()
@@ -533,14 +544,10 @@ public class HomeStatus : MonoBehaviour
 
     public bool AllBallsUnlocked()
     {
-        // Loop through all the balls and see if there is any ball to be unlocked
         // This is to decide whether the key should be on the level or not
-        for (int i = 0; i < player.unlockedBalls.Length; i++)
+        if (player.unlockedBalls.Count == totalBallsAmount)
         {
-            if (player.unlockedBalls[i] == 0)
-            {
-                return false;
-            }
+            return false;
         }
 
         return true;
@@ -579,114 +586,50 @@ public class HomeStatus : MonoBehaviour
 
     private void SetBackground()
     {
-        switch (player.currentBallIndex)
+        switch (player.currentBallName)
         {
-            case 0:
-                // Default - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 1:
-                // Bowling - STADIUM
+            case "bowling":
+            case "beach":
+            case "pool":
+            case "tennis":
+            case "volleyball":
+            case "football":
+            case "basketball":
                 SetBallBackground("STADIUM");
                 break;
-            case 2:
-                // Beachball - STADIUM
-                SetBallBackground("STADIUM");
-                break;
-            case 3:
-                // Poolball - STADIUM
-                SetBallBackground("STADIUM");
-                break;
-            case 4:
-                // Tennis - STADIUM
-                SetBallBackground("STADIUM");
-                break;
-            case 5:
-                // Volleyball - STADIUM
-                SetBallBackground("STADIUM");
-                break;
-            case 6:
-                // Footbal - STADIUM
-                SetBallBackground("STADIUM");
-                break;
-            case 7:
-                // Basketball - STADIUM
-                SetBallBackground("STADIUM");
-                break;
-            case 8:
-                // Watermelon - TABLE
+            case "watermelon":
+            case "donut":
+            case "cookie":
+            case "pumpkin":
+            case "candy":
                 SetBallBackground("TABLE");
                 break;
-            case 9:
-                // Smile - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 10:
-                // Pokemon - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 11:
-                // Donut - TABLE
-                SetBallBackground("TABLE");
-                break;
-            case 12:
-                // Darts - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 13:
-                // Cookie - TABLE
-                SetBallBackground("TABLE");
-                break;
-            case 14:
-                // Meteor - SPACE
+            case "sun":
+            case "meteor":
+            case "blackhole":
+            case "saturn":
                 SetBallBackground("SPACE");
                 break;
-            case 15:
-                // Flower - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 16:
-                // Pumpkin - TABLE
-                SetBallBackground("TABLE");
-                break;
-            case 17:
-                // Virus - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 18:
-                // Candy - TABLE
-                SetBallBackground("TABLE");
-                break;
-            case 19:
-                // Hypnose - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 20:
-                // Saturn - SPACE
-                SetBallBackground("SPACE");
-                break;
-            case 21:
-                // Wheel - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 22:
-                // Coin - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 23:
-                // Bomb - DEFAULT
-                SetBallBackground("DEFAULT");
-                break;
-            case 24:
-                // Sun - SPACE
-                SetBallBackground("SPACE");
-                break;
-            case 25:
-                // Blackhole - SPACE
-                SetBallBackground("SPACE");
-                break;
-            case 26:
-                // Atom - DEFAULT
+            case "smile":
+            case "default":
+            case "pokemon":
+            case "flower":
+            case "darts":
+            case "virus":
+            case "hypnose":
+            case "wheel":
+            case "coin":
+            case "bomb":
+            case "atom":
+            case "inyan":
+            case "gear":
+            case "eye":
+            case "disco":
+            case "button":
+            case "burger":
+            case "abbox":
+            case "snowball":
+            case "radiation":
                 SetBallBackground("DEFAULT");
                 break;
         }
