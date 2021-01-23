@@ -35,8 +35,6 @@ public class ShopStatus : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
 
-        player.ResetPlayer();
-
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
 

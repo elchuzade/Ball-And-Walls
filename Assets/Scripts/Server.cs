@@ -95,7 +95,7 @@ public class Server : MonoBehaviour
 
         string json = JsonUtility.ToJson(playerJson);
 
-        StartCoroutine(PostRequestCoroutine(url, json));
+        //StartCoroutine(PostRequestCoroutine(url, json));
 
         //StartCoroutine(GetAdLinkCoroutine(adurl));
     }

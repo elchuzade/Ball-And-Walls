@@ -5,7 +5,7 @@ using System.Collections;
 
 public class ChestStatus : MonoBehaviour
 {
-    public List<string> allBalls = new List<string>()
+    private List<string> allBalls = new List<string>()
         { "abbox", "atom", "basketball", "beach", "bomb",
         "bowling", "burger", "button", "candy", "coin", "cookie",
         "darts", "default", "disco", "donut", "eye", "flower",
@@ -13,11 +13,12 @@ public class ChestStatus : MonoBehaviour
         "pool", "pumpkin", "radiation", "saturn", "smile", "snowball",
         "sun", "tennis", "virus", "volleyball", "watermelon", "wheel" };
 
-    public List<string> allBestPrizeBalls = new List<string>()
+    // Match this with the prefabs given to the BestPrizesPrefabs
+    private List<string> allBestPrizeBalls = new List<string>()
         { "basketball", "beach", "bomb", "bowling", "burger", "button",
-        "coin", "cookie", "darts", "default", "donut", "flower",
-        "football", "gear", "yinyang", "pokemon", "pool", "pumpkin",
-        "saturn", "smile", "snowball", "tennis", "volleyball", "watermelon" };
+        "coin", "cookie", "darts", "donut", "flower", "football",
+        "gear", "yinyang", "pokemon", "pool", "pumpkin", "saturn",
+        "smile", "snowball", "tennis", "volleyball", "watermelon" };
 
     Player player;
     [SerializeField] GameObject key1;
@@ -31,9 +32,9 @@ public class ChestStatus : MonoBehaviour
     [SerializeField] Transform bestPrize;
 
     // Zoom animations on keys
-    private Animator key1animator;
-    private Animator key2animator;
-    private Animator key3animator;
+    Animator key1animator;
+    Animator key2animator;
+    Animator key3animator;
 
     // This is needed because we are mixing canvas and world game object
     float cameraHeightFactor = 1.44f;
@@ -88,6 +89,8 @@ public class ChestStatus : MonoBehaviour
         adCancelWarning = GameObject.Find("ChestAdCancelWarning");
         adWarningReceiveButton = GameObject.Find("AdWarningReceiveButton");
         adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
+
+        player.ResetPlayer();
     }
 
     void Start()
@@ -181,21 +184,19 @@ public class ChestStatus : MonoBehaviour
         }
 
         // Get a random number in the range of locked keys and choose the best prize
-        int bestPrizeIndex = new System.Random().Next(0, bestPrizes.Count);
+        int bestPrizeIndex = new System.Random().Next(0, allBestPrizeBalls.Count);
 
         bestPrizeName = bestPrizes[bestPrizeIndex];
 
-        for (int i = 0; i < bestPrizesPrefabs.Length; i++)
+        for (int i = 0; i < allBestPrizeBalls.Count; i++)
         {
-            if (bestPrizesPrefabs[i]
-                .transform.Find("Icon")
-                .GetComponent<SpriteRenderer>().sprite.name == bestPrizeName)
+            if (bestPrizesPrefabs[i].GetComponent<SpriteRenderer>().sprite.name == bestPrizeName)
             {
                 GameObject bestPrizeObject = Instantiate(
                     bestPrizesPrefabs[i], bestPrize.position, Quaternion.identity);
 
                 // Assign that ball to the best prize object to show above chests
-                bestPrizeObject.transform.parent = bestPrize;
+                bestPrizeObject.transform.SetParent(bestPrize.transform);
             }
         }
 
@@ -205,7 +206,7 @@ public class ChestStatus : MonoBehaviour
 
     public Sprite GetBestPrizeSprite()
     {
-        for (int i = 0; i < bestPrizesPrefabs.Length; i++)
+        for (int i = 0; i < allBestPrizeBalls.Count; i++)
         {
             if (bestPrizesPrefabs[i].GetComponent<SpriteRenderer>().sprite.name == bestPrizeName)
             {
