@@ -33,10 +33,10 @@ public class ShopStatus : MonoBehaviour
 
     void Awake()
     {
-        //player = FindObjectOfType<Player>();
+        player = FindObjectOfType<Player>();
 
         scoreboard = FindObjectOfType<Scoreboard>();
-        //navigator = FindObjectOfType<Navigator>();
+        navigator = FindObjectOfType<Navigator>();
 
         playButton = GameObject.Find("PlayButton");
         getCoinsButton = GameObject.Find("GetCoinsButton");

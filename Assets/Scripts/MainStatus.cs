@@ -18,8 +18,8 @@ public class MainStatus : MonoBehaviour
 
     void Awake()
     {
-        //player = FindObjectOfType<Player>();
-        //navigator = FindObjectOfType<Navigator>();
+        player = FindObjectOfType<Player>();
+        navigator = FindObjectOfType<Navigator>();
 
         hapticsButton = GameObject.Find("HapticsButton");
         soundsButton = GameObject.Find("SoundsButton");

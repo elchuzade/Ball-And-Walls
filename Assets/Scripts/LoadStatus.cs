@@ -8,13 +8,8 @@ public class LoadStatus : MonoBehaviour
 
     void Start()
     {
-        //player = FindObjectOfType<Player>();
-        //navigator = FindObjectOfType<Navigator>();
-
-        GameObject playerObject = Resources.Load("prefabs/Player") as GameObject;
-        player = playerObject.GetComponent<Player>();
-
-        player.ResetPlayer();
+        player = FindObjectOfType<Player>();
+        navigator = FindObjectOfType<Navigator>();
 
         player.LoadPlayer();
         StartCoroutine(LoadGame());
@@ -27,11 +22,11 @@ public class LoadStatus : MonoBehaviour
         {
             PlayerPrefs.SetInt("Haptics", 1);
             player.ResetPlayer();
-            navigator.LoadNextLevel(1);
+            navigator.LoadMainScene();
         }
         else
         {
-            navigator.LoadNextLevel(player.nextLevelIndex);
+            navigator.LoadMainScene();
         }
     }
 }

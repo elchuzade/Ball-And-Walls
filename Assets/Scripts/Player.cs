@@ -10,19 +10,17 @@ public class Player : MonoBehaviour
     public int keys = 0;
     public int nextLevelIndex = 1;
 
-    public static Player instance;
-
     void Awake()
     {
         // Singleton
-        if (instance == null)
+        int instances = FindObjectsOfType<Player>().Length;
+        if (instances > 1)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
+            Destroy(gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            DontDestroyOnLoad(gameObject);
         }
     }
 

@@ -92,8 +92,8 @@ public class LeaderboardStatus : MonoBehaviour
 
     void Awake()
     {
-        //player = FindObjectOfType<Player>();
-        //navigator = FindObjectOfType<Navigator>();
+        player = FindObjectOfType<Player>();
+        navigator = FindObjectOfType<Navigator>();
 
         arrow = GameObject.Find("Arrow");
         inputField = GameObject.Find("InputField");

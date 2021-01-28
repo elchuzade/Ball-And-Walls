@@ -52,7 +52,7 @@ public class BallCatcher : MonoBehaviour
         canvas = GameObject.Find("Canvas");
 
         homeStatus = FindObjectOfType<HomeStatus>();
-        //navigator = FindObjectOfType<Navigator>();
+        navigator = FindObjectOfType<Navigator>();
 
         // Animate scoreboard coin zooming when coins go to it
         coinsIcon = scoreboardCoinPrefab.GetComponent<TriggerAnimation>();

@@ -63,7 +63,7 @@ public class HomeStatus : MonoBehaviour
 
     void Awake()
     {
-        //player = FindObjectOfType<Player>();
+        player = FindObjectOfType<Player>();
 
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
@@ -82,7 +82,7 @@ public class HomeStatus : MonoBehaviour
         adCancelBg.transform.localScale = new Vector3(1, 1, 1);
         adCancelWarning.transform.localScale = new Vector3(1, 1, 1);
 
-        //navigator = FindObjectOfType<Navigator>();
+        navigator = FindObjectOfType<Navigator>();
         ball = FindObjectOfType<Ball>();
     }
 
