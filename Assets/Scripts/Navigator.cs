@@ -4,19 +4,17 @@ using UnityEngine.SceneManagement;
 
 public class Navigator : MonoBehaviour
 {
-    public static Navigator instance;
-
     void Awake()
     {
         // Singleton
-        if (instance == null)
+        int instances = FindObjectsOfType<Navigator>().Length;
+        if (instances > 1)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
+            Destroy(gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            DontDestroyOnLoad(gameObject);
         }
     }
 
