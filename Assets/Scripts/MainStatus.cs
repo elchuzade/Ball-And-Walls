@@ -32,7 +32,7 @@ public class MainStatus : MonoBehaviour
     void Start()
     {
         AdManager.ShowBanner();
-
+        player.ResetPlayer();
         player.LoadPlayer();
 
         // Set whether haptics and sound buttons are enabled or disabled initially

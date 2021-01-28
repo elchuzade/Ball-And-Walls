@@ -269,6 +269,21 @@ PrefabInstance:
       propertyPath: shuffle
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5897550093975419825, guid: 5a5a09b9579364bcab800c58ef076d2f,
+        type: 3}
+      propertyPath: FocusPointer
+      value: 
+      objectReference: {fileID: 1625076234}
+    - target: {fileID: 5897550093975419825, guid: 5a5a09b9579364bcab800c58ef076d2f,
+        type: 3}
+      propertyPath: HorizontalPointer
+      value: 
+      objectReference: {fileID: 1584228546}
+    - target: {fileID: 5897550093975419825, guid: 5a5a09b9579364bcab800c58ef076d2f,
+        type: 3}
+      propertyPath: FocusPointerAfterHintHorizontal
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5897550093975419826, guid: 5a5a09b9579364bcab800c58ef076d2f,
         type: 3}
       propertyPath: m_RootOrder
@@ -908,6 +923,18 @@ RectTransform:
   m_AnchoredPosition: {x: 375, y: 667}
   m_SizeDelta: {x: 750, y: 1334}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1584228546 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6203135688179384853, guid: 4489c3aae6ab449b19630f5fc6233a02,
+    type: 3}
+  m_PrefabInstance: {fileID: 6203135687427033891}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1625076234 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1031381234060772737, guid: e8818f57c45064f458b08f37d00734ab,
+    type: 3}
+  m_PrefabInstance: {fileID: 1031381233798993645}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1736735960
 GameObject:
   m_ObjectHideFlags: 0
