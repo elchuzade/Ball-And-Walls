@@ -18,8 +18,8 @@ public class MainStatus : MonoBehaviour
 
     void Awake()
     {
-        player = FindObjectOfType<Player>();
-        navigator = FindObjectOfType<Navigator>();
+        //player = FindObjectOfType<Player>();
+        //navigator = FindObjectOfType<Navigator>();
 
         hapticsButton = GameObject.Find("HapticsButton");
         soundsButton = GameObject.Find("SoundsButton");
@@ -31,6 +31,8 @@ public class MainStatus : MonoBehaviour
 
     void Start()
     {
+        AdManager.ShowBanner();
+
         player.LoadPlayer();
 
         // Set whether haptics and sound buttons are enabled or disabled initially

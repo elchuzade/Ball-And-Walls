@@ -7,10 +7,10 @@ using MoreMountains.NiceVibrations;
 public class BallCatcher : MonoBehaviour
 {
     // List of words to show when level is passed
-    private string[] winWords = { "Congrats!", "Excellent!", "Good Job!", "Perfect!", "Amazing!", "Superb!", "Great!", "Wonderful!", "Brilliant!" };
+    string[] winWords = { "Congrats!", "Excellent!", "Good Job!", "Perfect!", "Amazing!", "Superb!", "Great!", "Wonderful!", "Brilliant!" };
 
-    private Navigator navigator;
-    private HomeStatus homeStatus;
+    Navigator navigator;
+    HomeStatus homeStatus;
 
     [SerializeField] Player player;
     [SerializeField] GameObject winParticlesPrefab;
@@ -19,32 +19,32 @@ public class BallCatcher : MonoBehaviour
     [SerializeField] GameObject coinPrefab;
 
     // To set text to it as a child
-    private GameObject canvas;
+    GameObject canvas;
 
-    private TextMeshProUGUI winWordText;
+    TextMeshProUGUI winWordText;
 
     // Animation on scoreboard coin zooming when coins go to it
-    private TriggerAnimation coinsIcon;
+    TriggerAnimation coinsIcon;
 
-    private GameObject scoreboardCoinPrefab;
+    GameObject scoreboardCoinPrefab;
     // Number of coins dropped
-    private int dropCoinsAmount;
+    int dropCoinsAmount;
     // Distance to which every coin may travel after being dropped
-    private int dropCoinDistance = 25;
+    int dropCoinDistance = 25;
     // Angles list for all coins dropped
-    private List<int> dropCoinAngles = new List<int>();
+    List<int> dropCoinAngles = new List<int>();
     // List of game objcts of coins that were dropped
-    private List<GameObject> dropCoins = new List<GameObject>();
+    List<GameObject> dropCoins = new List<GameObject>();
     // Status of coins starting to move when they have reached their drop location
-    private bool coinsDropped = false;
+    bool coinsDropped = false;
     // Status of coins being dropped when level is passed
-    private bool moveDroppedCoins = false;
+    bool moveDroppedCoins = false;
     // Tolerance issues
-    private float margin = 0.1f;
+    float margin = 0.1f;
     // Status of coins animation is triggered, not to keep zooming for each coin reaching coins icon
-    private bool triggerAnimTriggered = false;
+    bool triggerAnimTriggered = false;
     // Number of collected coins to add to player data
-    private int collectedCoins = 0;
+    int collectedCoins = 0;
 
     void Awake()
     {
@@ -52,7 +52,7 @@ public class BallCatcher : MonoBehaviour
         canvas = GameObject.Find("Canvas");
 
         homeStatus = FindObjectOfType<HomeStatus>();
-        navigator = FindObjectOfType<Navigator>();
+        //navigator = FindObjectOfType<Navigator>();
 
         // Animate scoreboard coin zooming when coins go to it
         coinsIcon = scoreboardCoinPrefab.GetComponent<TriggerAnimation>();
@@ -229,8 +229,6 @@ public class BallCatcher : MonoBehaviour
                 player.keys += homeStatus.GetKeys() - player.keys;
             }
 
-            // Update the next level for the player
-            player.nextLevelIndex++;
             // Destroy the ball
             Destroy(collision.gameObject);
 
@@ -241,6 +239,10 @@ public class BallCatcher : MonoBehaviour
     private IEnumerator LoadNextScreen(int time)
     {
         yield return new WaitForSeconds(time);
+
+        // Update the next level for the player
+        player.nextLevelIndex++;
+
         // Wait for some time then update player data and load either next level or chest room
         if (player.keys == 3)
         {

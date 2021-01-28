@@ -7,14 +7,14 @@ public class Portal : MonoBehaviour
     [SerializeField] GameObject PortalOut;
 
     // Variable to determine that the ball has been caught by a portal in
-    private bool catchBall;
-    private Ball ball;
+    bool catchBall;
+    Ball ball;
     // This is used coz sometimes there may be a small difference in tolerance of coordinates
-    private float margin = 0.01f;
+    float margin = 0.01f;
     // Speed with which the portal in will suck the ball inside
-    private int portalSpeed = 500;
+    int portalSpeed = 500;
     // Speed with which teleport out will throw the ball
-    private int releaseSpeed = 30;
+    int releaseSpeed = 30;
 
     void Start()
     {

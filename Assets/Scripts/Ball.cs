@@ -13,36 +13,36 @@ public class Ball : MonoBehaviour
     [SerializeField] Transform ballClick;
 
     // To set particles angle against the ball direction
-    private int startParticleAngle;
+    int startParticleAngle;
 
     // To be toggled when reset button is clicked or ball hit the game borders
-    private bool ballReset = false;
+    bool ballReset;
 
     // To indicate that ball has entered a rotation wall, stop moving and let the wall rotate it
-    public bool entered = false;
+    public bool entered;
 
     // ----------- all these three speeds give the same visual
     // Speed of a ball when launched from rotating walls
-    private float speed = 10f;
+    float speed = 10f;
     // Speed of a ball when launched from start position by clicking
-    private float initSpeed = 30f;
+    float initSpeed = 30f;
     // Speed of rotation inside a rotating wall
-    private float angularSpeed = 600f;
+    float angularSpeed = 600f;
     // ----------- all these three speeds give the same visual
 
     // Indicates accelerated movement of a ball when forward button clicked
-    private bool forward = false;
+    bool forward;
 
-    private HomeStatus homeStatus;
+    HomeStatus homeStatus;
 
     // Prefab of currently selected ball based on player data
-    private GameObject ballPrefab;
+    GameObject ballPrefab;
 
     // Coordinates to return to when ball is reset
-    private Vector3 initialPosition;
+    Vector3 initialPosition;
 
     // Vector that determines direction of a ball to be launched by clicking
-    private Vector2 launchVector;
+    Vector2 launchVector;
 
     // Set a direction for the ball where to move when launched
     [SerializeField] Directions direction;

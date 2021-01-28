@@ -17,7 +17,7 @@ public class Chest : MonoBehaviour
     // Frame around coins reward
     [SerializeField] GameObject frame;
 
-    private ChestStatus chestStatus;
+    ChestStatus chestStatus;
 
     void Awake()
     {

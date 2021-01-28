@@ -6,14 +6,14 @@ public class WallRotate : MonoBehaviour
     // Direction in which the wall will rotate a ball
     [SerializeField] bool clockwise = true;
     // Transform that holds a position of a clockwise launching spot
-    private Transform clockLaunch;
+    Transform clockLaunch;
     // Transform that holds a position of a counter clockwise launching spot
-    private Transform counterClockLaunch;
+    Transform counterClockLaunch;
 
     // Position that will be passed based on where the ball has entered from
-    private Vector3 launchPosition;
+    Vector3 launchPosition;
     // Direction to launch the ball based on the wall assiting lines direction
-    private int angularDirection;
+    int angularDirection;
 
     void Awake()
     {

@@ -15,9 +15,9 @@ public class OptionsBar : MonoBehaviour
     [SerializeField] Image soundsFrame;
 
     // To store haptics status, whether it is are on or off
-    private bool haptics;
+    bool haptics;
     // To store sounds status, whether it is are on or off
-    private bool sounds;
+    bool sounds;
 
     // Animation of clicking haptics button
     TriggerAnimation hapticsButtonAnimation;

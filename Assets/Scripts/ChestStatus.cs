@@ -72,14 +72,14 @@ public class ChestStatus : MonoBehaviour
 
     void Awake()
     {
-        player = FindObjectOfType<Player>();
+        //player = FindObjectOfType<Player>();
         scoreboard = FindObjectOfType<Scoreboard>();
 
         key1animator = key1.GetComponent<Animator>();
         key2animator = key2.GetComponent<Animator>();
         key3animator = key3.GetComponent<Animator>();
 
-        navigator = FindObjectOfType<Navigator>();
+        //navigator = FindObjectOfType<Navigator>();
 
         exitButton = GameObject.Find("ExitButton");
         moreKeysButton = GameObject.Find("MoreKeysButton");

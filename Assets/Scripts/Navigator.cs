@@ -4,6 +4,22 @@ using UnityEngine.SceneManagement;
 
 public class Navigator : MonoBehaviour
 {
+    public static Navigator instance;
+
+    void Awake()
+    {
+        // Singleton
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public void LoadShop()
     {
         SceneManager.LoadScene("ShopScene");

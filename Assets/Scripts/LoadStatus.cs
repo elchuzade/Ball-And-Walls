@@ -8,8 +8,14 @@ public class LoadStatus : MonoBehaviour
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
-        navigator = FindObjectOfType<Navigator>();
+        //player = FindObjectOfType<Player>();
+        //navigator = FindObjectOfType<Navigator>();
+
+        GameObject playerObject = Resources.Load("prefabs/Player") as GameObject;
+        player = playerObject.GetComponent<Player>();
+
+        player.ResetPlayer();
+
         player.LoadPlayer();
         StartCoroutine(LoadGame());
     }

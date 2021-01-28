@@ -8,7 +8,7 @@ public class Collectable : MonoBehaviour
 {
     // Particle effect to show when the object is collected
     [SerializeField] GameObject collectParticlePrefab;
-    private HomeStatus homeStatus;
+    HomeStatus homeStatus;
 
     // Select whether it is a key or coin in the inspector
     [SerializeField] Type type;

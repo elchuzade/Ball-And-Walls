@@ -4,24 +4,24 @@ using MoreMountains.NiceVibrations;
 public class Wall : MonoBehaviour
 {
     // Radius to rotate ball over, inner radius of the wall minus ball radius
-    private float radius = 52f;
+    float radius = 52f;
     // Approximately ball radius to do the subtraction
-    private float ballRadius = 12f;
+    float ballRadius = 12f;
     // Direction in which the rotation of the wall will happen
-    private int angularDirection;
+    int angularDirection;
     // Toggle when the ball has entered the wall from either side
-    private bool readyToRotate = false;
+    bool readyToRotate = false;
     // This is to switch from if to else if in FixedUpdate
-    private float margin = 0.0001f;
+    float margin = 0.0001f;
     // Status that changes when the ball is detected inside the wall
-    private bool wallEntered = false;
+    bool wallEntered = false;
     // This is to fix the bug of sending to the center
-    private bool startedRotation = false;
+    bool startedRotation = false;
     // A variable to toggle when hint is used and correct position of a wall is exposed
-    private bool showCorrectPosition = false;
+    bool showCorrectPosition = false;
 
     // This is to save default color incase it was assigned via script, to return to, when finger is released
-    private Color32 initialColor;
+    Color32 initialColor;
 
     [SerializeField] GameObject background;
     [SerializeField] GameObject initPosition;
@@ -35,18 +35,18 @@ public class Wall : MonoBehaviour
     [SerializeField] GameObject counterClockAssistLong;
 
     // Holding coordinates of correct position incase the wall is horizontal or vertical to show when the hint is used
-    private Vector3 correctPositionCoordinates;
+    Vector3 correctPositionCoordinates;
     // Holding angle of correct position incase the wall is an angular wall to show when hint is used
-    private Quaternion correctPositionRotation;
+    Quaternion correctPositionRotation;
 
-    private Ball ball;
-    private HomeStatus homeStatus;
+    Ball ball;
+    HomeStatus homeStatus;
 
     // Slight zoom animation when the walll is touched
-    private Animator dragAnimator;
+    Animator dragAnimator;
 
     // Position for launching the ball, changes based on which side the ball enters from
-    private Vector3 launchPosition;
+    Vector3 launchPosition;
 
     void Awake()
     {
