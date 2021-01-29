@@ -12,7 +12,12 @@ public class Server : MonoBehaviour
         public PlayerData playerData;
     }
 
-    public static Server instance;
+    public class VideoJson
+    {
+        public string video;
+        public string name;
+        public string website;
+    }
 
     Player player;
     TV tv;
@@ -25,17 +30,6 @@ public class Server : MonoBehaviour
     void Awake()
     {
         player = FindObjectOfType<Player>();
-
-        // Singleton
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
 
         tv = FindObjectOfType<TV>();
         tvLight = GameObject.Find("Light");
@@ -81,19 +75,19 @@ public class Server : MonoBehaviour
 
     private void SendData()
     {
-        PlayerData newPlayer = new PlayerData(player);
+        //PlayerData newPlayer = new PlayerData(player);
 
         //string url = "https://abboxgames.com/1/v1/save";
 
-        string url = "http://localhost:5001/v1/players";
+        //string url = "http://localhost:5001/v1/player";
 
-        //string adurl = "http://localhost:5001/1/v1/adlink";
+        //string adurl = "http://localhost:5001/api/v1/videos";
 
-        PlayerJson playerJson = new PlayerJson();
-        playerJson.playerId = SystemInfo.deviceUniqueIdentifier;
-        playerJson.playerData = newPlayer;
+        //PlayerJson playerJson = new PlayerJson();
+        //playerJson.playerId = SystemInfo.deviceUniqueIdentifier;
+        //playerJson.playerData = newPlayer;
 
-        string json = JsonUtility.ToJson(playerJson);
+        //string json = JsonUtility.ToJson(playerJson);
 
         //StartCoroutine(PostRequestCoroutine(url, json));
 
@@ -112,6 +106,8 @@ public class Server : MonoBehaviour
         UnityWebRequest www =
             new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
 
+        //www.SetRequestHeader("", "");
+
         yield return www.SendWebRequest();
 
         if (www.isNetworkError)
@@ -122,6 +118,7 @@ public class Server : MonoBehaviour
 
     public IEnumerator GetAdLinkCoroutine(string url)
     {
+        Debug.Log("test");
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
             // Request and wait for the desired page.
@@ -139,7 +136,11 @@ public class Server : MonoBehaviour
             {
                 SwitchOnLightOn();
                 Debug.Log(webRequest.downloadHandler.text);
-                tv.SetAdLink(webRequest.downloadHandler.text);
+                VideoJson videoInfo = JsonUtility.FromJson<VideoJson>(webRequest.downloadHandler.text);
+                Debug.Log(videoInfo.video);
+                Debug.Log(videoInfo.name);
+                Debug.Log(videoInfo.website);
+                tv.SetAdLink(videoInfo.video);
                 tv.transform.Find("ScreenAnimation").gameObject.SetActive(false);
                 Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
             }

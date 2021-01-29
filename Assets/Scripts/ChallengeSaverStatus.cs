@@ -3,6 +3,10 @@ using UnityEngine.UI;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Collections;
+
+using UnityEngine.Networking;
+
 
 public class ChallengeSaverStatus : MonoBehaviour
 {
@@ -75,6 +79,7 @@ public class ChallengeSaverStatus : MonoBehaviour
         SavePortals();
 
         string saveDataJson = JsonUtility.ToJson(saveData);
+        SendData(saveDataJson);
         System.IO.File.WriteAllText(Application.dataPath + "/SaveData.json", saveDataJson);
     }
 
@@ -192,5 +197,34 @@ public class ChallengeSaverStatus : MonoBehaviour
             // If at least one barrier is named incorrect, stop the program
             throw new Exception("Portal Name is incorrect: " + portalType);
         }
+    }
+
+    private void SendData(string json)
+    {
+        string url = "http://localhost:5001/v1/challenges";
+
+        StartCoroutine(PostRequestCoroutine(url, json));
+    }
+
+    public IEnumerator PostRequestCoroutine(string url, string json)
+    {
+        var jsonBinary = System.Text.Encoding.UTF8.GetBytes(json);
+
+        DownloadHandlerBuffer downloadHandlerBuffer = new DownloadHandlerBuffer();
+
+        UploadHandlerRaw uploadHandlerRaw = new UploadHandlerRaw(jsonBinary);
+        uploadHandlerRaw.contentType = "application/json";
+
+        UnityWebRequest www =
+            new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
+
+        //www.SetRequestHeader("", "");
+
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError)
+            Debug.LogError(string.Format("{0}: {1}", www.url, www.error));
+        else
+            Debug.Log(string.Format("Response: {0}", www.downloadHandler.text));
     }
 }

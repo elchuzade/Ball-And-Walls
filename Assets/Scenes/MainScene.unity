@@ -225,7 +225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f2a1f836e695417eba0450a33782923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 4400931109895508982, guid: a94919507c5ad496a947cbed4bcde4f8, type: 3}
 --- !u!4 &365073485
 Transform:
   m_ObjectHideFlags: 0
@@ -925,7 +924,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54c6a5c5b3d6448c8c015518697c9e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 4400931109895508982, guid: a94919507c5ad496a947cbed4bcde4f8, type: 3}
 --- !u!4 &1192700643
 Transform:
   m_ObjectHideFlags: 0
@@ -2250,46 +2248,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 447982858}
     m_Modifications:
-    - target: {fileID: 444297323, guid: c50edb04e9d754e04a39d32c4224e6da, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -30
-      objectReference: {fileID: 0}
-    - target: {fileID: 444297323, guid: c50edb04e9d754e04a39d32c4224e6da, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -58
-      objectReference: {fileID: 0}
-    - target: {fileID: 1159008297, guid: c50edb04e9d754e04a39d32c4224e6da, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1159008297, guid: c50edb04e9d754e04a39d32c4224e6da, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1159008297, guid: c50edb04e9d754e04a39d32c4224e6da, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765352728116047181, guid: c50edb04e9d754e04a39d32c4224e6da,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765352728116047181, guid: c50edb04e9d754e04a39d32c4224e6da,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765352728116047181, guid: c50edb04e9d754e04a39d32c4224e6da,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765352728116047181, guid: c50edb04e9d754e04a39d32c4224e6da,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8324370080677982225, guid: c50edb04e9d754e04a39d32c4224e6da,
         type: 3}
       propertyPath: m_Pivot.x
