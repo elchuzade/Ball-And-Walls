@@ -731,6 +731,11 @@ PrefabInstance:
       propertyPath: shuffle
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5897550093975419825, guid: 5a5a09b9579364bcab800c58ef076d2f,
+        type: 3}
+      propertyPath: VerticalPointer
+      value: 
+      objectReference: {fileID: 8206624858369994927}
     - target: {fileID: 5897550093975419826, guid: 5a5a09b9579364bcab800c58ef076d2f,
         type: 3}
       propertyPath: m_RootOrder
@@ -1686,3 +1691,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7aac00ae6869c4438ac336df934445a4, type: 3}
+--- !u!1 &8206624858369994927 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8206624859272296856, guid: 7aac00ae6869c4438ac336df934445a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 8206624858369994926}
+  m_PrefabAsset: {fileID: 0}
