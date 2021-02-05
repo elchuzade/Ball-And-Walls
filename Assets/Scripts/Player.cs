@@ -4,11 +4,12 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour
 {
     public List<string> unlockedBalls = new List<string>() { "default" };
-    public string currentBallName = "default";
+    public string currentBall = "default";
     public int coins = 0;
     public int diamonds = 0;
     public int keys = 0;
     public int nextLevelIndex = 1;
+    public bool nameModified = false;
 
     void Awake()
     {
@@ -32,11 +33,12 @@ public class Player : MonoBehaviour
     public void ResetPlayer()
     {
         unlockedBalls = new List<string>() { "default" };
-        currentBallName = "default";
+        currentBall = "default";
         coins = 56789;
         keys = 0;
         diamonds = 987;
         nextLevelIndex = 1;
+        nameModified = false;
         SaveSystem.SavePlayer(this);
     }
 
@@ -50,10 +52,11 @@ public class Player : MonoBehaviour
         }
 
         unlockedBalls = data.unlockedBalls;
-        currentBallName = data.currentBallName;
+        currentBall = data.currentBall;
         coins = data.coins;
         keys = data.keys;
         diamonds = data.diamonds;
         nextLevelIndex = data.nextLevelIndex;
+        nameModified = data.nameModified;
     }
 }

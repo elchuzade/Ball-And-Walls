@@ -5,13 +5,33 @@ public class LoadStatus : MonoBehaviour
 {
     Navigator navigator;
     Player player;
+    Server server;
+
+    void Awake()
+    {
+        server = FindObjectOfType<Server>();
+        player = FindObjectOfType<Player>();
+        navigator = FindObjectOfType<Navigator>();
+    }
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
-        navigator = FindObjectOfType<Navigator>();
-
         player.LoadPlayer();
+
+        server.CreatePlayer();
+    }
+
+    // Create a new player
+    public void CreatePlayerSuccess(string response)
+    {
+        Debug.Log(response);
+        StartCoroutine(LoadGame());
+    }
+
+    // Player already exists or error while creating
+    public void CreatePlayerError(string response)
+    {
+        Debug.Log(response);
         StartCoroutine(LoadGame());
     }
 

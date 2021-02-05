@@ -195,7 +195,7 @@ public class HomeStatus : MonoBehaviour
         for (int i = 0; i < balls.Length; i++)
         {
             // Get sprite name from sprite renderer because it is in the game
-            if (balls[i].GetComponent<SpriteRenderer>().sprite.name == player.currentBallName)
+            if (balls[i].GetComponent<SpriteRenderer>().sprite.name == player.currentBall)
             {
                 // Instantiate a ball from all balls array and player data ball index, set its parent to ballStuff
                 GameObject ballPrefab = Instantiate(balls[i], ball.transform.position, ball.transform.rotation);
@@ -590,7 +590,7 @@ public class HomeStatus : MonoBehaviour
 
     private void SetBackground()
     {
-        switch (player.currentBallName)
+        switch (player.currentBall)
         {
             case "bowling":
             case "beach":

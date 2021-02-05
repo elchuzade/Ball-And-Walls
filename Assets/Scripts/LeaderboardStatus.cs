@@ -4,12 +4,21 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+// Bring classes from Server
+using static Server;
 
 public class LeaderboardStatus : MonoBehaviour
 {
+    // To send player data to server
+    private class PlayerJson
+    {
+        public string playerId;
+        public PlayerData playerData;
+    }
+
     Player player;
     Navigator navigator;
-
+    Server server;
     // This one should be based on indexes
     [SerializeField] Sprite[] ballSprites;
     // Single line of leadersboard
@@ -39,59 +48,22 @@ public class LeaderboardStatus : MonoBehaviour
 
     GameObject leaderboardScrollbar;
 
+    InputField nameInput;
+
     // To point at change name button
     GameObject arrow;
 
     // The object where the name typed into the field is held
     GameObject inputField;
 
-    // This is to see if the diamonds should be given, fetch this from server
-    bool nameIsChanged;
-
-    // Name of the player to change when typing, this will be changed to name if the server sends name changed bool true
-    string playerName;
-
-    // To send player data to server
-    private class PlayerJson
-    {
-        public string playerId;
-        public PlayerData playerData;
-    }
-
-    private (string name, int rank, int ballIndex)[] topMock = {
-        ("Player-100001", 1, 3),
-        ("Player-100002", 2, 1),
-        ("Player-100003", 3, 6),
-        ("Player-100004", 4, 4),
-        ("Player-100005", 5, 3),
-        ("Player-100006", 6, 7),
-        ("Player-100007", 7, 25),
-        ("Player-100008", 8, 23),
-        ("Player-100009", 9, 31),
-        ("Player-100010", 10, 19)
-    };
-
-    private (string name, int rank, int ballIndex)[] beforeMock = {
-        ("Player-100188", 188, 30),
-        ("Player-100189", 189, 34),
-        ("Player-100190", 190, 15)
-    };
-
-    private (string name, int rank, int ballIndex)[] afterMock = {
-        ("Player-100192", 192, 21),
-        ("Player-100193", 193, 22),
-        ("Player-100194", 194, 29)
-    };
-
-    private (string name, int rank, int ballIndex) youMock = ("Kamran", 191, 33);
-
-    private List<(string name, int rank, int ballIndex)> before = new List<(string name, int rank, int ballIndex)>();
-    private List<(string name, int rank, int ballIndex)> after = new List<(string name, int rank, int ballIndex)>();
-    private List<(string name, int rank, int ballIndex)> top = new List<(string name, int rank, int ballIndex)>();
-    private (string name, int rank, int ballIndex) you;
+    private List<LeaderboardItem> before = new List<LeaderboardItem>();
+    private List<LeaderboardItem> after = new List<LeaderboardItem>();
+    private List<LeaderboardItem> top = new List<LeaderboardItem>();
+    private LeaderboardItem you;
 
     void Awake()
     {
+        server = FindObjectOfType<Server>();
         player = FindObjectOfType<Player>();
         navigator = FindObjectOfType<Navigator>();
 
@@ -113,26 +85,27 @@ public class LeaderboardStatus : MonoBehaviour
         bronzeName = GameObject.Find("BronzeName");
         exitButton = GameObject.Find("ExitButton");
         changeNameCanvasButton = GameObject.Find("EditButton");
+        nameInput = inputField.GetComponent<InputField>();
     }
 
     void Start()
     {
+        player.LoadPlayer();
+
         // Hide point arrow until server has replied
         arrow.SetActive(false);
 
         // Fetch data from server and choose the button to show
-        if (nameIsChanged)
+        if (player.nameModified)
         {
             // The name sent from the server
-            playerName = "BlaBla";
+            arrow.SetActive(false);
             changeNameGetDiamondsButton.SetActive(false);
         } else
         {
             arrow.SetActive(true);
             changeNameSaveButton.SetActive(false);
         }
-        var input = inputField.GetComponent<InputField>();
-        input.onEndEdit.AddListener(SubmitName);  // This also works
 
         // Widen name input field and hide it
         changeName.transform.localScale = new Vector3(1, 1, 1);
@@ -140,8 +113,7 @@ public class LeaderboardStatus : MonoBehaviour
 
         SetButtonFunctions();
 
-        PopulateMockData();
-        BuildUpList();
+        server.GetLeaderboard();
     }
 
     private void SetButtonFunctions()
@@ -164,7 +136,7 @@ public class LeaderboardStatus : MonoBehaviour
         {
             total++;
         }
-        // baed on total find where to place the scroll
+        // based on total find where to place the scroll
         if (total > 10)
         {
             // If total is greater than 10, it is safe to show the bottom 5 players to make sure you are also visible
@@ -184,36 +156,67 @@ public class LeaderboardStatus : MonoBehaviour
         }
     }
 
-    private void PopulateMockData()
+    public void ChangeNameError()
     {
-        // Loop though top ten list provided by the server and add them to local list
-        for (int i = 0; i < topMock.Length; i++)
+        CloseChangeName();
+    }
+
+    public void ChangeNameSuccess()
+    {
+        if (!player.nameModified)
         {
-            top.Add(topMock[i]);
+            player.nameModified = true;
+            player.SavePlayer();
+            player.LoadPlayer();
+        }
+        // Repopulate leaderboard data
+        server.GetLeaderboard();
+
+        CloseChangeName();
+    }
+
+    public void SetLeaderboardData(List<LeaderboardItem> topData, List<LeaderboardItem> beforeData, LeaderboardItem youData, List<LeaderboardItem> afterData)
+    {
+        // Clear the lists incase they already had data in them
+        foreach (Transform child in leaderboardScrollContent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        top.Clear();
+        before.Clear();
+        after.Clear();
+        // Loop though top ten list provided by the server and add them to local list
+        for (int i = 0; i < topData.Count; i++)
+        {
+            top.Add(topData[i]);
         }
         // Loop though up to 3 players before you list provided by the server
         // and if they have not yet been added to the list add them
-        for (int i = 0; i < beforeMock.Length; i++)
+        for (int i = 0; i < beforeData.Count; i++)
         {
-            if (!CheckIfExists(beforeMock[i].rank))
+            if (!CheckIfExists(beforeData[i].rank))
             {
-                before.Add(beforeMock[i]);
+                before.Add(beforeData[i]);
             }
         }
         // Check if your rank has already been added to the list if not add it
-        if (!CheckIfExists(youMock.rank))
+        if (!CheckIfExists(youData.rank))
         {
-            you = youMock;
+            you = youData;
+            // Set the name in the change name field to prepopulate
+            nameInput.text = youData.name;
         }
         // Loop though up to 3 players after you list provided by the server
         // and if they have not yet been added to the list add them
-        for (int i = 0; i < afterMock.Length; i++)
+        for (int i = 0; i < afterData.Count; i++)
         {
-            if (!CheckIfExists(afterMock[i].rank))
+            if (!CheckIfExists(afterData[i].rank))
             {
-                after.Add(afterMock[i]);
+                after.Add(afterData[i]);
             }
         }
+
+        BuildUpList();
     }
 
     // Loop through top ten, 3 before and 3 after lists to find if give data exists not to repeat
@@ -264,7 +267,7 @@ public class LeaderboardStatus : MonoBehaviour
                 leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
 
                 // Compare item from top ten with your rank incase you are in top ten
-                if (item.rank == youMock.rank)
+                if (item.rank == you.rank)
                 {
                     // Show frame around your entry
                     ShowYourEntryFrame(leaderboardItem);
@@ -275,25 +278,25 @@ public class LeaderboardStatus : MonoBehaviour
                 // Set its rank component text mesh pro value to rank from top list converted to string
                 leaderboardItem.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = item.rank.ToString();
                 // Set its ball icon based on data from server and indexes of balls
-                leaderboardItem.transform.Find("Ball").GetComponent<Image>().sprite = ballSprites[item.ballIndex];
+                leaderboardItem.transform.Find("Ball").GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
             } else
             {
                 if (item.rank == 1)
                 {
                     // Set golden podium
                     goldName.GetComponent<TextMeshProUGUI>().text = item.name;
-                    goldBall.GetComponent<Image>().sprite = ballSprites[item.ballIndex];
+                    goldBall.GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
                 }
                 else if (item.rank == 2)
                 {
                     // Set silver podium
                     silverName.GetComponent<TextMeshProUGUI>().text = item.name;
-                    silverBall.GetComponent<Image>().sprite = ballSprites[item.ballIndex];
+                    silverBall.GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
                 } else
                 {
                     // Set bronze podium
                     bronzeName.GetComponent<TextMeshProUGUI>().text = item.name;
-                    bronzeBall.GetComponent<Image>().sprite = ballSprites[item.ballIndex];
+                    bronzeBall.GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
                 }
             }
         });
@@ -336,6 +339,19 @@ public class LeaderboardStatus : MonoBehaviour
         ScrollListToPlayer();
     }
 
+    private Sprite GetBallSprite(string ballName)
+    {
+        for (int i = 0; i < ballSprites.Length; i++)
+        {
+            if (ballSprites[i].name == ballName)
+            {
+                return ballSprites[i];
+            }
+        }
+
+        return null;
+    }
+
     private void CreateTrippleDotsEntry()
     {
         // Create tripple dots to separate different lists
@@ -361,14 +377,14 @@ public class LeaderboardStatus : MonoBehaviour
         SetItemEntry(leaderboardItem, you);
     }
 
-    private void SetItemEntry(GameObject item, (string name, int rank, int ballIndex) value)
+    private void SetItemEntry(GameObject item, LeaderboardItem value)
     {
         // Set its name component text mesh pro value to your name
         item.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = value.name;
         // Set its rank component text mesh pro value to your rank
         item.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = value.rank.ToString();
         // Set its ball icon based on data from server and indexes of balls
-        item.transform.Find("Ball").GetComponent<Image>().sprite = ballSprites[value.ballIndex];
+        item.transform.Find("Ball").GetComponent<Image>().sprite = GetBallSprite(value.currentBall);
     }
 
     private void ShowYourEntryFrame(GameObject item)
@@ -390,13 +406,6 @@ public class LeaderboardStatus : MonoBehaviour
         return false;
     }
 
-    // Take text inside input field
-    private void SubmitName(string value)
-    {
-        // Take the text and pass it to the post request
-        Debug.Log(value);
-    }
-
     // Close Leadersboard Scene
     public void ClickExitButton()
     {
@@ -413,6 +422,7 @@ public class LeaderboardStatus : MonoBehaviour
     {
         if (changeNameCanvasButton.GetComponent<Button>().IsInteractable())
         {
+            arrow.SetActive(false);
             // Trigge rthe click animation on exit button of the chest room top left
             changeNameCanvasButton.GetComponent<TriggerButton>().ClickButton(0.2f);
             StartCoroutine(LoadChangeNameCoroutine(0.2f));
@@ -434,7 +444,7 @@ public class LeaderboardStatus : MonoBehaviour
 
     public void ClickSaveName()
     {
-        // When name is changed and save button is shown
+        // When name is changed and save button is shown instead of get diamonds
         if (changeNameSaveButton.GetComponent<Button>().IsInteractable())
         {
             changeNameSaveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
@@ -465,58 +475,21 @@ public class LeaderboardStatus : MonoBehaviour
         GetDiamonds();
     }
 
-    public void SendData()
-    {
-        PlayerData newPlayer = new PlayerData(player);
-
-        //string url = "https://abboxgames.com/1/v1/save";
-
-        string url = "http://localhost:5001/1/v1/save";
-
-        PlayerJson playerJson = new PlayerJson();
-        playerJson.playerId = SystemInfo.deviceUniqueIdentifier;
-        playerJson.playerData = newPlayer;
-
-        string json = JsonUtility.ToJson(playerJson);
-
-        StartCoroutine(PostRequestCoroutine(url, json));
-    }
-
     // This is for invisible button that covers the rest of the screen when modal is open
     public void CloseChangeName()
     {
         changeName.SetActive(false);
     }
 
-    // Save name and get 3 diamonds
+    // Save name
     public void SaveName()
     {
-        Debug.Log("Save Name");
+        server.ChangePlayerName(nameInput.text);
     }
 
     // Save name and get 3 diamonds
     public void GetDiamonds()
     {
-        Debug.Log("Get Diamonds");
-    }
-
-    private IEnumerator PostRequestCoroutine(string url, string json)
-    {
-        var jsonBinary = System.Text.Encoding.UTF8.GetBytes(json);
-
-        DownloadHandlerBuffer downloadHandlerBuffer = new DownloadHandlerBuffer();
-
-        UploadHandlerRaw uploadHandlerRaw = new UploadHandlerRaw(jsonBinary);
-        uploadHandlerRaw.contentType = "application/json";
-
-        UnityWebRequest www =
-            new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
-
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError)
-            Debug.LogError(string.Format("{0}: {1}", www.url, www.error));
-        else
-            Debug.Log(string.Format("Response: {0}", www.downloadHandler.text));
+        server.ChangePlayerName(nameInput.text);
     }
 }

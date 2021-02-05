@@ -6,7 +6,7 @@ using System.Collections;
 public class ChestStatus : MonoBehaviour
 {
     private List<string> allBalls = new List<string>()
-        { "abbox", "atom", "basketball", "beach", "bomb",
+        { "abbox", "atom", "basketball", "beach", "blackhole", "bomb",
         "bowling", "burger", "button", "candy", "coin", "cookie",
         "darts", "default", "disco", "donut", "eye", "flower",
         "football", "gear", "hypnose", "yinyang", "meteor", "pokemon",
@@ -226,7 +226,7 @@ public class ChestStatus : MonoBehaviour
         if (bestPrizeReceived)
         {
             player.unlockedBalls.Add(bestPrizeName);
-            player.currentBallName = bestPrizeName;
+            player.currentBall = bestPrizeName;
         }
         
         player.SavePlayer();

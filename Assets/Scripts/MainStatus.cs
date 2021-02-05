@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -16,8 +15,18 @@ public class MainStatus : MonoBehaviour
     Player player;
     Navigator navigator;
 
+    TV tv;
+    GameObject tvLight;
+    GameObject tvSwitch;
+    bool switchIsOn;
+
+    float switchTurnSpeed = 2;
+
+    Server server;
+
     void Awake()
     {
+        server = FindObjectOfType<Server>();
         player = FindObjectOfType<Player>();
         navigator = FindObjectOfType<Navigator>();
 
@@ -27,6 +36,10 @@ public class MainStatus : MonoBehaviour
         leaderboardButton = GameObject.Find("LeaderboardButton");
         playButton = GameObject.Find("PlayButton");
         shopButton = GameObject.Find("ShopButton");
+
+        tv = FindObjectOfType<TV>();
+        tvLight = GameObject.Find("Light");
+        tvSwitch = GameObject.Find("Switch");
     }
 
     void Start()
@@ -35,8 +48,57 @@ public class MainStatus : MonoBehaviour
         player.ResetPlayer();
         player.LoadPlayer();
 
+        server.GetVideoLink();
+
         // Set whether haptics and sound buttons are enabled or disabled initially
         SetButtonInitialState();
+    }
+
+    void Update()
+    {
+        // -0.6 is off position, 0 is on position
+        if (switchIsOn && tvSwitch.transform.rotation.z > -0.6)
+        {
+            // Turn switch clockwise
+            tvSwitch.transform.Rotate(new Vector3(0, 0, -switchTurnSpeed));
+        }
+    }
+
+    // Turn on the light and rotate the switch
+    private void SwitchOnLightOn()
+    {
+        // Run the switch on animation, if switch is at off state
+        if (!switchIsOn)
+        {
+            switchIsOn = true;
+        }
+        // Turn lights on to green
+        tvLight.GetComponent<Image>().color = new Color32(0, 255, 0, 255);
+    }
+
+    // Turn on the light and rotate the switch
+    private void SwitchOffLightOff()
+    {
+        // Turn switch to off state
+        switchIsOn = false;
+        // Turn lights on to red
+        tvLight.GetComponent<Image>().color = new Color32(255, 0, 0, 255);
+    }
+
+    // Set video link from server file
+    public void SetVideoLinkSuccess(string response)
+    {
+        SwitchOnLightOn();
+
+        tv.SetAdLink(response);
+        tv.transform.Find("ScreenAnimation").gameObject.SetActive(false);
+    }
+
+    // Set error actions of video link from server file
+    public void SetVideoLinkError(string response)
+    {
+        Debug.Log(response);
+        SwitchOffLightOff();
     }
 
     // Set initial states of haptics and sounds buttons based on player prefs

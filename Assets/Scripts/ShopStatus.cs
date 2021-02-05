@@ -52,7 +52,7 @@ public class ShopStatus : MonoBehaviour
         player.LoadPlayer();
 
         // Set currently selected ball with their frames and backgrounds
-        currentBallName = player.currentBallName;
+        currentBallName = player.currentBall;
     }
 
     void Start()
@@ -101,7 +101,7 @@ public class ShopStatus : MonoBehaviour
         if (player.unlockedBalls.Contains(ballName))
         {
             currentBallName = ballName;
-            player.currentBallName = currentBallName;
+            player.currentBall = currentBallName;
             player.SavePlayer();
 
             // Remove the select frame from previous item and place in new item
