@@ -166,6 +166,7 @@ public class LeaderboardStatus : MonoBehaviour
         if (!player.nameModified)
         {
             player.nameModified = true;
+            player.diamonds += 3;
             player.SavePlayer();
             player.LoadPlayer();
         }
