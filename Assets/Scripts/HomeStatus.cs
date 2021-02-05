@@ -84,6 +84,8 @@ public class HomeStatus : MonoBehaviour
 
         navigator = FindObjectOfType<Navigator>();
         ball = FindObjectOfType<Ball>();
+        // In order to get proper locations of walls (in case hint button is clicked)
+        walls = GameObject.Find("Walls").transform;
     }
 
     void Start()
