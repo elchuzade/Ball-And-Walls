@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
+        transform.SetParent(transform.parent.parent);
         // Singleton
         int instances = FindObjectsOfType<Player>().Length;
         if (instances > 1)
@@ -34,9 +35,9 @@ public class Player : MonoBehaviour
     {
         unlockedBalls = new List<string>() { "default" };
         currentBall = "default";
-        coins = 56789;
+        coins = 44444;
         keys = 0;
-        diamonds = 987;
+        diamonds = 555;
         nextLevelIndex = 1;
         nameModified = false;
         SaveSystem.SavePlayer(this);

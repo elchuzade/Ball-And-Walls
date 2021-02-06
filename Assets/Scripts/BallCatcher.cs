@@ -12,7 +12,7 @@ public class BallCatcher : MonoBehaviour
     Navigator navigator;
     HomeStatus homeStatus;
 
-    [SerializeField] Player player;
+    Player player;
     [SerializeField] GameObject winParticlesPrefab;
     [SerializeField] GameObject winTextPrefab;
     // To drop when level is passed
@@ -60,6 +60,9 @@ public class BallCatcher : MonoBehaviour
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
+
+        player.LoadPlayer();
         // Assing random number to amount of coins to drop from 7 to 13
         dropCoinsAmount = Random.Range(7, 14); 
     }

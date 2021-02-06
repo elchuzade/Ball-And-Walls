@@ -19,6 +19,8 @@ public class LeaderboardStatus : MonoBehaviour
     Player player;
     Navigator navigator;
     Server server;
+    Scoreboard scoreboard;
+
     // This one should be based on indexes
     [SerializeField] Sprite[] ballSprites;
     // Single line of leadersboard
@@ -64,8 +66,8 @@ public class LeaderboardStatus : MonoBehaviour
     void Awake()
     {
         server = FindObjectOfType<Server>();
-        player = FindObjectOfType<Player>();
         navigator = FindObjectOfType<Navigator>();
+        scoreboard = FindObjectOfType<Scoreboard>();
 
         arrow = GameObject.Find("Arrow");
         inputField = GameObject.Find("InputField");
@@ -90,22 +92,16 @@ public class LeaderboardStatus : MonoBehaviour
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
+        player.ResetPlayer();
         player.LoadPlayer();
 
         // Hide point arrow until server has replied
         arrow.SetActive(false);
 
-        // Fetch data from server and choose the button to show
-        if (player.nameModified)
-        {
-            // The name sent from the server
-            arrow.SetActive(false);
-            changeNameGetDiamondsButton.SetActive(false);
-        } else
-        {
-            arrow.SetActive(true);
-            changeNameSaveButton.SetActive(false);
-        }
+        scoreboard.SetDiamonds(player.diamonds);
+
+        SwapSaveButton();
 
         // Widen name input field and hide it
         changeName.transform.localScale = new Vector3(1, 1, 1);
@@ -114,6 +110,24 @@ public class LeaderboardStatus : MonoBehaviour
         SetButtonFunctions();
 
         server.GetLeaderboard();
+    }
+
+    private void SwapSaveButton()
+    {
+        // Fetch data from server and choose the button to show
+        if (player.nameModified)
+        {
+            // The name sent from the server
+            arrow.SetActive(false);
+            changeNameSaveButton.SetActive(true);
+            changeNameGetDiamondsButton.SetActive(false);
+        }
+        else
+        {
+            arrow.SetActive(true);
+            changeNameSaveButton.SetActive(false);
+            changeNameGetDiamondsButton.SetActive(true);
+        }
     }
 
     private void SetButtonFunctions()
@@ -169,6 +183,7 @@ public class LeaderboardStatus : MonoBehaviour
             player.diamonds += 3;
             player.SavePlayer();
             player.LoadPlayer();
+            scoreboard.SetDiamonds(player.diamonds);
         }
         // Repopulate leaderboard data
         server.GetLeaderboard();
@@ -480,6 +495,7 @@ public class LeaderboardStatus : MonoBehaviour
     public void CloseChangeName()
     {
         changeName.SetActive(false);
+        SwapSaveButton();
     }
 
     // Save name

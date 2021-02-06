@@ -13,7 +13,7 @@ public class ChestStatus : MonoBehaviour
         "pool", "pumpkin", "radiation", "saturn", "smile", "snowball",
         "sun", "tennis", "virus", "volleyball", "watermelon", "wheel" };
 
-    // Match this with the prefabs given to the BestPrizesPrefabs
+    // Match this with the prefabs given to the BestPrizesPrefabs 23 balls
     private List<string> allBestPrizeBalls = new List<string>()
         { "basketball", "beach", "bomb", "bowling", "burger", "button",
         "coin", "cookie", "darts", "donut", "flower", "football",

@@ -27,7 +27,6 @@ public class MainStatus : MonoBehaviour
     void Awake()
     {
         server = FindObjectOfType<Server>();
-        player = FindObjectOfType<Player>();
         navigator = FindObjectOfType<Navigator>();
 
         hapticsButton = GameObject.Find("HapticsButton");
@@ -44,6 +43,8 @@ public class MainStatus : MonoBehaviour
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
+
         AdManager.ShowBanner();
         player.ResetPlayer();
         player.LoadPlayer();

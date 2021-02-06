@@ -33,8 +33,6 @@ public class ShopStatus : MonoBehaviour
 
     void Awake()
     {
-        player = FindObjectOfType<Player>();
-
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
 
@@ -57,6 +55,8 @@ public class ShopStatus : MonoBehaviour
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
+
         AdManager.ShowBanner();
 
         // Set current player coins to the scoreboard

@@ -10,12 +10,13 @@ public class LoadStatus : MonoBehaviour
     void Awake()
     {
         server = FindObjectOfType<Server>();
-        player = FindObjectOfType<Player>();
         navigator = FindObjectOfType<Navigator>();
     }
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
+
         player.LoadPlayer();
 
         server.CreatePlayer();

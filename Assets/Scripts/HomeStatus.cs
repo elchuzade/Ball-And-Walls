@@ -26,7 +26,8 @@ public class HomeStatus : MonoBehaviour
     int tutorialStep = 0;
 
     // This should be changed as new balls are being added
-    int totalBallsAmount = 36;
+    // This is not all balls but all unlockable balls
+    int totalBallsAmount = 23;
 
     // Background Sprites
     [SerializeField] Sprite table;
@@ -63,8 +64,6 @@ public class HomeStatus : MonoBehaviour
 
     void Awake()
     {
-        player = FindObjectOfType<Player>();
-
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
         hintButton = GameObject.Find("HintButton");
@@ -90,9 +89,10 @@ public class HomeStatus : MonoBehaviour
 
     void Start()
     {
-        player.LoadPlayer();
+        // This is in start so it can destroy the old item before accessing it
+        player = FindObjectOfType<Player>();
 
-        Debug.Log(player.nextLevelIndex);
+        player.LoadPlayer();
 
         forwardButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
         SetButtonFunctions();
@@ -145,11 +145,6 @@ public class HomeStatus : MonoBehaviour
 
     public bool GetShuffle()
     {
-        // Return if the walls on the level should be shuffled, accessed by each wall
-        if (player.nextLevelIndex > 3)
-        {
-            return true;
-        }
         return shuffle;
     }
 
@@ -550,13 +545,17 @@ public class HomeStatus : MonoBehaviour
 
     public bool AllBallsUnlocked()
     {
+        if (!player)
+        {
+            player = FindObjectOfType<Player>();
+        }
         // This is to decide whether the key should be on the level or not
         if (player.unlockedBalls.Count == totalBallsAmount)
         {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     // Set the game background based on the ball
