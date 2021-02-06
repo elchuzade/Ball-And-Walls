@@ -5,6 +5,16 @@ using System.Collections.Generic;
 
 public class Server : MonoBehaviour
 {
+    public class ChallengeLevelMini
+    {
+        public int tried;
+        public int solved;
+        public int coins;
+        public int diamonds;
+        public string screenshot;
+        public string background;
+    }
+
     public class PlayerName
     {
         public string deviceId;
@@ -18,12 +28,6 @@ public class Server : MonoBehaviour
         public string currentBall;
     }
 
-    private List<LeaderboardItem> top = new List<LeaderboardItem>();
-    private List<LeaderboardItem> before = new List<LeaderboardItem>();
-    private List<LeaderboardItem> after = new List<LeaderboardItem>();
-    private LeaderboardItem you = new LeaderboardItem();
-
-    // To send player data to server
     private class PlayerJson
     {
         public string deviceOS;
@@ -37,108 +41,54 @@ public class Server : MonoBehaviour
         public string website;
     }
 
+    private List<LeaderboardItem> top = new List<LeaderboardItem>();
+    private List<LeaderboardItem> before = new List<LeaderboardItem>();
+    private List<LeaderboardItem> after = new List<LeaderboardItem>();
+    private LeaderboardItem you = new LeaderboardItem();
+
     // To send response to corresponding files
     [SerializeField] MainStatus mainStatus;
     // This is to call the functions in load scene
     [SerializeField] LoadStatus loadStatus;
     // This is to call the functions in leaderboard scene
     [SerializeField] LeaderboardStatus leaderboardStatus;
+    // This is to call the functions in challenges scene
+    [SerializeField] ChallengesStatus challengesStatus;
 
-    void Awake()
+    /* ---------- CHALLENGES SCENE ---------- */
+
+    // This one is for the big challenge in challenges scene
+    // This does not have data to build up a challenge level
+    // Only teasing stuff, like screenshot, rewards, try-solve, background
+    private IEnumerator GetLatestChallengeMiniCoroutine(string url)
     {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            // Send request and wait for the desired reqsponse.
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+                // Set the error of video link received from the server
+                challengesStatus.LatestChallengeMiniError();
+            }
+            else
+            {
+                Debug.Log(webRequest.downloadHandler.text);
+                // Parse the response from server to retrieve all data fields
+                string levelData = JsonHelper.GetJsonObject(webRequest.downloadHandler.text, "data");
+
+                ChallengeLevelMini challengeLevel = JsonUtility.FromJson<ChallengeLevelMini>(levelData);
+
+                challengesStatus.LatestChallengeMiniSuccess(challengeLevel);
+            }
+        }
     }
 
-    void Start()
+    public void GetLatestChallengeMini()
     {
-        // Send data stuff
-        //SendData();
-    }
-
-    void Update()
-    {
-
-    }
-
-    private void SendData()
-    {
-        //PlayerData newPlayer = new PlayerData(player);
-
-        //string url = "https://abboxgames.com/1/v1/save";
-
-        //string url = "http://localhost:5001/v1/player";
-
-        //PlayerJson playerJson = new PlayerJson();
-        //playerJson.playerId = SystemInfo.deviceUniqueIdentifier;
-        //playerJson.playerData = newPlayer;
-
-        //string json = JsonUtility.ToJson(playerJson);
-
-        //StartCoroutine(PostRequestCoroutine(url, json));
-    }
-
-    public void ChangePlayerName(string name)
-    {
-        string id = SystemInfo.deviceUniqueIdentifier;
-
-        string nameUrl = "http://localhost:5001/api/v1/players/name/";
-
-        PlayerName nameObject = new PlayerName();
-        nameObject.deviceId = id;
-        nameObject.name = name;
-
-        string nameJson = JsonUtility.ToJson(nameObject);
-
-        StartCoroutine(ChangeNameCoroutine(nameUrl, nameJson));
-    }
-
-    public void GetLeaderboard()
-    {
-        string id = SystemInfo.deviceUniqueIdentifier;
-
-        string leaderboardUrl = "http://localhost:5001/api/v1/players/leaderboard/" + id;
-        StartCoroutine(LeaderboardCoroutine(leaderboardUrl));
-    }
-
-    public void GetVideoLink()
-    {
-        string videoUrl = "http://localhost:5001/api/v1/videos";
-        StartCoroutine(GetAdLinkCoroutine(videoUrl));
-    }
-
-    public void CreatePlayer()
-    {
-        string playerUrl = "http://localhost:5001/api/v1/players/player";
-
-        PlayerJson playerObject = new PlayerJson();
-        playerObject.deviceId = SystemInfo.deviceUniqueIdentifier;
-        playerObject.deviceOS = SystemInfo.operatingSystem;
-
-        string playerJson = JsonUtility.ToJson(playerObject);
-
-        Debug.Log(playerUrl);
-        Debug.Log(playerJson);
-
-        StartCoroutine(CreatePlayerCoroutine(playerUrl, playerJson));
-    }
-
-    private IEnumerator PostRequestCoroutine(string url, string json)
-    {
-        var jsonBinary = System.Text.Encoding.UTF8.GetBytes(json);
-        DownloadHandlerBuffer downloadHandlerBuffer = new DownloadHandlerBuffer();
-        UploadHandlerRaw uploadHandlerRaw = new UploadHandlerRaw(jsonBinary);
-        uploadHandlerRaw.contentType = "application/json";
-
-        UnityWebRequest www =
-            new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
-
-        //www.SetRequestHeader("", "");
-
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError)
-            Debug.LogError(string.Format("{0}: {1}", www.url, www.error));
-        else
-            Debug.Log(string.Format("Response: {0}", www.downloadHandler.text));
+        string latestChallengeMiniUrl = "http://localhost:5001/api/v1/challenges/latest-mini";
+        StartCoroutine(GetLatestChallengeMiniCoroutine(latestChallengeMiniUrl));
     }
 
     /* ---------- LOAD SCENE ---------- */
@@ -160,13 +110,29 @@ public class Server : MonoBehaviour
         if (webRequest.isNetworkError)
         {
             // Set the error received from creating a player
-            loadStatus.CreatePlayerError(webRequest.error);
+            loadStatus.CreatePlayerError();
         } 
         else
         {
             // Make the success actions received from creating a player
-            loadStatus.CreatePlayerSuccess(webRequest.downloadHandler.text);
+            loadStatus.CreatePlayerSuccess();
         }
+    }
+
+    public void CreatePlayer()
+    {
+        string playerUrl = "http://localhost:5001/api/v1/players/player";
+
+        PlayerJson playerObject = new PlayerJson();
+        playerObject.deviceId = SystemInfo.deviceUniqueIdentifier;
+        playerObject.deviceOS = SystemInfo.operatingSystem;
+
+        string playerJson = JsonUtility.ToJson(playerObject);
+
+        Debug.Log(playerUrl);
+        Debug.Log(playerJson);
+
+        StartCoroutine(CreatePlayerCoroutine(playerUrl, playerJson));
     }
 
     /* ---------- MAIN SCENE ---------- */
@@ -195,6 +161,12 @@ public class Server : MonoBehaviour
                 mainStatus.SetVideoLinkSuccess(videoInfo.video);
             }
         }
+    }
+
+    public void GetVideoLink()
+    {
+        string videoUrl = "http://localhost:5001/api/v1/videos";
+        StartCoroutine(GetAdLinkCoroutine(videoUrl));
     }
 
     /* ---------- LEADERBOARD SCENE ---------- */
@@ -244,6 +216,29 @@ public class Server : MonoBehaviour
                 PopulateData(webRequest.downloadHandler.text);
             }
         }
+    }
+
+    public void ChangePlayerName(string name)
+    {
+        string id = SystemInfo.deviceUniqueIdentifier;
+
+        string nameUrl = "http://localhost:5001/api/v1/players/name/";
+
+        PlayerName nameObject = new PlayerName();
+        nameObject.deviceId = id;
+        nameObject.name = name;
+
+        string nameJson = JsonUtility.ToJson(nameObject);
+
+        StartCoroutine(ChangeNameCoroutine(nameUrl, nameJson));
+    }
+
+    public void GetLeaderboard()
+    {
+        string id = SystemInfo.deviceUniqueIdentifier;
+
+        string leaderboardUrl = "http://localhost:5001/api/v1/players/leaderboard/" + id;
+        StartCoroutine(LeaderboardCoroutine(leaderboardUrl));
     }
 
     private void PopulateData(string jsonData)

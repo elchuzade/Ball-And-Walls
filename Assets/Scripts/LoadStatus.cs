@@ -23,16 +23,14 @@ public class LoadStatus : MonoBehaviour
     }
 
     // Create a new player
-    public void CreatePlayerSuccess(string response)
+    public void CreatePlayerSuccess()
     {
-        Debug.Log(response);
         StartCoroutine(LoadGame());
     }
 
     // Player already exists or error while creating
-    public void CreatePlayerError(string response)
+    public void CreatePlayerError()
     {
-        Debug.Log(response);
         StartCoroutine(LoadGame());
     }
 

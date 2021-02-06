@@ -29,11 +29,6 @@ public class ChallengeStatus : MonoBehaviour
         public string rotation;
     }
 
-    public class ChallengeCoin
-    {
-        public string position;
-    }
-
     [SerializeField] GameObject angular_135;
     [SerializeField] GameObject angular_180;
     [SerializeField] GameObject angular_225;
@@ -238,10 +233,6 @@ public class ChallengeStatus : MonoBehaviour
         string[] portalInsJson = JsonHelper.GetJsonObjectArray(jsonData, "portalIns");
         string[] portalOutsJson = JsonHelper.GetJsonObjectArray(jsonData, "portalOuts");
         PopulatePortalsData(portalInsJson, portalOutsJson);
-
-        // Extracting coins array json from overall data
-        string[] coinsJson = JsonHelper.GetJsonObjectArray(jsonData, "coins");
-        PopulateCoinsData(coinsJson);
     }
 
     private void PopulateWallsData(string[] wallsJson)
@@ -325,27 +316,6 @@ public class ChallengeStatus : MonoBehaviour
             }
 
             DrawPortals();
-        }
-    }
-
-    private void PopulateCoinsData(string[] coinsJson)
-    {
-        if (coinsJson != null)
-        {
-            // Populating barriers for each barrierJson inside walls json
-            for (int i = 0; i < coinsJson.Length; i++)
-            {
-                // Parsing coins json into coins class object
-                ChallengeCoin coinsInfo = JsonUtility.FromJson<ChallengeCoin>(coinsJson[i]);
-
-                // Creating tuple that a game level would understand
-                Vector3 coinsObject = JsonStringToVector3(coinsInfo.position);
-
-                // Adding newly parsed and foramtter wall to the walls list to draw on the map
-                coins.Add(coinsObject);
-            }
-
-            DrawCoins();
         }
     }
 
