@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 // Bring classes from Server
 using static Server;
 
@@ -10,10 +11,16 @@ public class ChallengesStatus : MonoBehaviour
     Player player;
     Server server;
 
+    GameObject challengeLevelBackground;
+    GameObject challengeLevelScreenshot;
+
     void Awake()
     {
         server = FindObjectOfType<Server>();
         navigator = FindObjectOfType<Navigator>();
+
+        challengeLevelBackground = GameObject.Find("ChallengeLevelBackground");
+        challengeLevelScreenshot = GameObject.Find("ChallengeLevelScreenshot");
     }
 
     // Start is called before the first frame update
@@ -22,6 +29,16 @@ public class ChallengesStatus : MonoBehaviour
         player = FindObjectOfType<Player>();
 
         server.GetLatestChallengeMini();
+    }
+
+    public void SetBackgroundImage(Sprite sprite)
+    {
+        challengeLevelBackground.GetComponent<Image>().sprite = sprite;
+    }
+
+    public void SetScreenshotImage(Sprite sprite)
+    {
+        challengeLevelScreenshot.GetComponent<Image>().sprite = sprite;
     }
 
     public void LatestChallengeMiniSuccess(ChallengeLevelMini challengeLevel)

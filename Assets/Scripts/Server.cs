@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 
@@ -81,6 +82,9 @@ public class Server : MonoBehaviour
                 ChallengeLevelMini challengeLevel = JsonUtility.FromJson<ChallengeLevelMini>(levelData);
 
                 challengesStatus.LatestChallengeMiniSuccess(challengeLevel);
+
+                StartCoroutine(ExtractLatestChallengeMiniBackgroundImage(challengeLevel));
+                StartCoroutine(ExtractLatestChallengeMiniScreenshotImage(challengeLevel));
             }
         }
     }
@@ -89,6 +93,38 @@ public class Server : MonoBehaviour
     {
         string latestChallengeMiniUrl = "http://localhost:5001/api/v1/challenges/latest-mini";
         StartCoroutine(GetLatestChallengeMiniCoroutine(latestChallengeMiniUrl));
+    }
+
+    private IEnumerator ExtractLatestChallengeMiniBackgroundImage(ChallengeLevelMini challengeLevel)
+    {
+        if (challengeLevel.background != null)
+        {
+            WWW www = new WWW(challengeLevel.background);
+
+            yield return www;
+            if (www.texture != null)
+            {
+                Sprite sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+
+                challengesStatus.SetBackgroundImage(sprite);
+            }
+        }
+    }
+
+    private IEnumerator ExtractLatestChallengeMiniScreenshotImage(ChallengeLevelMini challengeLevel)
+    {
+        if (challengeLevel.background != null)
+        {
+            WWW www = new WWW(challengeLevel.screenshot);
+
+            yield return www;
+            if (www.texture != null)
+            {
+                Sprite sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+
+                challengesStatus.SetScreenshotImage(sprite);
+            }
+        }
     }
 
     /* ---------- LOAD SCENE ---------- */
@@ -128,9 +164,6 @@ public class Server : MonoBehaviour
         playerObject.deviceOS = SystemInfo.operatingSystem;
 
         string playerJson = JsonUtility.ToJson(playerObject);
-
-        Debug.Log(playerUrl);
-        Debug.Log(playerJson);
 
         StartCoroutine(CreatePlayerCoroutine(playerUrl, playerJson));
     }
