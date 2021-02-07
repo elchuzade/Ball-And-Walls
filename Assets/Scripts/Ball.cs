@@ -127,6 +127,30 @@ public class Ball : MonoBehaviour
         return angularSpeed;
     }
 
+    public string GetDirection()
+    {
+        return direction.ToString();
+    }
+
+    public void SetDirection(string _direction)
+    {
+        switch (_direction)
+        {
+            case "North":
+                direction = Directions.North;
+                break;
+            case "South":
+                direction = Directions.South;
+                break;
+            case "West":
+                direction = Directions.West;
+                break;
+            case "East":
+                direction = Directions.East;
+                break;
+        }
+    }
+
     // Launch the ball from inside walls or from starting position
     public void Launch(Vector2 velocityVector)
     {

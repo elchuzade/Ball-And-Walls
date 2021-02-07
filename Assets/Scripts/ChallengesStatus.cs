@@ -11,7 +11,9 @@ public class ChallengesStatus : MonoBehaviour
     Player player;
     Server server;
 
-    GameObject challengeLevelBackground;
+
+    GameObject tried;
+    GameObject solved;
     GameObject challengeLevelScreenshot;
 
     void Awake()
@@ -19,8 +21,9 @@ public class ChallengesStatus : MonoBehaviour
         server = FindObjectOfType<Server>();
         navigator = FindObjectOfType<Navigator>();
 
-        challengeLevelBackground = GameObject.Find("ChallengeLevelBackground");
         challengeLevelScreenshot = GameObject.Find("ChallengeLevelScreenshot");
+        tried = GameObject.Find("TriedText");
+        solved = GameObject.Find("SolvedText");
     }
 
     // Start is called before the first frame update
@@ -31,11 +34,6 @@ public class ChallengesStatus : MonoBehaviour
         server.GetLatestChallengeMini();
     }
 
-    public void SetBackgroundImage(Sprite sprite)
-    {
-        challengeLevelBackground.GetComponent<Image>().sprite = sprite;
-    }
-
     public void SetScreenshotImage(Sprite sprite)
     {
         challengeLevelScreenshot.GetComponent<Image>().sprite = sprite;
@@ -43,12 +41,10 @@ public class ChallengesStatus : MonoBehaviour
 
     public void LatestChallengeMiniSuccess(ChallengeLevelMini challengeLevel)
     {
-        Debug.Log(challengeLevel.tried);
-        Debug.Log(challengeLevel.solved);
+        tried.GetComponent<Text>().text = challengeLevel.tried.ToString() + " tried";
+        solved.GetComponent<Text>().text = challengeLevel.tried.ToString() + " solved";
         Debug.Log(challengeLevel.coins);
         Debug.Log(challengeLevel.diamonds);
-        Debug.Log(challengeLevel.screenshot);
-        Debug.Log(challengeLevel.background);
     }
 
     public void LatestChallengeMiniError()

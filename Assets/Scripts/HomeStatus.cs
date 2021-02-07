@@ -25,6 +25,8 @@ public class HomeStatus : MonoBehaviour
     bool showedPointer = false;
     int tutorialStep = 0;
 
+    [SerializeField] bool tutorial;
+
     // This should be changed as new balls are being added
     // This is not all balls but all unlockable balls
     int totalBallsAmount = 23;
@@ -281,7 +283,7 @@ public class HomeStatus : MonoBehaviour
         // Set the ball launched status to be access by other scripts
         ballLaunched = true;
         // If this is the tutorial on level hide the tutorial stuff
-        if (player.nextLevelIndex == 1)
+        if (player.nextLevelIndex == 1 && tutorial)
         {
             FocusPointer.SetActive(false);
         }
@@ -438,74 +440,84 @@ public class HomeStatus : MonoBehaviour
     // Tutorial stuff
     public void CheckPointerMove()
     {
-        if (player.nextLevelIndex == 1)
+        if (tutorial)
         {
-            if (HorizontalPointer.activeSelf)
+            if (player.nextLevelIndex == 1)
             {
-                HorizontalPointer.SetActive(false);
+                if (HorizontalPointer.activeSelf)
+                {
+                    HorizontalPointer.SetActive(false);
+                }
+                else
+                {
+                    CheckPointerFocus();
+                }
             }
-            else
+            else if (player.nextLevelIndex == 2)
             {
-                CheckPointerFocus();
+                if (VerticalPointer.activeSelf)
+                {
+                    VerticalPointer.SetActive(false);
+                }
+                else
+                {
+                    CheckPointerFocus();
+                }
             }
+            else if (player.nextLevelIndex == 3)
+            {
+                if (AngularPointer.activeSelf)
+                {
+                    AngularPointer.SetActive(false);
+                }
+                else
+                {
+                    CheckPointerFocus();
+                }
+            }
+            showedPointer = true;
         }
-        else if (player.nextLevelIndex == 2)
-        {
-            if (VerticalPointer.activeSelf)
-            {
-                VerticalPointer.SetActive(false);
-            }
-            else
-            {
-                CheckPointerFocus();
-            }
-        }
-        else if (player.nextLevelIndex == 3)
-        {
-            if (AngularPointer.activeSelf)
-            {
-                AngularPointer.SetActive(false);
-            }
-            else
-            {
-                CheckPointerFocus();
-            }
-        }
-        showedPointer = true;
     }
     // Tutorial stuff
     public void CheckPointerFocus()
     {
-        if ((player.nextLevelIndex == 1 || player.nextLevelIndex == 4) && showedPointer)
+        if (tutorial)
         {
-            if (FocusPointer.activeSelf || showedFocus)
+            if ((player.nextLevelIndex == 1 || player.nextLevelIndex == 4) && showedPointer)
             {
-                FocusPointer.SetActive(false);
-            } else
-            {
-                FocusPointer.SetActive(true);
-                showedFocus = true;
+                if (FocusPointer.activeSelf || showedFocus)
+                {
+                    FocusPointer.SetActive(false);
+                }
+                else
+                {
+                    FocusPointer.SetActive(true);
+                    showedFocus = true;
+                }
             }
         }
     }
     // Tutorial stuff
     public bool TutorialPassed()
     {
-        if (player.nextLevelIndex == 1 && HorizontalPointer.activeSelf)
+        if (tutorial)
         {
-            return false;
-        }
-        else if (player.nextLevelIndex == 2 && VerticalPointer.activeSelf)
-        {
-            return false;
-        }
-        else if (player.nextLevelIndex == 3 && AngularPointer.activeSelf)
-        {
-            return false;
-        }
-        else if (player.nextLevelIndex == 4 && FocusPointer.activeSelf)
-        {
-            return false;
+            if (player.nextLevelIndex == 1 && HorizontalPointer.activeSelf)
+            {
+                return false;
+            }
+            else if (player.nextLevelIndex == 2 && VerticalPointer.activeSelf)
+            {
+                return false;
+            }
+            else if (player.nextLevelIndex == 3 && AngularPointer.activeSelf)
+            {
+                return false;
+            }
+            else if (player.nextLevelIndex == 4 && FocusPointer.activeSelf)
+            {
+                return false;
+            }
         }
         return true;
     }
@@ -513,28 +525,37 @@ public class HomeStatus : MonoBehaviour
     // Tutorial stuff
     public void ShowFocusPinterAfterHintHorizontal()
     {
-        FocusPointerAfterHintHorizontal.SetActive(true);
-        tutorialStep++;
+        if (tutorial)
+        {
+            FocusPointerAfterHintHorizontal.SetActive(true);
+            tutorialStep++;
+        }
     }
     // Tutorial stuff
     public void HideFocusPinterAfterHintHorizontal()
     {
-        if (player.nextLevelIndex == 4)
+        if (tutorial)
         {
-            if (tutorialStep == 1)
+            if (player.nextLevelIndex == 4)
             {
-                FocusPointerAfterHintHorizontal.SetActive(false);
-                FocusPointerAfterHintVertical.SetActive(true);
-                tutorialStep++;
+                if (tutorialStep == 1)
+                {
+                    FocusPointerAfterHintHorizontal.SetActive(false);
+                    FocusPointerAfterHintVertical.SetActive(true);
+                    tutorialStep++;
+                }
             }
         }
     }
     // Tutorial stuff
     public void HideFocusPinterAfterHintVertical()
     {
-        if (player.nextLevelIndex == 4)
+        if (tutorial)
         {
-            FocusPointerAfterHintVertical.SetActive(false);
+            if (player.nextLevelIndex == 4)
+            {
+                FocusPointerAfterHintVertical.SetActive(false);
+            }
         }
     }
 

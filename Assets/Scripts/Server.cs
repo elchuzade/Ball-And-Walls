@@ -83,7 +83,6 @@ public class Server : MonoBehaviour
 
                 challengesStatus.LatestChallengeMiniSuccess(challengeLevel);
 
-                StartCoroutine(ExtractLatestChallengeMiniBackgroundImage(challengeLevel));
                 StartCoroutine(ExtractLatestChallengeMiniScreenshotImage(challengeLevel));
             }
         }
@@ -95,25 +94,9 @@ public class Server : MonoBehaviour
         StartCoroutine(GetLatestChallengeMiniCoroutine(latestChallengeMiniUrl));
     }
 
-    private IEnumerator ExtractLatestChallengeMiniBackgroundImage(ChallengeLevelMini challengeLevel)
-    {
-        if (challengeLevel.background != null)
-        {
-            WWW www = new WWW(challengeLevel.background);
-
-            yield return www;
-            if (www.texture != null)
-            {
-                Sprite sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-
-                challengesStatus.SetBackgroundImage(sprite);
-            }
-        }
-    }
-
     private IEnumerator ExtractLatestChallengeMiniScreenshotImage(ChallengeLevelMini challengeLevel)
     {
-        if (challengeLevel.background != null)
+        if (challengeLevel.screenshot != null)
         {
             WWW www = new WWW(challengeLevel.screenshot);
 

@@ -29,6 +29,17 @@ public class ChallengeStatus : MonoBehaviour
         public string rotation;
     }
 
+    public class ChallengeBall
+    {
+        public string direction;
+        public string position;
+    }
+
+    public class ChallengeBallCatcher
+    {
+        public string position;
+    }
+
     [SerializeField] GameObject angular_135;
     [SerializeField] GameObject angular_180;
     [SerializeField] GameObject angular_225;
@@ -61,33 +72,42 @@ public class ChallengeStatus : MonoBehaviour
     [SerializeField] GameObject coinPrefab;
 
     // To set parent of all barriers
-    private GameObject barriersParent;
+    GameObject barriersParent;
 
     // To set parent of all walls
-    private GameObject wallsParent;
+    GameObject wallsParent;
 
     // To set parent of all coins
-    private GameObject coinsParent;
-
-    // To set parent of all coins
-    private GameObject portalsParent;
-
-    private List<Vector3> coins = new List<Vector3>();
+    GameObject portalsParent;
 
     // For every index of a portal in there should be a portal out to connect
     // Type will be a Red-Green or a Blue-Yellow to show which type color pair of portals to place
-    private List<(string type, Vector3 position, Vector3 rotation)> portalIns = new List<(string type, Vector3 position, Vector3 rotation)>();
-    private List<(string type, Vector3 position, Vector3 rotation)> portalOuts = new List<(string type, Vector3 position, Vector3 rotation)>();
-    private List<(string type, Color32 color, Vector3 position, Vector3 rotation)> walls = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
-    private List<(string type, Color32 color, Vector3 position, Vector3 rotation)> barriers = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
+    List<(string type, Vector3 position, Vector3 rotation)> portalIns = new List<(string type, Vector3 position, Vector3 rotation)>();
+    List<(string type, Vector3 position, Vector3 rotation)> portalOuts = new List<(string type, Vector3 position, Vector3 rotation)>();
+    List<(string type, Color32 color, Vector3 position, Vector3 rotation)> walls = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
+    List<(string type, Color32 color, Vector3 position, Vector3 rotation)> barriers = new List<(string type, Color32 color, Vector3 position, Vector3 rotation)>();
+
+    int lives = 5;
+
+    // Reward from server
+    int diamonds = 0;
+    int coins = 0;
+
+    GameObject ball;
+    GameObject ballDirectionArrow;
+    GameObject ballCatcher;
+
+    string challengeId = "601fce7f2169911a30dbbe42";
 
     void Awake()
     {
         barriersParent = GameObject.Find("Barriers");    
         wallsParent = GameObject.Find("Walls");
-        coinsParent = GameObject.Find("Coins");
         portalsParent = GameObject.Find("Portals");
 
+        ball = GameObject.Find("Ball");
+        ballDirectionArrow = GameObject.Find("BallDirectionArrow");
+        ballCatcher = GameObject.Find("BallCatcher");
     }
 
     void Start()
@@ -119,17 +139,6 @@ public class ChallengeStatus : MonoBehaviour
             barrier.transform.SetParent(barriersParent.transform);
             // Change its color based on the server data
             barrier.GetComponent<SpriteRenderer>().color = item.color;
-        });
-    }
-
-    private void DrawCoins()
-    {
-        coins.ForEach(item => {
-            // Create and place coins from coin prefab based on the position
-            GameObject coin = Instantiate(coinPrefab, item, Quaternion.identity);
-            // Shrink the coin size to normal level size coins of 0.8
-            coin.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-            coin.transform.SetParent(coinsParent.transform);
         });
     }
 
@@ -192,12 +201,12 @@ public class ChallengeStatus : MonoBehaviour
 
     private void SendData()
     {
-        string challengeurl = "http://localhost:5001/1/v1/challenge";
+        string challengeurl = "http://localhost:5001/api/v1/challenges/" + challengeId;
 
-        StartCoroutine(GetAdLinkCoroutine(challengeurl));
+        StartCoroutine(GetCurrentChallengeCoroutine(challengeurl));
     }
 
-    IEnumerator GetAdLinkCoroutine(string uri)
+    IEnumerator GetCurrentChallengeCoroutine(string uri)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -209,11 +218,11 @@ public class ChallengeStatus : MonoBehaviour
 
             if (webRequest.isNetworkError)
             {
-                Debug.Log(pages[page] + ": Error: " + webRequest.error);
+                Debug.Log(webRequest.error);
             }
             else
             {
-                //Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                Debug.Log(webRequest.downloadHandler.text);
                 PopulateData(webRequest.downloadHandler.text);
             }
         }
@@ -233,6 +242,21 @@ public class ChallengeStatus : MonoBehaviour
         string[] portalInsJson = JsonHelper.GetJsonObjectArray(jsonData, "portalIns");
         string[] portalOutsJson = JsonHelper.GetJsonObjectArray(jsonData, "portalOuts");
         PopulatePortalsData(portalInsJson, portalOutsJson);
+
+        // Extracting ball json from overall data
+        string ballJson = JsonHelper.GetJsonObject(jsonData, "ball");
+        PopulateBallData(ballJson);
+    }
+
+    private void PopulateBallData(string ballJson)
+    {
+        Debug.Log(ballJson);
+        // Parsing ball json into ball class object
+        ChallengeBall ballInfo = JsonUtility.FromJson<ChallengeBall>(ballJson);
+
+        Debug.Log(ballInfo);
+        ball.transform.position = JsonStringToVector3(ballInfo.position);
+        ball.GetComponent<Ball>().SetDirection(ballInfo.direction);
     }
 
     private void PopulateWallsData(string[] wallsJson)

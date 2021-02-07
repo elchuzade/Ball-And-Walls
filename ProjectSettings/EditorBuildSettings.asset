@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/LeaderboardScene.unity
     guid: 2e6a95bc5b53c43e4a53c343b48fe223
   - enabled: 1
-    path: Assets/Scenes/ChallengeScene.unity
+    path: Assets/Scenes/ChallengesScene.unity
     guid: 707b2f203ec4d49568b2e1ea43afe301
   - enabled: 1
     path: Assets/Scenes/ShopScene.unity

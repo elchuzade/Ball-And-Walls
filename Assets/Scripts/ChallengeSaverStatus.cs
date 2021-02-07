@@ -18,6 +18,8 @@ public class ChallengeSaverStatus : MonoBehaviour
         public List<string> walls = new List<string>();
         public List<string> barriers = new List<string>();
         public List<string> portals = new List<string>();
+        public string ball;
+        public string ballCatcher;
     }
 
     public class ChallengeWall
@@ -43,17 +45,28 @@ public class ChallengeSaverStatus : MonoBehaviour
         public Vector3 rotation;
     }
 
+    public class ChallengeBallCatcher
+    {
+        public Vector3 position;
+    }
+
+    public class ChallengeBall
+    {
+        // East, West, North, South
+        public string direction;
+        public Vector3 position;
+    }
+
     GameObject saveJsonButton;
 
     GameObject barriers;
     GameObject walls;
     GameObject portals;
 
-    ChallengeWall[] challengeWalls;
-    ChallengeBarrier[] challengeBarriers;
-    ChallengePortal[] challengePortals;
-
     ChallengeData saveData;
+
+    GameObject ball;
+    GameObject ballCatcher;
 
     void Awake()
     {
@@ -61,6 +74,9 @@ public class ChallengeSaverStatus : MonoBehaviour
         barriers = GameObject.Find("Barriers");
         walls = GameObject.Find("Walls");
         portals = GameObject.Find("Portals");
+
+        ball = GameObject.Find("Ball");
+        ballCatcher = GameObject.Find("BallCatcher");
     }
 
     void Start()
@@ -76,10 +92,32 @@ public class ChallengeSaverStatus : MonoBehaviour
         SaveBarriers();
         SaveWalls();
         SavePortals();
+        SaveBall();
+        SaveBallCatcher();
 
         string saveDataJson = JsonUtility.ToJson(saveData);
         SendData(saveDataJson);
-        System.IO.File.WriteAllText(Application.dataPath + "/SaveData.json", saveDataJson);
+    }
+
+    private void SaveBall()
+    {
+        ChallengeBall challengeBall = new ChallengeBall();
+        challengeBall.direction = ball.GetComponent<Ball>().GetDirection();
+        challengeBall.position = ball.GetComponent<Ball>().transform.position;
+
+        // Save data about every barrier into the list
+        string ballJson = JsonUtility.ToJson(challengeBall);
+        saveData.ball = ballJson;
+    }
+
+    private void SaveBallCatcher()
+    {
+        ChallengeBallCatcher challengeBallCatcher = new ChallengeBallCatcher();
+        challengeBallCatcher.position = ballCatcher.transform.position;
+
+        // Save data about every barrier into the list
+        string ballCatcherJson = JsonUtility.ToJson(challengeBallCatcher);
+        saveData.ballCatcher = ballCatcherJson;
     }
 
     private void SaveBarriers()
@@ -200,7 +238,7 @@ public class ChallengeSaverStatus : MonoBehaviour
 
     private void SendData(string json)
     {
-        string url = "http://localhost:5001/v1/challenges";
+        string url = "http://localhost:5001/api/v1/challenges";
 
         StartCoroutine(PostRequestCoroutine(url, json));
     }
