@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System;
 using System.Collections;
 using UnityEngine.Networking;
-
+using static Server;
 
 public class ChallengeSaverStatus : MonoBehaviour
 {
@@ -20,41 +20,6 @@ public class ChallengeSaverStatus : MonoBehaviour
         public List<string> portals = new List<string>();
         public string ball;
         public string ballCatcher;
-    }
-
-    public class ChallengeWall
-    {
-        public string type;
-        public Color32 color;
-        public Vector3 position;
-        public Vector3 rotation;
-    }
-
-    public class ChallengeBarrier
-    {
-        public string type;
-        public Color32 color;
-        public Vector3 position;
-        public Vector3 rotation;
-    }
-
-    public class ChallengePortal
-    {
-        public string type;
-        public Vector3 position;
-        public Vector3 rotation;
-    }
-
-    public class ChallengeBallCatcher
-    {
-        public Vector3 position;
-    }
-
-    public class ChallengeBall
-    {
-        // East, West, North, South
-        public string direction;
-        public Vector3 position;
     }
 
     GameObject saveJsonButton;

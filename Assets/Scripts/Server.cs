@@ -1,11 +1,55 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 
 public class Server : MonoBehaviour
 {
+    public class ChallengeWall
+    {
+        public string type;
+        public Color32 color;
+        public Vector3 position;
+        public Vector3 rotation;
+    }
+
+    public class ChallengeBarrier
+    {
+        public string type;
+        public Color32 color;
+        public Vector3 position;
+        public Vector3 rotation;
+    }
+
+    public class ChallengePortal
+    {
+        public string type;
+        public Vector3 position;
+        public Vector3 rotation;
+    }
+
+    public class ChallengeBallCatcher
+    {
+        public Vector3 position;
+    }
+
+    public class ChallengeBall
+    {
+        // East, West, North, South
+        public string direction;
+        public Vector3 position;
+    }
+
+    public class ChallengeLevel
+    {
+        public ChallengeBall ball;
+        public ChallengeBallCatcher ballCatcher;
+        public ChallengeWall[] walls;
+        public ChallengeBarrier[] barriers;
+        public ChallengePortal[] portals;
+        public string background;
+    }
+
     public class ChallengeLevelMini
     {
         public int tried;
@@ -42,6 +86,12 @@ public class Server : MonoBehaviour
         public string website;
     }
 
+    private List<ChallengeWall> walls = new List<ChallengeWall>();
+    private List<ChallengeBarrier> barriers = new List<ChallengeBarrier>();
+    private List<ChallengePortal> portals = new List<ChallengePortal>();
+    private ChallengeBall ball = new ChallengeBall();
+    private ChallengeBallCatcher ballCatcher = new ChallengeBallCatcher();
+
     private List<LeaderboardItem> top = new List<LeaderboardItem>();
     private List<LeaderboardItem> before = new List<LeaderboardItem>();
     private List<LeaderboardItem> after = new List<LeaderboardItem>();
@@ -55,8 +105,99 @@ public class Server : MonoBehaviour
     [SerializeField] LeaderboardStatus leaderboardStatus;
     // This is to call the functions in challenges scene
     [SerializeField] ChallengesStatus challengesStatus;
+    // This is to call the functions in challenge scene
+    [SerializeField] ChallengeStatus challengeStatus;
 
     /* ---------- CHALLENGES SCENE ---------- */
+
+    private void PopulateChallengeData(string jsonData)
+    {
+        // Clear the lists incase they already had data in them
+        walls.Clear();
+        barriers.Clear();
+        portals.Clear();
+        // Extract string arrays of top, before, after and stirng of you data
+        string[] wallsData = JsonHelper.GetJsonObjectArray(jsonData, "walls");
+        string[] barriersData = JsonHelper.GetJsonObjectArray(jsonData, "barriers");
+        string[] portalsData = JsonHelper.GetJsonObjectArray(jsonData, "portals");
+        string ballData = JsonHelper.GetJsonObject(jsonData, "ball");
+        string ballCatcherData = JsonHelper.GetJsonObject(jsonData, "ballCatcher");
+
+        // Set challenge level background
+        ChallengeLevel challengeLevel = JsonUtility.FromJson<ChallengeLevel>(jsonData);
+        StartCoroutine(ExtractCurrentChallengeBackgroundImage(challengeLevel));
+
+        // Parse walls data
+        for (int i = 0; i < wallsData.Length; i++)
+        {
+            ChallengeWall wall = JsonUtility.FromJson<ChallengeWall>(wallsData[i]);
+            walls.Add(wall);
+        }
+        // Parse barriers data
+        for (int i = 0; i < barriersData.Length; i++)
+        {
+            ChallengeBarrier barrier = JsonUtility.FromJson<ChallengeBarrier>(barriersData[i]);
+            barriers.Add(barrier);
+        }
+        // Parse ball data
+        ball = JsonUtility.FromJson<ChallengeBall>(ballData);
+        // Parse ball catcher data
+        ballCatcher = JsonUtility.FromJson<ChallengeBallCatcher>(ballCatcherData);
+        // Parse after data
+        for (int i = 0; i < portalsData.Length; i++)
+        {
+            ChallengePortal portal = JsonUtility.FromJson<ChallengePortal>(portalsData[i]);
+            portals.Add(portal);
+        }
+        // Send leaderboard data to leaderboard scene
+        challengeStatus.CurrentChallengeSuccess(walls, barriers, portals, ball, ballCatcher);
+    }
+
+    public void GetCurrentChallenge()
+    {
+        string challengeId = "601fce7f2169911a30dbbe42";
+        string currentChallengeUrl = "http://localhost:5001/api/v1/challenges/" + challengeId;
+        StartCoroutine(GetCurrentChallengeCoroutine(currentChallengeUrl));
+    }
+
+    // This one is for the current challenge level
+    private IEnumerator GetCurrentChallengeCoroutine(string url)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            // Send request and wait for the desired reqsponse.
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+                // Set the error of video link received from the server
+                challengeStatus.CurrentChallengeError();
+            }
+            else
+            {
+                // Parse the response from server to retrieve all data fields
+                string levelData = JsonHelper.GetJsonObject(webRequest.downloadHandler.text, "data");
+
+                PopulateChallengeData(levelData);
+            }
+        }
+    }
+
+    private IEnumerator ExtractCurrentChallengeBackgroundImage(ChallengeLevel challengeLevel)
+    {
+        if (challengeLevel.background != null)
+        {
+            WWW www = new WWW(challengeLevel.background);
+
+            yield return www;
+            if (www.texture != null)
+            {
+                Sprite sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+
+                challengesStatus.SetScreenshotImage(sprite);
+            }
+        }
+    }
 
     // This one is for the big challenge in challenges scene
     // This does not have data to build up a challenge level
@@ -229,7 +370,7 @@ public class Server : MonoBehaviour
             else
             {
                 // Parse the response from server to retrieve all data fields
-                PopulateData(webRequest.downloadHandler.text);
+                PopulateLeaderboardData(webRequest.downloadHandler.text);
             }
         }
     }
@@ -257,7 +398,7 @@ public class Server : MonoBehaviour
         StartCoroutine(LeaderboardCoroutine(leaderboardUrl));
     }
 
-    private void PopulateData(string jsonData)
+    private void PopulateLeaderboardData(string jsonData)
     {
         // Clear the lists incase they already had data in them
         top.Clear();

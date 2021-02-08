@@ -169,6 +169,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Server
       objectReference: {fileID: 0}
+    - target: {fileID: 7789883723887609022, guid: cdace4d3a5dd94de19bf462420ef8645,
+        type: 3}
+      propertyPath: challengeStatus
+      value: 
+      objectReference: {fileID: 2057276744}
     - target: {fileID: 7789883723887609023, guid: cdace4d3a5dd94de19bf462420ef8645,
         type: 3}
       propertyPath: m_RootOrder
@@ -1264,7 +1269,7 @@ PrefabInstance:
     - target: {fileID: 5689082986981646531, guid: d66bef2f684f947c0ab8cac142d03c8f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 124
+      value: -288
       objectReference: {fileID: 0}
     - target: {fileID: 5689082986981646531, guid: d66bef2f684f947c0ab8cac142d03c8f,
         type: 3}
