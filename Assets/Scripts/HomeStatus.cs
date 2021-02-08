@@ -25,6 +25,8 @@ public class HomeStatus : MonoBehaviour
     bool showedPointer = false;
     int tutorialStep = 0;
 
+    [SerializeField] bool challengeLevel;
+
     [SerializeField] bool tutorial;
 
     // This should be changed as new balls are being added
@@ -238,7 +240,6 @@ public class HomeStatus : MonoBehaviour
         }
     }
 
-
     private void UseHintCancel()
     {
         // Show the warning stuff if it is the first time of cancelling
@@ -415,8 +416,13 @@ public class HomeStatus : MonoBehaviour
         // If it is not a tutorial level, show the shop and hint buttons
         if (player.nextLevelIndex > 4)
         {
-            homeButton.SetActive(true);
             hintButton.SetActive(true);
+        }
+        if (player.nextLevelIndex > 4 || challengeLevel)
+        {
+            homeButton.SetActive(true);
+            ChallengeStatus challengeLevelScript = FindObjectOfType<ChallengeStatus>();
+            challengeLevelScript.DecreaseLife();
         }
     }
 
@@ -521,7 +527,6 @@ public class HomeStatus : MonoBehaviour
         }
         return true;
     }
-
     // Tutorial stuff
     public void ShowFocusPinterAfterHintHorizontal()
     {

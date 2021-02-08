@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public class Server : MonoBehaviour
 {
+    /* CHALLENGE */
+
+    // Challenge data
     public class ChallengeWall
     {
         public string type;
@@ -12,7 +15,6 @@ public class Server : MonoBehaviour
         public Vector3 position;
         public Vector3 rotation;
     }
-
     public class ChallengeBarrier
     {
         public string type;
@@ -20,26 +22,23 @@ public class Server : MonoBehaviour
         public Vector3 position;
         public Vector3 rotation;
     }
-
     public class ChallengePortal
     {
         public string type;
         public Vector3 position;
         public Vector3 rotation;
     }
-
     public class ChallengeBallCatcher
     {
         public Vector3 position;
     }
-
     public class ChallengeBall
     {
         // East, West, North, South
         public string direction;
         public Vector3 position;
     }
-
+    // Current challenge to play
     public class ChallengeLevel
     {
         public ChallengeBall ball;
@@ -50,22 +49,29 @@ public class Server : MonoBehaviour
         public string background;
     }
 
+    /* CHALLENGES */
+
+    // Every challenge in the list including current challenge
     public class ChallengeLevelMini
     {
         public int tried;
         public int solved;
         public int coins;
+        public int lives;
         public int diamonds;
         public string screenshot;
         public string background;
     }
 
+    /* LEADERBOARD */
+
+    // Change player name
     public class PlayerName
     {
         public string deviceId;
         public string name;
     }
-
+    // Each row of leaderboard
     public class LeaderboardItem
     {
         public string name;
@@ -73,17 +79,34 @@ public class Server : MonoBehaviour
         public string currentBall;
     }
 
+    /* LOADING */
+
+    // Create a new player
     private class PlayerJson
     {
         public string deviceOS;
         public string deviceId;
     }
 
+    /* MAIN */
+
+    // Video Link
     public class VideoJson
     {
         public string video;
         public string name;
         public string website;
+    }
+
+    public class PlayerData
+    {
+        public int coins;
+        public int diamonds;
+        public int keys;
+        public int nextLevelIndex;
+        public string currentBall;
+        public List<string> unlockedBalls;
+        public string deviceId;
     }
 
     private List<ChallengeWall> walls = new List<ChallengeWall>();
@@ -110,6 +133,37 @@ public class Server : MonoBehaviour
 
     /* ---------- CHALLENGES SCENE ---------- */
 
+    public void GetCurrentChallenge()
+    {
+        // PROD
+        string challengeId = "602192a7a2142d00155b65bb";
+        string currentChallengeUrl = "https://ballandwalls.abboxgames.com/api/v1/challenges/" + challengeId;
+        StartCoroutine(GetCurrentChallengeCoroutine(currentChallengeUrl));
+    }
+
+    // This one is for the current challenge level
+    private IEnumerator GetCurrentChallengeCoroutine(string url)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            // Send request and wait for the desired reqsponse.
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+                // Set the error of video link received from the server
+                challengeStatus.CurrentChallengeError();
+            }
+            else
+            {
+                // Parse the response from server to retrieve all data fields
+                string levelData = JsonHelper.GetJsonObject(webRequest.downloadHandler.text, "data");
+
+                PopulateChallengeData(levelData);
+            }
+        }
+    }
+
     private void PopulateChallengeData(string jsonData)
     {
         // Clear the lists incase they already had data in them
@@ -124,8 +178,8 @@ public class Server : MonoBehaviour
         string ballCatcherData = JsonHelper.GetJsonObject(jsonData, "ballCatcher");
 
         // Set challenge level background
-        ChallengeLevel challengeLevel = JsonUtility.FromJson<ChallengeLevel>(jsonData);
-        StartCoroutine(ExtractCurrentChallengeBackgroundImage(challengeLevel));
+        //ChallengeLevel challengeLevel = JsonUtility.FromJson<ChallengeLevel>(jsonData);
+        //StartCoroutine(ExtractCurrentChallengeBackgroundImage(challengeLevel));
 
         // Parse walls data
         for (int i = 0; i < wallsData.Length; i++)
@@ -151,36 +205,6 @@ public class Server : MonoBehaviour
         }
         // Send leaderboard data to leaderboard scene
         challengeStatus.CurrentChallengeSuccess(walls, barriers, portals, ball, ballCatcher);
-    }
-
-    public void GetCurrentChallenge()
-    {
-        string challengeId = "601fce7f2169911a30dbbe42";
-        string currentChallengeUrl = "http://localhost:5001/api/v1/challenges/" + challengeId;
-        StartCoroutine(GetCurrentChallengeCoroutine(currentChallengeUrl));
-    }
-
-    // This one is for the current challenge level
-    private IEnumerator GetCurrentChallengeCoroutine(string url)
-    {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-        {
-            // Send request and wait for the desired reqsponse.
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.isNetworkError)
-            {
-                // Set the error of video link received from the server
-                challengeStatus.CurrentChallengeError();
-            }
-            else
-            {
-                // Parse the response from server to retrieve all data fields
-                string levelData = JsonHelper.GetJsonObject(webRequest.downloadHandler.text, "data");
-
-                PopulateChallengeData(levelData);
-            }
-        }
     }
 
     private IEnumerator ExtractCurrentChallengeBackgroundImage(ChallengeLevel challengeLevel)
@@ -211,6 +235,7 @@ public class Server : MonoBehaviour
 
             if (webRequest.isNetworkError)
             {
+                Debug.Log(webRequest.downloadHandler.text);
                 // Set the error of video link received from the server
                 challengesStatus.LatestChallengeMiniError();
             }
@@ -231,7 +256,7 @@ public class Server : MonoBehaviour
 
     public void GetLatestChallengeMini()
     {
-        string latestChallengeMiniUrl = "http://localhost:5001/api/v1/challenges/latest-mini";
+        string latestChallengeMiniUrl = "https://ballandwalls.abboxgames.com/api/v1/challenges/latest-mini";
         StartCoroutine(GetLatestChallengeMiniCoroutine(latestChallengeMiniUrl));
     }
 
@@ -269,11 +294,13 @@ public class Server : MonoBehaviour
 
         if (webRequest.isNetworkError)
         {
+            Debug.Log(webRequest.downloadHandler.text);
             // Set the error received from creating a player
             loadStatus.CreatePlayerError();
         } 
         else
         {
+            Debug.Log(webRequest.downloadHandler.text);
             // Make the success actions received from creating a player
             loadStatus.CreatePlayerSuccess();
         }
@@ -281,7 +308,7 @@ public class Server : MonoBehaviour
 
     public void CreatePlayer()
     {
-        string playerUrl = "http://localhost:5001/api/v1/players/player";
+        string playerUrl = "https://ballandwalls.abboxgames.com/api/v1/players/player";
 
         PlayerJson playerObject = new PlayerJson();
         playerObject.deviceId = SystemInfo.deviceUniqueIdentifier;
@@ -294,6 +321,56 @@ public class Server : MonoBehaviour
 
     /* ---------- MAIN SCENE ---------- */
 
+    // Save player data
+    public void SavePlayerData(Player player)
+    {
+        string playerDataUrl = "https://ballandwalls.abboxgames.com/api/v1/players/data";
+
+        PlayerData playerData = new PlayerData();
+        playerData.coins = player.coins;
+        playerData.diamonds = player.diamonds;
+        playerData.keys = player.keys;
+        playerData.nextLevelIndex = player.nextLevelIndex;
+        playerData.currentBall = player.currentBall;
+        playerData.deviceId = SystemInfo.deviceUniqueIdentifier;
+        playerData.unlockedBalls = new List<string>();
+
+        player.unlockedBalls.ForEach(b =>
+        {
+            playerData.unlockedBalls.Add(b);
+        });
+
+        string playerDataJson = JsonUtility.ToJson(playerData);
+
+        StartCoroutine(SavePlayerDataCoroutine(playerDataUrl, playerDataJson));
+    }
+
+    private IEnumerator SavePlayerDataCoroutine(string url, string playerData)
+    {
+        var jsonBinary = System.Text.Encoding.UTF8.GetBytes(playerData);
+        DownloadHandlerBuffer downloadHandlerBuffer = new DownloadHandlerBuffer();
+        UploadHandlerRaw uploadHandlerRaw = new UploadHandlerRaw(jsonBinary);
+        uploadHandlerRaw.contentType = "application/json";
+
+        UnityWebRequest webRequest =
+            new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
+
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.isNetworkError)
+        {
+            Debug.Log(webRequest.downloadHandler.text);
+            // Set the error received from creating a player
+            mainStatus.SavePlayerDataError();
+        }
+        else
+        {
+            Debug.Log(webRequest.downloadHandler.text);
+            // Make the success actions received from creating a player
+            mainStatus.SavePlayerDataSuccess();
+        }
+    }
+
     // This one is for TV in main scene
     // Get the latest video link, for now in general, in future personal based on the DeviceId
     private IEnumerator GetAdLinkCoroutine(string url)
@@ -305,6 +382,7 @@ public class Server : MonoBehaviour
 
             if (webRequest.isNetworkError)
             {
+                Debug.Log(webRequest.downloadHandler.text);
                 // Set the error of video link received from the server
                 mainStatus.SetVideoLinkError(webRequest.error);
             }
@@ -322,11 +400,27 @@ public class Server : MonoBehaviour
 
     public void GetVideoLink()
     {
-        string videoUrl = "http://localhost:5001/api/v1/videos";
+        string videoUrl = "https://ads.abbox.com/api/v1/videos";
         StartCoroutine(GetAdLinkCoroutine(videoUrl));
     }
 
     /* ---------- LEADERBOARD SCENE ---------- */
+
+    // CHANGE PLAYER NAME
+    public void ChangePlayerName(string name)
+    {
+        string id = SystemInfo.deviceUniqueIdentifier;
+
+        string nameUrl = "https://ballandwalls.abboxgames.com/api/v1/players/name/";
+
+        PlayerName nameObject = new PlayerName();
+        nameObject.deviceId = id;
+        nameObject.name = name;
+
+        string nameJson = JsonUtility.ToJson(nameObject);
+
+        StartCoroutine(ChangeNameCoroutine(nameUrl, nameJson));
+    }
 
     // Change player name
     private IEnumerator ChangeNameCoroutine(string url, string playerName)
@@ -343,7 +437,7 @@ public class Server : MonoBehaviour
 
         if (webRequest.isNetworkError)
         {
-            Debug.Log(webRequest.error);
+            Debug.Log(webRequest.downloadHandler.text);
             // Set the error received from creating a player
             leaderboardStatus.ChangeNameError();
         }
@@ -351,8 +445,18 @@ public class Server : MonoBehaviour
         {
             Debug.Log(webRequest.downloadHandler.text);
             // Make the success actions received from creating a player
-            leaderboardStatus.ChangeNameSuccess();
+            leaderboardStatus.ChangeNameSuccess(webRequest.downloadHandler.text);
         }
+    }
+
+
+    // GET LEADERBOARD LIST
+    public void GetLeaderboard()
+    {
+        string id = SystemInfo.deviceUniqueIdentifier;
+
+        string leaderboardUrl = "https://ballandwalls.abboxgames.com/api/v1/players/leaderboard/" + id;
+        StartCoroutine(LeaderboardCoroutine(leaderboardUrl));
     }
 
     // Get leaderboard data and populate it into the scroll list
@@ -366,36 +470,15 @@ public class Server : MonoBehaviour
             if (webRequest.isNetworkError)
             {
                 // Set the error of leaderboard data received from the server
+                Debug.Log(webRequest.downloadHandler.text);
             }
             else
             {
+                Debug.Log(webRequest.downloadHandler.text);
                 // Parse the response from server to retrieve all data fields
                 PopulateLeaderboardData(webRequest.downloadHandler.text);
             }
         }
-    }
-
-    public void ChangePlayerName(string name)
-    {
-        string id = SystemInfo.deviceUniqueIdentifier;
-
-        string nameUrl = "http://localhost:5001/api/v1/players/name/";
-
-        PlayerName nameObject = new PlayerName();
-        nameObject.deviceId = id;
-        nameObject.name = name;
-
-        string nameJson = JsonUtility.ToJson(nameObject);
-
-        StartCoroutine(ChangeNameCoroutine(nameUrl, nameJson));
-    }
-
-    public void GetLeaderboard()
-    {
-        string id = SystemInfo.deviceUniqueIdentifier;
-
-        string leaderboardUrl = "http://localhost:5001/api/v1/players/leaderboard/" + id;
-        StartCoroutine(LeaderboardCoroutine(leaderboardUrl));
     }
 
     private void PopulateLeaderboardData(string jsonData)

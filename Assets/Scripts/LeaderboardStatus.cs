@@ -114,7 +114,7 @@ public class LeaderboardStatus : MonoBehaviour
     private void SwapSaveButton()
     {
         // Fetch data from server and choose the button to show
-        if (player.nameModified)
+        if (player.playerName.Length >= 2)
         {
             // The name sent from the server
             arrow.SetActive(false);
@@ -174,11 +174,11 @@ public class LeaderboardStatus : MonoBehaviour
         CloseChangeName();
     }
 
-    public void ChangeNameSuccess()
+    public void ChangeNameSuccess(string name)
     {
-        if (!player.nameModified)
+        if (player.playerName.Length < 2)
         {
-            player.nameModified = true;
+            player.playerName = name;
             player.diamonds += 3;
             player.SavePlayer();
             player.LoadPlayer();

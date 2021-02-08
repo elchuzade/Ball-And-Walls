@@ -104,10 +104,7 @@ public class ChallengeSaverStatus : MonoBehaviour
         barrierInfo.type = barrier.name;
         barrierInfo.color = barrier.GetComponent<SpriteRenderer>().color;
         barrierInfo.position = barrier.transform.position;
-        barrierInfo.rotation = new Vector3(
-            barrier.transform.rotation.x,
-            barrier.transform.rotation.y,
-            barrier.transform.rotation.z);
+        barrierInfo.rotation = barrier.transform.rotation.eulerAngles;
 
         // Save data about every barrier into the list
         string barrierJson = JsonUtility.ToJson(barrierInfo);
@@ -143,10 +140,7 @@ public class ChallengeSaverStatus : MonoBehaviour
         wallInfo.type = wall.name;
         wallInfo.color = wall.GetComponent<SpriteRenderer>().color;
         wallInfo.position = wall.transform.position;
-        wallInfo.rotation = new Vector3(
-            wall.transform.rotation.x,
-            wall.transform.rotation.y,
-            wall.transform.rotation.z);
+        wallInfo.rotation = wall.transform.rotation.eulerAngles;
 
         // Save data about every barrier into the list
         string wallJson = JsonUtility.ToJson(wallInfo);
@@ -181,10 +175,7 @@ public class ChallengeSaverStatus : MonoBehaviour
         // Get the name of object. 
         portalInfo.type = portal.name;
         portalInfo.position = portal.transform.position;
-        portalInfo.rotation = new Vector3(
-            portal.transform.rotation.x,
-            portal.transform.rotation.y,
-            portal.transform.rotation.z);
+        portalInfo.rotation = portal.transform.rotation.eulerAngles;
 
         // Save data about every barrier into the list
         string portalJson = JsonUtility.ToJson(portalInfo);
@@ -203,7 +194,7 @@ public class ChallengeSaverStatus : MonoBehaviour
 
     private void SendData(string json)
     {
-        string url = "http://localhost:5001/api/v1/challenges";
+        string url = "https://ballandwalls.abboxgames.com/api/v1/challenges";
 
         StartCoroutine(PostRequestCoroutine(url, json));
     }
@@ -219,8 +210,6 @@ public class ChallengeSaverStatus : MonoBehaviour
 
         UnityWebRequest www =
             new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
-
-        //www.SetRequestHeader("", "");
 
         yield return www.SendWebRequest();
 

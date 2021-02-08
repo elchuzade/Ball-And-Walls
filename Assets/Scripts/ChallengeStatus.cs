@@ -1,13 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
-using System;
+using UnityEngine.UI;
+using System.Collections;
+
 using static Server;
 
 public class ChallengeStatus : MonoBehaviour
 {
     Server server;
+    Player player;
+    Scoreboard scoreboard;
+    Navigator navigator;
 
     [SerializeField] GameObject angular_135;
     [SerializeField] GameObject angular_180;
@@ -40,6 +43,8 @@ public class ChallengeStatus : MonoBehaviour
     // Each coin should be described as x, y
     [SerializeField] GameObject coinPrefab;
 
+    GameObject extraLifeAd;
+
     // To set parent of all barriers
     GameObject barriersParent;
 
@@ -49,12 +54,24 @@ public class ChallengeStatus : MonoBehaviour
     // To set parent of all coins
     GameObject portalsParent;
 
+    // Continue watching and receive a reward button when player wanted to skip the video
+    GameObject adWarningReceiveButton;
+    // Reject reward and continue playing game button when player wanted to skip the video
+    GameObject adWarningContinueButton;
+    // Background of window that pops up if player wants to switch off reward ad
+    GameObject adCancelBg;
+    // Window with buttons that pops up if player wants to switch off reward ad
+    GameObject adCancelWarning;
+
     // For every index of a portal in there should be a portal out to connect
     // Type will be a Red-Green or a Blue-Yellow to show which type color pair of portals to place
     List<ChallengePortal> portalIns = new List<ChallengePortal>();
     List<ChallengePortal> portalOuts = new List<ChallengePortal>();
     List<ChallengeWall> walls = new List<ChallengeWall>();
     List<ChallengeBarrier> barriers = new List<ChallengeBarrier>();
+
+    // Parent that holds all 5 lives
+    GameObject livesParent;
 
     int lives = 5;
 
@@ -63,26 +80,94 @@ public class ChallengeStatus : MonoBehaviour
     int coins = 0;
 
     GameObject ball;
-    GameObject ballDirectionArrow;
     GameObject ballCatcher;
+    GameObject getLifeButton;
 
-    string challengeId = "601fce7f2169911a30dbbe42";
+    // Track if ad cancel warning has already been shown, not to annoy each time showing the same window
+    bool showedAdCancelWarning = false;
 
     void Awake()
     {
+        scoreboard = FindObjectOfType<Scoreboard>();
+        navigator = FindObjectOfType<Navigator>();
         server = FindObjectOfType<Server>();
+
         barriersParent = GameObject.Find("Barriers");    
         wallsParent = GameObject.Find("Walls");
         portalsParent = GameObject.Find("Portals");
 
         ball = GameObject.Find("Ball");
-        ballDirectionArrow = GameObject.Find("BallDirectionArrow");
         ballCatcher = GameObject.Find("BallCatcher");
+        livesParent = GameObject.Find("Lives");
+
+        extraLifeAd = GameObject.Find("ExtraLifeAd");
+        getLifeButton = GameObject.Find("GetLifeButton");
+        adCancelBg = GameObject.Find("AdCancelBg");
+        adCancelWarning = GameObject.Find("AdCancelWarning");
+        adWarningReceiveButton = GameObject.Find("AdWarningReceiveButton");
+        adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
     }
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
+
         server.GetCurrentChallenge();
+        SetLives();
+
+        // Hide it and return its scale to normal
+        extraLifeAd.transform.localScale = new Vector3(1, 1, 1);
+        extraLifeAd.SetActive(false);
+    }
+
+    private void SetLives()
+    {
+        for (int i = 0; i < livesParent.transform.childCount; i++)
+        {
+            if (i < lives)
+            {
+                livesParent.transform.GetChild(i).GetComponent<Image>().color =
+                    new Color32(255, 255, 255, 255);
+            } else
+            {
+                livesParent.transform.GetChild(i).GetComponent<Image>().color =
+                    new Color32(60, 60, 60, 255);
+            }
+        }
+    }
+
+    private void SetEarnLifeAdScreen()
+    {
+        Debug.Log("ads");
+        extraLifeAd.SetActive(true);
+    }
+
+    // When you lose
+    public void DecreaseLife()
+    {
+        if (lives > 0)
+        {
+            lives--;
+            SetLives();
+
+            player.lives--;
+            player.SavePlayer();
+
+            if (lives == 0)
+            {
+                SetEarnLifeAdScreen();
+            }
+        }
+    }
+
+    // When you watch ads
+    public void IncreaseLife()
+    {
+        if (lives == 0)
+        {
+            lives++;
+            SetLives();
+        }
     }
 
     public void CurrentChallengeError()
@@ -99,12 +184,12 @@ public class ChallengeStatus : MonoBehaviour
     {
         // Set ball position and direction
         ball.transform.position = ballData.position;
+        
+        ball.GetComponent<Ball>().SetPosition(ballData.position);
         ball.GetComponent<Ball>().SetDirection(ballData.direction);
 
         // Set ballCatcher position
         ballCatcher.transform.position = ballCatcherData.position;
-
-        Debug.Log(wallsData[0].type);
 
         // Set walls
         walls = wallsData;
@@ -136,10 +221,6 @@ public class ChallengeStatus : MonoBehaviour
     {
         walls.ForEach(item =>
         {
-            Debug.Log(item.type);
-            Debug.Log(item.color);
-            Debug.Log(item.position);
-            Debug.Log(item.rotation);
             // Create and place walls from angular-135 prefab based on position and rotation given by the server
             GameObject wall = Instantiate(GetWallPrefabFromType(item.type), item.position, Quaternion.Euler(item.rotation));
             // Put the wall into Walls folder
@@ -197,7 +278,7 @@ public class ChallengeStatus : MonoBehaviour
         }
         else if (type == "Portal-Out-Blue-Yellow")
         {
-            return portalOutRedGreen;
+            return portalOutBlueYellow;
         }
         else if (type == "Portal-Out-Red-Green")
         {
@@ -278,5 +359,111 @@ public class ChallengeStatus : MonoBehaviour
             return vertical_270;
         }
         return null;
+    }
+
+    public void GetMoreCoins()
+    {
+        if (getLifeButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run the trigger button animation and disable button for its duration
+            getLifeButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is over, load get more coins ad
+            StartCoroutine(LoadGetMoreCoinsCoroutine(0.2f));
+        }
+    }
+
+    public IEnumerator LoadGetMoreCoinsCoroutine(float time)
+    {
+        // Wait for given time and load the ad screen
+        yield return new WaitForSeconds(time);
+
+        AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
+    }
+
+
+    public void ReceiveCoinsButtonClick()
+    {
+        if (adWarningReceiveButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run animation of clicking receive coins and watch the ad button
+            adWarningReceiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is finished, load the ad screen
+            StartCoroutine(ReceiveCoinsButtonCoroutine(0.2f));
+        }
+    }
+
+    // This is similar to LoadGetMoreCoins. But for consistency, it is better to keep it separately
+    public IEnumerator ReceiveCoinsButtonCoroutine(float time)
+    {
+        // Wait for given time and load the ad screen
+        yield return new WaitForSeconds(time);
+        // Load the ad screen
+        AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
+    }
+
+    public void ContinuePlayingButtonClick()
+    {
+        if (adWarningContinueButton.GetComponent<Button>().IsInteractable())
+        {
+            // Wait for given time and load the ad screen
+            adWarningContinueButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is finished, load the ad screen
+            StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
+        }
+    }
+
+    public IEnumerator ContinuePlayingButtonCoroutine(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        // Wait for some time and hide all the ad stuff, since player has cancelled reward and refused to watch the ad
+        adCancelBg.SetActive(false);
+        adCancelWarning.SetActive(false);
+    }
+
+    private void GetCoinsCancel()
+    {
+        // Playe has canceled get extra ccoins video
+        if (!showedAdCancelWarning)
+        {
+            // If it is the first time, show him a warnigng screen with ad stuff
+            adCancelBg.SetActive(true);
+            adCancelWarning.SetActive(true);
+        }
+        else
+        {
+            // else hide a warning screen with ad stuff
+            adCancelBg.SetActive(false);
+            adCancelWarning.SetActive(false);
+        }
+
+        // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
+        showedAdCancelWarning = true;
+    }
+
+    private void GetCoinsFail()
+    {
+        // If a video for receiving coins fails, hide the warning page about cancelling, not to annoy the player
+        // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
+        showedAdCancelWarning = true;
+        adCancelBg.SetActive(false);
+        adCancelWarning.SetActive(false);
+    }
+
+    public void GetCoinsSuccess()
+    {
+        // If video has been played suvvessfully till the end give the reward
+        // Increase player coins by ad reward amount
+        if (player.lives == 0)
+        {
+            player.lives++;
+            IncreaseLife();
+            player.SavePlayer();
+        }
+
+        // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
+        showedAdCancelWarning = true;
+        adCancelBg.SetActive(false);
+        adCancelWarning.SetActive(false);
     }
 }

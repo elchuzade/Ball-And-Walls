@@ -47,16 +47,18 @@ public class Ball : MonoBehaviour
     // Set a direction for the ball where to move when launched
     [SerializeField] Directions direction;
 
+    GameObject ballDirectionArrow;
+
     void Awake()
     {
         homeStatus = FindObjectOfType<HomeStatus>();
+        ballDirectionArrow = GameObject.Find("BallDirectionArrow");
     }
 
     void Start()
     {
-        initialPosition = transform.position;
-
-        SetLaunchVector();
+        // Set initial position and launch vector based on direction
+        PrepareForLaunch();
     }
 
     public void OnMouseDown()
@@ -69,6 +71,46 @@ public class Ball : MonoBehaviour
             // Run all the actions needed when ball has just been launched
             BallClicked();
         }
+    }
+
+    private void SetDirectionArrow()
+    {
+        // Set direction and position of arrow
+        // 0 degrees is pointing at West, 90 - South, 180 - East, 270 - North
+        switch (direction)
+        {
+            case Directions.North:
+                ballDirectionArrow.transform.position = transform.position + new Vector3(0, 50, 0);
+                ballDirectionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 270));
+                break;
+            case Directions.South:
+                ballDirectionArrow.transform.position = transform.position + new Vector3(0, -50, 0);
+                ballDirectionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
+                break;
+            case Directions.East:
+                ballDirectionArrow.transform.position = transform.position + new Vector3(50, 0, 0);
+                ballDirectionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180));
+                break;
+            case Directions.West:
+                ballDirectionArrow.transform.position = transform.position + new Vector3(-50, 0, 0);
+                ballDirectionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                break;
+        }
+    }
+
+    private void PrepareForLaunch()
+    {
+        initialPosition = transform.position;
+
+        SetLaunchVector();
+
+        SetDirectionArrow();
+    }
+
+    // This is to set when the ball position comes from server, ChallengesScene
+    public void SetPosition(Vector3 position)
+    {
+        transform.position = position;
     }
 
     public void BallClicked()
@@ -149,6 +191,7 @@ public class Ball : MonoBehaviour
                 direction = Directions.East;
                 break;
         }
+        PrepareForLaunch();
     }
 
     // Launch the ball from inside walls or from starting position

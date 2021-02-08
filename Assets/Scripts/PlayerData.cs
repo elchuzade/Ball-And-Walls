@@ -8,9 +8,11 @@ public class PlayerData
     public string currentBall = "default";
     public int coins = 0;
     public int keys = 0;
+    public int lives = 0;
     public int diamonds = 0;
     public int nextLevelIndex = 1;
-    public bool nameModified = false;
+    public string playerName = "";
+    public bool playerCreated = false;
 
     public PlayerData (Player player)
     {
@@ -18,8 +20,10 @@ public class PlayerData
         currentBall = player.currentBall;
         coins = player.coins;
         keys = player.keys;
+        lives = player.lives;
         diamonds = player.diamonds;
         nextLevelIndex = player.nextLevelIndex;
-        nameModified = player.nameModified;
+        playerName = player.playerName;
+        playerCreated = player.playerCreated;
     }
 }

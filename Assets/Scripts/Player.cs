@@ -8,8 +8,10 @@ public class Player : MonoBehaviour
     public int coins = 0;
     public int diamonds = 0;
     public int keys = 0;
+    public int lives = 0;
     public int nextLevelIndex = 1;
-    public bool nameModified = false;
+    public string playerName = "";
+    public bool playerCreated = false;
 
     void Awake()
     {
@@ -37,9 +39,12 @@ public class Player : MonoBehaviour
         currentBall = "default";
         coins = 44444;
         keys = 0;
+        playerName = "";
         diamonds = 555;
         nextLevelIndex = 1;
-        nameModified = false;
+        lives = 0;
+        playerName = "";
+        playerCreated = false;
         SaveSystem.SavePlayer(this);
     }
 
@@ -52,12 +57,14 @@ public class Player : MonoBehaviour
             data = SaveSystem.LoadPlayer();
         }
 
+        playerCreated = data.playerCreated;
+        playerName = data.playerName;
         unlockedBalls = data.unlockedBalls;
         currentBall = data.currentBall;
         coins = data.coins;
         keys = data.keys;
+        lives = data.lives;
         diamonds = data.diamonds;
         nextLevelIndex = data.nextLevelIndex;
-        nameModified = data.nameModified;
     }
 }

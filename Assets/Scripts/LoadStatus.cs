@@ -19,12 +19,17 @@ public class LoadStatus : MonoBehaviour
 
         player.LoadPlayer();
 
-        server.CreatePlayer();
+        if (!player.playerCreated)
+        {
+            server.CreatePlayer();
+        }
     }
 
     // Create a new player
     public void CreatePlayerSuccess()
     {
+        player.playerCreated = true;
+        player.SavePlayer();
         StartCoroutine(LoadGame());
     }
 

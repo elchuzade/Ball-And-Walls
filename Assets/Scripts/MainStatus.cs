@@ -45,6 +45,8 @@ public class MainStatus : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
 
+        server.SavePlayerData(player);
+
         AdManager.ShowBanner();
         player.ResetPlayer();
         player.LoadPlayer();
@@ -84,6 +86,18 @@ public class MainStatus : MonoBehaviour
         switchIsOn = false;
         // Turn lights on to red
         tvLight.GetComponent<Image>().color = new Color32(255, 0, 0, 255);
+    }
+
+    // Save data was successful
+    public void SavePlayerDataSuccess()
+    {
+        Debug.Log("save player success");
+    }
+
+    // Save data was successful
+    public void SavePlayerDataError()
+    {
+        Debug.Log("save player failed");
     }
 
     // Set video link from server file
