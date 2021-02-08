@@ -46,16 +46,16 @@ public class ShopStatus : MonoBehaviour
         adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
 
         items = GameObject.Find("Items");
-
-        player.LoadPlayer();
-
-        // Set currently selected ball with their frames and backgrounds
-        currentBallName = player.currentBall;
     }
 
     void Start()
     {
         player = FindObjectOfType<Player>();
+
+        player.LoadPlayer();
+
+        // Set currently selected ball with their frames and backgrounds
+        currentBallName = player.currentBall;
 
         AdManager.ShowBanner();
 
@@ -92,6 +92,15 @@ public class ShopStatus : MonoBehaviour
             return true;
         }
 
+        return false;
+    }
+
+    public bool GetPlayerLoaded()
+    {
+        if (player != null && player.unlockedBalls.Count > 0)
+        {
+            return true;
+        }
         return false;
     }
 
@@ -152,8 +161,8 @@ public class ShopStatus : MonoBehaviour
             player.SavePlayer();
             // Load player again to access its data
             player.LoadPlayer();
-            // Update coins in scoreboard based on new status of player coins
-            scoreboard.SetCoins(player.coins);
+            // Update diamonds in scoreboard based on new status of player diamonds
+            scoreboard.SetDiamonds(player.diamonds);
             return true;
         }
         return false;

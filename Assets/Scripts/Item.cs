@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using MoreMountains.NiceVibrations;
+using System.Collections;
 
 // Item in the shop
 public class Item : MonoBehaviour
@@ -22,6 +23,9 @@ public class Item : MonoBehaviour
     GameObject coin;
     GameObject diamond;
 
+    // This is to hold loading player stuff until it has been created with singleton
+    bool loadedBallData = false;
+
     void Awake()
     {
         // This finds a script of ShopStatus, can be used if there is only one item that holds this script
@@ -34,7 +38,19 @@ public class Item : MonoBehaviour
     {
         // Get sprite name from image because it is in the canvas
         ballName = transform.Find("Icon").GetComponent<Image>().sprite.name;
+    }
 
+    void Update()
+    {
+        if (!loadedBallData && shopStatus.GetPlayerLoaded())
+        {
+            CheckBallData();
+            loadedBallData = true;
+        }
+    }
+
+    private void CheckBallData()
+    {
         // Check from the player data if the item is unlocked for this player
         if (shopStatus.CheckUnlockStatus(ballName))
         {
@@ -54,7 +70,8 @@ public class Item : MonoBehaviour
         {
             price.text = diamondTag.ToString();
             coin.SetActive(false);
-        } else
+        }
+        else
         {
             price.text = priceTag.ToString();
             diamond.SetActive(false);
