@@ -418,7 +418,11 @@ public class HomeStatus : MonoBehaviour
         {
             hintButton.SetActive(true);
         }
-        if (player.nextLevelIndex > 4 || challengeLevel)
+        if (player.nextLevelIndex > 4)
+        {
+            homeButton.SetActive(true);
+        }
+        if (challengeLevel)
         {
             homeButton.SetActive(true);
             ChallengeStatus challengeLevelScript = FindObjectOfType<ChallengeStatus>();

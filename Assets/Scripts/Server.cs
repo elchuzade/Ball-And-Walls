@@ -52,15 +52,16 @@ public class Server : MonoBehaviour
     /* CHALLENGES */
 
     // Every challenge in the list including current challenge
-    public class ChallengeLevelMini
+    public class PastChallenge
     {
         public int tried;
         public int solved;
         public int coins;
-        public int lives;
         public int diamonds;
+        public int lives;
+        public string status;
         public string screenshot;
-        public string background;
+        public string id;
     }
 
     /* LEADERBOARD */
@@ -69,12 +70,12 @@ public class Server : MonoBehaviour
     public class PlayerName
     {
         public string deviceId;
-        public string name;
+        public string playerName;
     }
     // Each row of leaderboard
     public class LeaderboardItem
     {
-        public string name;
+        public string playerName;
         public int rank;
         public string currentBall;
     }
@@ -109,16 +110,31 @@ public class Server : MonoBehaviour
         public string deviceId;
     }
 
-    private List<ChallengeWall> walls = new List<ChallengeWall>();
-    private List<ChallengeBarrier> barriers = new List<ChallengeBarrier>();
-    private List<ChallengePortal> portals = new List<ChallengePortal>();
-    private ChallengeBall ball = new ChallengeBall();
-    private ChallengeBallCatcher ballCatcher = new ChallengeBallCatcher();
+    // LOCAL TESTING
+    string abboxAdsApi = "http://localhost:5001";
+    string abboxMessengerApi = "http://localhost:5001";
+    string ballAndWallsApi = "http://localhost:5001";
 
-    private List<LeaderboardItem> top = new List<LeaderboardItem>();
-    private List<LeaderboardItem> before = new List<LeaderboardItem>();
-    private List<LeaderboardItem> after = new List<LeaderboardItem>();
-    private LeaderboardItem you = new LeaderboardItem();
+    // STAGING
+    //private string abboxAdsApi = "https://staging.ads.abbox.com";
+    //private string abboxMessengerApi = "https://staging.messenger.abbox.com";
+    //private string ballAndWallsApi = "https://staging.ballandwalls.abboxgames.com";
+
+    // PRODUCTION
+    //private string abboxAdsApi = "https://ads.abbox.com";
+    //private string abboxMessengerApi = "https://messenger.abbox.com";
+    //private string ballAndWallsApi = "https://ballandwalls.abboxgames.com";
+
+    List<ChallengeWall> walls = new List<ChallengeWall>();
+    List<ChallengeBarrier> barriers = new List<ChallengeBarrier>();
+    List<ChallengePortal> portals = new List<ChallengePortal>();
+    ChallengeBall ball = new ChallengeBall();
+    ChallengeBallCatcher ballCatcher = new ChallengeBallCatcher();
+
+    List<LeaderboardItem> top = new List<LeaderboardItem>();
+    List<LeaderboardItem> before = new List<LeaderboardItem>();
+    List<LeaderboardItem> after = new List<LeaderboardItem>();
+    LeaderboardItem you = new LeaderboardItem();
 
     // To send response to corresponding files
     [SerializeField] MainStatus mainStatus;
@@ -131,13 +147,23 @@ public class Server : MonoBehaviour
     // This is to call the functions in challenge scene
     [SerializeField] ChallengeStatus challengeStatus;
 
+    List<PastChallenge> pastChallenges = new List<PastChallenge>();
+
+    string deviceId;
+    string deviceOS;
+
+    void Awake()
+    {
+        deviceId = SystemInfo.deviceUniqueIdentifier;
+        deviceOS = SystemInfo.operatingSystem;
+    }
+
     /* ---------- CHALLENGES SCENE ---------- */
 
-    public void GetCurrentChallenge()
+    // GET CHALLENGE DATA BY ID
+    public void GetCurrentChallenge(string challengeId)
     {
-        // PROD
-        string challengeId = "602192a7a2142d00155b65bb";
-        string currentChallengeUrl = "https://ballandwalls.abboxgames.com/api/v1/challenges/" + challengeId;
+        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId;
         StartCoroutine(GetCurrentChallengeCoroutine(currentChallengeUrl));
     }
 
@@ -223,10 +249,17 @@ public class Server : MonoBehaviour
         }
     }
 
+    // GET PAST CHALLENGES
+    public void GetPastChallenges()
+    {
+        string pastChallengesUrl = ballAndWallsApi + "/api/v1/challenges/past/" + deviceId;
+        StartCoroutine(GetPastChallengesCoroutine(pastChallengesUrl));
+    }
+
     // This one is for the big challenge in challenges scene
     // This does not have data to build up a challenge level
     // Only teasing stuff, like screenshot, rewards, try-solve, background
-    private IEnumerator GetLatestChallengeMiniCoroutine(string url)
+    private IEnumerator GetPastChallengesCoroutine(string url)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
@@ -237,30 +270,35 @@ public class Server : MonoBehaviour
             {
                 Debug.Log(webRequest.downloadHandler.text);
                 // Set the error of video link received from the server
-                challengesStatus.LatestChallengeMiniError();
+                challengesStatus.PastChallengesError();
             }
             else
             {
                 Debug.Log(webRequest.downloadHandler.text);
                 // Parse the response from server to retrieve all data fields
-                string levelData = JsonHelper.GetJsonObject(webRequest.downloadHandler.text, "data");
+                string[] levelsData = JsonHelper.GetJsonObjectArray(webRequest.downloadHandler.text, "data");
 
-                ChallengeLevelMini challengeLevel = JsonUtility.FromJson<ChallengeLevelMini>(levelData);
+                if (levelsData != null)
+                {
+                    // Parse top data to leaderboard item to populate the list
+                    for (int i = 0; i < levelsData.Length; i++)
+                    {
+                        PastChallenge pastChallengeLevel = JsonUtility.FromJson<PastChallenge>(levelsData[i]);
+                        pastChallenges.Add(pastChallengeLevel);
+                    }
+                }
 
-                challengesStatus.LatestChallengeMiniSuccess(challengeLevel);
-
-                StartCoroutine(ExtractLatestChallengeMiniScreenshotImage(challengeLevel));
+                // Set all past challenges
+                challengesStatus.PastChallengesSuccess(pastChallenges);
+                // Set first past challenge as current challenge since it is the latest
+                challengesStatus.SetSelectedChallenge(pastChallenges[0]);
+                // Extract screenshot of first past challenge
+                StartCoroutine(ExtractPastChallengeScreenshotImage(pastChallenges[0]));
             }
         }
     }
 
-    public void GetLatestChallengeMini()
-    {
-        string latestChallengeMiniUrl = "https://ballandwalls.abboxgames.com/api/v1/challenges/latest-mini";
-        StartCoroutine(GetLatestChallengeMiniCoroutine(latestChallengeMiniUrl));
-    }
-
-    private IEnumerator ExtractLatestChallengeMiniScreenshotImage(ChallengeLevelMini challengeLevel)
+    public IEnumerator ExtractPastChallengeScreenshotImage(PastChallenge challengeLevel)
     {
         if (challengeLevel.screenshot != null)
         {
@@ -277,6 +315,20 @@ public class Server : MonoBehaviour
     }
 
     /* ---------- LOAD SCENE ---------- */
+
+    // CREATE NEW PLAYER
+    public void CreatePlayer()
+    {
+        string playerUrl = ballAndWallsApi + "/api/v1/players/player";
+
+        PlayerJson playerObject = new PlayerJson();
+        playerObject.deviceId = deviceId;
+        playerObject.deviceOS = deviceOS;
+
+        string playerJson = JsonUtility.ToJson(playerObject);
+
+        StartCoroutine(CreatePlayerCoroutine(playerUrl, playerJson));
+    }
 
     // This one is called when the game is just launched
     // Either create a new player or move on
@@ -306,25 +358,12 @@ public class Server : MonoBehaviour
         }
     }
 
-    public void CreatePlayer()
-    {
-        string playerUrl = "https://ballandwalls.abboxgames.com/api/v1/players/player";
-
-        PlayerJson playerObject = new PlayerJson();
-        playerObject.deviceId = SystemInfo.deviceUniqueIdentifier;
-        playerObject.deviceOS = SystemInfo.operatingSystem;
-
-        string playerJson = JsonUtility.ToJson(playerObject);
-
-        StartCoroutine(CreatePlayerCoroutine(playerUrl, playerJson));
-    }
-
     /* ---------- MAIN SCENE ---------- */
 
-    // Save player data
+    // SAVE PLAYER DATA
     public void SavePlayerData(Player player)
     {
-        string playerDataUrl = "https://ballandwalls.abboxgames.com/api/v1/players/data";
+        string playerDataUrl = ballAndWallsApi + "/api/v1/players/data";
 
         PlayerData playerData = new PlayerData();
         playerData.coins = player.coins;
@@ -332,7 +371,7 @@ public class Server : MonoBehaviour
         playerData.keys = player.keys;
         playerData.nextLevelIndex = player.nextLevelIndex;
         playerData.currentBall = player.currentBall;
-        playerData.deviceId = SystemInfo.deviceUniqueIdentifier;
+        playerData.deviceId = deviceId;
         playerData.unlockedBalls = new List<string>();
 
         player.unlockedBalls.ForEach(b =>
@@ -400,29 +439,27 @@ public class Server : MonoBehaviour
 
     public void GetVideoLink()
     {
-        string videoUrl = "https://ads.abbox.com/api/v1/videos";
+        string videoUrl = "https://ads.abbox.com" + "/api/v1/videos";
         StartCoroutine(GetAdLinkCoroutine(videoUrl));
     }
 
     /* ---------- LEADERBOARD SCENE ---------- */
 
     // CHANGE PLAYER NAME
-    public void ChangePlayerName(string name)
+    public void ChangePlayerName(string playerName)
     {
-        string id = SystemInfo.deviceUniqueIdentifier;
-
-        string nameUrl = "https://ballandwalls.abboxgames.com/api/v1/players/name/";
+        string nameUrl = ballAndWallsApi + "/api/v1/players/name/";
 
         PlayerName nameObject = new PlayerName();
-        nameObject.deviceId = id;
-        nameObject.name = name;
+        nameObject.deviceId = deviceId;
+        nameObject.playerName = playerName;
 
         string nameJson = JsonUtility.ToJson(nameObject);
 
         StartCoroutine(ChangeNameCoroutine(nameUrl, nameJson));
     }
 
-    // Change player name
+    // CHANGE PLAYER NAME
     private IEnumerator ChangeNameCoroutine(string url, string playerName)
     {
         var jsonBinary = System.Text.Encoding.UTF8.GetBytes(playerName);
@@ -453,9 +490,7 @@ public class Server : MonoBehaviour
     // GET LEADERBOARD LIST
     public void GetLeaderboard()
     {
-        string id = SystemInfo.deviceUniqueIdentifier;
-
-        string leaderboardUrl = "https://ballandwalls.abboxgames.com/api/v1/players/leaderboard/" + id;
+        string leaderboardUrl = ballAndWallsApi + "/api/v1/players/leaderboard/" + deviceId;
         StartCoroutine(LeaderboardCoroutine(leaderboardUrl));
     }
 
@@ -493,26 +528,39 @@ public class Server : MonoBehaviour
         string youData = JsonHelper.GetJsonObject(jsonData, "you");
         string[] afterData = JsonHelper.GetJsonObjectArray(jsonData, "after");
 
-        // Parse top data to leaderboard item to populate the list
-        for (int i = 0; i < topData.Length; i++)
+        if (topData != null)
         {
-            LeaderboardItem item = JsonUtility.FromJson<LeaderboardItem>(topData[i]);
-            top.Add(item);
+            // Parse top data to leaderboard item to populate the list
+            for (int i = 0; i < topData.Length; i++)
+            {
+                LeaderboardItem item = JsonUtility.FromJson<LeaderboardItem>(topData[i]);
+                top.Add(item);
+            }
         }
-        // Parse before data
-        for (int i = 0; i < beforeData.Length; i++)
+
+        if (beforeData != null)
         {
-            LeaderboardItem item = JsonUtility.FromJson<LeaderboardItem>(beforeData[i]);
-            before.Add(item);
+            // Parse before data
+            for (int i = 0; i < beforeData.Length; i++)
+            {
+                LeaderboardItem item = JsonUtility.FromJson<LeaderboardItem>(beforeData[i]);
+                before.Add(item);
+            }
         }
+
         // Parse you data
         you = JsonUtility.FromJson<LeaderboardItem>(youData);
-        // Parse after data
-        for (int i = 0; i < afterData.Length; i++)
+
+        if (afterData != null)
         {
-            LeaderboardItem item = JsonUtility.FromJson<LeaderboardItem>(afterData[i]);
-            after.Add(item);
+            // Parse after data
+            for (int i = 0; i < afterData.Length; i++)
+            {
+                LeaderboardItem item = JsonUtility.FromJson<LeaderboardItem>(afterData[i]);
+                after.Add(item);
+            }
         }
+
         // Send leaderboard data to leaderboard scene
         leaderboardStatus.SetLeaderboardData(top, before, you, after);
     }

@@ -194,7 +194,7 @@ public class ChallengeSaverStatus : MonoBehaviour
 
     private void SendData(string json)
     {
-        string url = "https://ballandwalls.abboxgames.com/api/v1/challenges";
+        string url = "http://localhost:5001/api/v1/challenges";
 
         StartCoroutine(PostRequestCoroutine(url, json));
     }

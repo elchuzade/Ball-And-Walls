@@ -14,14 +14,23 @@ public class ChallengesStatus : MonoBehaviour
 
     GameObject tried;
     GameObject solved;
-    GameObject challengeLevelScreenshot;
+    GameObject challengeScreenshot;
+
+    [SerializeField] GameObject challengeItem;
+    GameObject allChallengesScrollContent;
+
+    // To store all levels to scroll from
+    List<PastChallenge> pastChallenges;
+    // To store currently selected level
+    PastChallenge selectedChallenge;
 
     void Awake()
     {
         server = FindObjectOfType<Server>();
         navigator = FindObjectOfType<Navigator>();
 
-        challengeLevelScreenshot = GameObject.Find("ChallengeLevelScreenshot");
+        allChallengesScrollContent = GameObject.Find("AllChallengesScrollContent");
+        challengeScreenshot = GameObject.Find("ChallengeScreenshot");
         tried = GameObject.Find("TriedText");
         solved = GameObject.Find("SolvedText");
     }
@@ -31,30 +40,76 @@ public class ChallengesStatus : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
 
-        server.GetLatestChallengeMini();
+        server.GetPastChallenges();
     }
 
     public void SetScreenshotImage(Sprite sprite)
     {
-        challengeLevelScreenshot.GetComponent<Image>().sprite = sprite;
+        challengeScreenshot.GetComponent<Image>().sprite = sprite;
     }
 
-    public void LatestChallengeMiniSuccess(ChallengeLevelMini challengeLevel)
+    public void PastChallengesSuccess(List<PastChallenge> challenge)
     {
-        tried.GetComponent<Text>().text = challengeLevel.tried.ToString() + " tried";
-        solved.GetComponent<Text>().text = challengeLevel.tried.ToString() + " solved";
-        Debug.Log(challengeLevel.coins);
-        Debug.Log(challengeLevel.diamonds);
+        pastChallenges = challenge;
+        PopulateChallenges();
     }
 
-    public void LatestChallengeMiniError()
+    public void PastChallengesError()
     {
         Debug.Log("error");
     }
 
-    // Update is called once per frame
-    void Update()
+    private void UnlockChallengeLevel(GameObject level)
     {
-        
+        level.GetComponent<ChallengeItem>().SetLocked(false);
+    }
+
+    private void ClickChallengeLevel(GameObject level)
+    {
+        selectedChallenge = pastChallenges[level.GetComponent<ChallengeItem>().GetIndex()];
+
+        // Extract and set screenshot of selected challenge
+        StartCoroutine(server.ExtractPastChallengeScreenshotImage(selectedChallenge));
+
+        // Set tried and solved and load the screenshot of selected level
+        SetSelectedChallenge(selectedChallenge);
+        Debug.Log(selectedChallenge.screenshot);
+    }
+
+    public void SetSelectedChallenge(PastChallenge challenge)
+    {
+        tried.GetComponent<Text>().text = challenge.tried.ToString() + "tried";
+        solved.GetComponent<Text>().text = challenge.solved.ToString() + "solved";
+    }
+
+    private void PlaySelectedChallenge()
+    {
+        // Set selected challenge level id to player prefs
+        PlayerPrefs.SetString("challengeId", selectedChallenge.id);
+    }
+
+    private void PopulateChallenges()
+    {
+        for (int i = 0; i < pastChallenges.Count; i++)
+        {
+            GameObject challengeInstance = Instantiate(challengeItem, transform.position, Quaternion.identity);
+
+            challengeInstance.GetComponent<ChallengeItem>().SetIndex(i);
+
+            if (pastChallenges[i].status != "new" || i == 0)
+            {
+                // This level is unlocked, hide the locked frame
+                challengeInstance.transform.Find("LockedFrame").gameObject.SetActive(false);
+            }
+
+            challengeInstance.transform.Find("LevelTop")
+                    .GetComponent<Button>().onClick.AddListener(() => ClickChallengeLevel(challengeInstance));
+
+            challengeInstance.transform.Find("LockedFrame")
+                .GetComponent<Button>().onClick.AddListener(() => UnlockChallengeLevel(challengeInstance));
+
+
+            challengeInstance.transform.SetParent(allChallengesScrollContent.transform);
+        }
     }
 }

@@ -112,7 +112,7 @@ public class ChallengeStatus : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
 
-        server.GetCurrentChallenge();
+        server.GetCurrentChallenge(PlayerPrefs.GetString("challengeId"));
         SetLives();
 
         // Hide it and return its scale to normal

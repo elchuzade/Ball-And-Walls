@@ -60,7 +60,7 @@ public class LeaderboardStatus : MonoBehaviour
     private List<LeaderboardItem> before = new List<LeaderboardItem>();
     private List<LeaderboardItem> after = new List<LeaderboardItem>();
     private List<LeaderboardItem> top = new List<LeaderboardItem>();
-    private LeaderboardItem you;
+    private LeaderboardItem you = new LeaderboardItem();
 
     void Awake()
     {
@@ -92,7 +92,7 @@ public class LeaderboardStatus : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
-        player.ResetPlayer();
+        
         player.LoadPlayer();
 
         // Hide point arrow until server has replied
@@ -200,34 +200,49 @@ public class LeaderboardStatus : MonoBehaviour
         top.Clear();
         before.Clear();
         after.Clear();
-        // Loop though top ten list provided by the server and add them to local list
-        for (int i = 0; i < topData.Count; i++)
+        if (topData != null)
         {
-            top.Add(topData[i]);
-        }
-        // Loop though up to 3 players before you list provided by the server
-        // and if they have not yet been added to the list add them
-        for (int i = 0; i < beforeData.Count; i++)
-        {
-            if (!CheckIfExists(beforeData[i].rank))
+            // Loop though top ten list provided by the server and add them to local list
+            for (int i = 0; i < topData.Count; i++)
             {
-                before.Add(beforeData[i]);
+                top.Add(topData[i]);
             }
         }
-        // Check if your rank has already been added to the list if not add it
-        if (!CheckIfExists(youData.rank))
+        if (beforeData != null)
         {
-            you = youData;
-            // Set the name in the change name field to prepopulate
-            nameInput.text = youData.name;
-        }
-        // Loop though up to 3 players after you list provided by the server
-        // and if they have not yet been added to the list add them
-        for (int i = 0; i < afterData.Count; i++)
-        {
-            if (!CheckIfExists(afterData[i].rank))
+            // Loop though up to 3 players before you list provided by the server
+            // and if they have not yet been added to the list add them
+            for (int i = 0; i < beforeData.Count; i++)
             {
-                after.Add(afterData[i]);
+                if (!CheckIfExists(beforeData[i].rank))
+                {
+                    before.Add(beforeData[i]);
+                }
+            }
+        }
+        if (youData != null)
+        {
+            // Check if your rank has already been added to the list if not add it
+            if (!CheckIfExists(youData.rank))
+            {
+                you = youData;
+                // Set the name in the change name field to prepopulate
+                nameInput.text = youData.playerName;
+                Debug.Log(you.playerName);
+                Debug.Log(you.currentBall);
+                Debug.Log(you.rank);
+            }
+        }
+        if (afterData != null)
+        {
+            // Loop though up to 3 players after you list provided by the server
+            // and if they have not yet been added to the list add them
+            for (int i = 0; i < afterData.Count; i++)
+            {
+                if (!CheckIfExists(afterData[i].rank))
+                {
+                    after.Add(afterData[i]);
+                }
             }
         }
 
@@ -289,7 +304,7 @@ public class LeaderboardStatus : MonoBehaviour
                 }
 
                 // Set its name component text mesh pro value to name from top list
-                leaderboardItem.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.name;
+                leaderboardItem.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.playerName;
                 // Set its rank component text mesh pro value to rank from top list converted to string
                 leaderboardItem.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = item.rank.ToString();
                 // Set its ball icon based on data from server and indexes of balls
@@ -299,18 +314,18 @@ public class LeaderboardStatus : MonoBehaviour
                 if (item.rank == 1)
                 {
                     // Set golden podium
-                    goldName.GetComponent<TextMeshProUGUI>().text = item.name;
+                    goldName.GetComponent<TextMeshProUGUI>().text = item.playerName;
                     goldBall.GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
                 }
                 else if (item.rank == 2)
                 {
                     // Set silver podium
-                    silverName.GetComponent<TextMeshProUGUI>().text = item.name;
+                    silverName.GetComponent<TextMeshProUGUI>().text = item.playerName;
                     silverBall.GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
-                } else
+                } else if (item.rank == 3)
                 {
                     // Set bronze podium
-                    bronzeName.GetComponent<TextMeshProUGUI>().text = item.name;
+                    bronzeName.GetComponent<TextMeshProUGUI>().text = item.playerName;
                     bronzeBall.GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
                 }
             }
@@ -395,7 +410,7 @@ public class LeaderboardStatus : MonoBehaviour
     private void SetItemEntry(GameObject item, LeaderboardItem value)
     {
         // Set its name component text mesh pro value to your name
-        item.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = value.name;
+        item.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = value.playerName;
         // Set its rank component text mesh pro value to your rank
         item.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = value.rank.ToString();
         // Set its ball icon based on data from server and indexes of balls
