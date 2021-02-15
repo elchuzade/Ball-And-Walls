@@ -182,7 +182,7 @@ public class BallCatcher : MonoBehaviour
             }
 
             // Show an ad before every 5th level except the 100th one which is the last level
-            if ((player.nextLevelIndex + 1) % 5 == 0 && player.nextLevelIndex != 99)
+            if ((player.nextLevelIndex) % 5 == 0 && player.nextLevelIndex != 99)
             {
                 AdManager.ShowStandardAd(() => { }, () => { }, () => { });
             }

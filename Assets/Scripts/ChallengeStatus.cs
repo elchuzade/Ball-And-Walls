@@ -91,6 +91,7 @@ public class ChallengeStatus : MonoBehaviour
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
         server = FindObjectOfType<Server>();
+        scoreboard = FindObjectOfType<Scoreboard>();
 
         barriersParent = GameObject.Find("Barriers");    
         wallsParent = GameObject.Find("Walls");
@@ -114,6 +115,8 @@ public class ChallengeStatus : MonoBehaviour
 
         server.GetCurrentChallenge(PlayerPrefs.GetString("challengeId"));
         SetLives();
+
+        scoreboard.SetDiamonds(player.diamonds);
 
         // Hide it and return its scale to normal
         extraLifeAd.transform.localScale = new Vector3(1, 1, 1);

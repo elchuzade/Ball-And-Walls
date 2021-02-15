@@ -253,7 +253,7 @@ public class MainStatus : MonoBehaviour
         // Wait for given time and load the challenge scene
         yield return new WaitForSeconds(time);
 
-        navigator.LoadChallengeScene();
+        navigator.LoadChallengesScene();
     }
 
     private IEnumerator LoadLeaderboardSceneCoroutine(float time)

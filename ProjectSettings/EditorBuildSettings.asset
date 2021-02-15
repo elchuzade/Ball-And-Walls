@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/ChallengesScene.unity
     guid: 707b2f203ec4d49568b2e1ea43afe301
   - enabled: 1
+    path: Assets/Scenes/ChallengeLevel.unity
+    guid: c996b2322aa884d4daa2276a2579688f
+  - enabled: 1
     path: Assets/Scenes/ShopScene.unity
     guid: 93b31a1926ad5401e80852dbfe804fee
   - enabled: 1

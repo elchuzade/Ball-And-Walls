@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using static Utilities;
+using System;
 
 public class Server : MonoBehaviour
 {
@@ -160,6 +162,61 @@ public class Server : MonoBehaviour
 
     /* ---------- CHALLENGES SCENE ---------- */
 
+    public void GetLivesForDiamond()
+    {
+        //string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/" + deviceId + "/unlocked";
+        //StartCoroutine(UnlockChallengeCoroutine(currentChallengeUrl));
+    }
+
+    //private IEnumerator UnlockChallengeCoroutine(string url)
+    //{
+    //    using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+    //    {
+    //        // Send request and wait for the desired reqsponse.
+    //        yield return webRequest.SendWebRequest();
+
+    //        if (webRequest.isNetworkError)
+    //        {
+    //            Debug.Log(webRequest.downloadHandler.text);
+    //            // Set the error of video link received from the server
+    //            challengesStatus.UnlockChallengeError();
+    //        }
+    //        else
+    //        {
+    //            Debug.Log(webRequest.downloadHandler.text);
+    //            challengesStatus.UnlockChallengeSuccess();
+    //        }
+    //    }
+    //}
+
+    // UNLOCK A CHALLENGE BY ID
+    public void UnlockChallenge(string challengeId)
+    {
+        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/" + deviceId + "/unlocked";
+        StartCoroutine(UnlockChallengeCoroutine(currentChallengeUrl));
+    }
+
+    private IEnumerator UnlockChallengeCoroutine(string url)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            // Send request and wait for the desired reqsponse.
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+                Debug.Log(webRequest.downloadHandler.text);
+                // Set the error of video link received from the server
+                challengesStatus.UnlockChallengeError();
+            }
+            else
+            {
+                Debug.Log(webRequest.downloadHandler.text);
+                challengesStatus.UnlockChallengeSuccess();
+            }
+        }
+    }
+
     // GET CHALLENGE DATA BY ID
     public void GetCurrentChallenge(string challengeId)
     {
@@ -263,6 +320,15 @@ public class Server : MonoBehaviour
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
+            string message = "{'deviceId':'13C387F6-88DA-4381-83','_id':'602192a7a2142d00155b65bb'}";
+            string encoded = Encoder(message);
+
+            string encodedEscape = Uri.EscapeUriString(encoded);
+
+            encodedEscape = encodedEscape.Replace("(", "&#40&#40&#40");
+            encodedEscape = encodedEscape.Replace(")", "&#41&#41&#41");
+
+            webRequest.SetRequestHeader("token", encodedEscape);
             // Send request and wait for the desired reqsponse.
             yield return webRequest.SendWebRequest();
 
@@ -292,8 +358,6 @@ public class Server : MonoBehaviour
                 challengesStatus.PastChallengesSuccess(pastChallenges);
                 // Set first past challenge as current challenge since it is the latest
                 challengesStatus.SetSelectedChallenge(pastChallenges[0]);
-                // Extract screenshot of first past challenge
-                StartCoroutine(ExtractPastChallengeScreenshotImage(pastChallenges[0]));
             }
         }
     }
