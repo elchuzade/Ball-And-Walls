@@ -28,6 +28,10 @@ public class HomeStatus : MonoBehaviour
     [SerializeField] bool challengeLevel;
 
     [SerializeField] bool tutorial;
+    // To pass to ad cancel for normal level
+    [SerializeField] Sprite hintIcon;
+    // To pass to ad cancel for challenge level
+    [SerializeField] Sprite lifeIcon;
 
     // This should be changed as new balls are being added
     // This is not all balls but all unlockable balls
@@ -52,11 +56,7 @@ public class HomeStatus : MonoBehaviour
 
     Navigator navigator;
 
-    // Ad cancel warning stuff
-    GameObject adCancelBg;
-    GameObject adCancelWarning;
-    GameObject adWarningReceiveButton;
-    GameObject adWarningContinueButton;
+    AdCancel adCancel;
 
     bool showedAdCancelWarning = false;
 
@@ -75,15 +75,7 @@ public class HomeStatus : MonoBehaviour
         resetButton = GameObject.Find("ResetButton");
         forwardButton = GameObject.Find("ForwardButton");
         ballDirectionArrow = GameObject.Find("BallDirectionArrow");
-
-        adCancelBg = GameObject.Find("AdCancelBg");
-        adCancelWarning = GameObject.Find("AdCancelWarning");
-        adWarningReceiveButton = GameObject.Find("AdWarningReceiveButton");
-        adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
-
-        // Set ad stuff back to normal as they are shrinked in x axis for visibility by default
-        adCancelBg.transform.localScale = new Vector3(1, 1, 1);
-        adCancelWarning.transform.localScale = new Vector3(1, 1, 1);
+        adCancel = FindObjectOfType<AdCancel>();
 
         navigator = FindObjectOfType<Navigator>();
         ball = FindObjectOfType<Ball>();
@@ -107,8 +99,6 @@ public class HomeStatus : MonoBehaviour
         // Hide all the supposedely invisible buttons
         resetButton.SetActive(false);
         forwardButton.SetActive(false);
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
 
         // Change the camera zoom based on the screen ration, for very tall or very wide screens
         if ((float)Screen.height / Screen.width > 2)
@@ -134,6 +124,22 @@ public class HomeStatus : MonoBehaviour
         SetBallPrefab();
         // Set the background based on the ball
         SetBackground();
+
+        if (challengeLevel)
+        {
+            adCancel.InitializeAdCancel(" life", lifeIcon);
+        } else
+        {
+            adCancel.InitializeAdCancel(" hint", hintIcon);
+        }
+        adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
+        adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
+    }
+
+    public void SetLifeIcon(Sprite icon)
+    {
+        lifeIcon = icon;
+        adCancel.InitializeAdCancel(" life", lifeIcon);
     }
 
     private void SetButtonFunctions()
@@ -142,9 +148,6 @@ public class HomeStatus : MonoBehaviour
         hintButton.GetComponent<Button>().onClick.AddListener(() => ClickHintButton());
         resetButton.GetComponent<Button>().onClick.AddListener(() => ClickResetButton());
         forwardButton.GetComponent<Button>().onClick.AddListener(() => ClickForwardButton());
-
-        adWarningReceiveButton.GetComponent<Button>().onClick.AddListener(() => ReceiveHintButtonClick());
-        adWarningContinueButton.GetComponent<Button>().onClick.AddListener(() => ContinuePlayingButtonClick());
     }
 
     public bool GetShuffle()
@@ -152,12 +155,13 @@ public class HomeStatus : MonoBehaviour
         return shuffle;
     }
 
-    public void ReceiveHintButtonClick()
+    public void ReceiveButtonClick()
     {
-        if (adWarningReceiveButton.GetComponent<Button>().IsInteractable())
+        GameObject receiveButton = adCancel.GetReceiveButton();
+        if (receiveButton.GetComponent<Button>().IsInteractable())
         {
             // Run animation of clicking receive coins and watch the ad button
-            adWarningReceiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            receiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
             // Approximately when animation is finished, load the ad screen
             StartCoroutine(ReceiveHintButtonCoroutine(0.2f));
         }
@@ -171,24 +175,24 @@ public class HomeStatus : MonoBehaviour
         AdManager.ShowStandardAd(UseHintSuccess, UseHintCancel, UseHintFail);
     }
 
-    public void ContinuePlayingButtonClick()
+    public void CancelButtonClick()
     {
-        if (adWarningContinueButton.GetComponent<Button>().IsInteractable())
+        GameObject cancelButton = adCancel.GetCancelButton();
+        if (cancelButton.GetComponent<Button>().IsInteractable())
         {
             // Wait for given time and load the ad screen
-            adWarningContinueButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            cancelButton.GetComponent<TriggerButton>().ClickButton(0.2f);
             // Approximately when animation is finished, load the ad screen
-            StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
+            StartCoroutine(CancelButtonCoroutine(0.2f));
         }
     }
 
-    public IEnumerator ContinuePlayingButtonCoroutine(float time)
+    public IEnumerator CancelButtonCoroutine(float time)
     {
         // Wait for given time and hide the ad and warning stuff
         yield return new WaitForSeconds(time);
 
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.gameObject.SetActive(false);
     }
 
     private void SetBallPrefab()
@@ -245,12 +249,10 @@ public class HomeStatus : MonoBehaviour
         // Show the warning stuff if it is the first time of cancelling
         if (!showedAdCancelWarning)
         {
-            adCancelBg.SetActive(true);
-            adCancelWarning.SetActive(true);
+            adCancel.gameObject.SetActive(true);
         } else
         {
-            adCancelBg.SetActive(false);
-            adCancelWarning.SetActive(false);
+            adCancel.gameObject.SetActive(false);
         }
 
         showedAdCancelWarning = true;
@@ -260,8 +262,7 @@ public class HomeStatus : MonoBehaviour
     {
         // Close the warning stuff if for some reason video failed
         showedAdCancelWarning = true;
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.gameObject.SetActive(false);
     }
 
     public void UseHintSuccess()
@@ -275,8 +276,7 @@ public class HomeStatus : MonoBehaviour
 
         // Incase this is coming from after warning stuff being showed, hide it
         showedAdCancelWarning = true;
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.gameObject.SetActive(false);
     }
 
     public void LaunchBall()

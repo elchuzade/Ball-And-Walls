@@ -30,6 +30,8 @@ public class ChestStatus : MonoBehaviour
     
     [SerializeField] GameObject[] bestPrizesPrefabs;
     [SerializeField] Transform bestPrize;
+    // To pass to ad cancel
+    [SerializeField] Sprite keyIcon;
 
     // Zoom animations on keys
     Animator key1animator;
@@ -45,11 +47,7 @@ public class ChestStatus : MonoBehaviour
     GameObject moreKeysButton;
     GameObject passPhraseButton;
 
-    GameObject adCancelBg;
-    GameObject adCancelWarning;
-
-    GameObject adWarningReceiveButton;
-    GameObject adWarningContinueButton;
+    AdCancel adCancel;
 
     bool showedAdCancelWarning = false;
 
@@ -72,29 +70,23 @@ public class ChestStatus : MonoBehaviour
 
     void Awake()
     {
-        //player = FindObjectOfType<Player>();
         scoreboard = FindObjectOfType<Scoreboard>();
+        navigator = FindObjectOfType<Navigator>();
+        adCancel = FindObjectOfType<AdCancel>();
 
         key1animator = key1.GetComponent<Animator>();
         key2animator = key2.GetComponent<Animator>();
         key3animator = key3.GetComponent<Animator>();
 
-        //navigator = FindObjectOfType<Navigator>();
-
         exitButton = GameObject.Find("ExitButton");
         moreKeysButton = GameObject.Find("MoreKeysButton");
         passPhraseButton = GameObject.Find("PassPhrase");
-
-        adCancelBg = GameObject.Find("AdCancelBg");
-        adCancelWarning = GameObject.Find("ChestAdCancelWarning");
-        adWarningReceiveButton = GameObject.Find("AdWarningReceiveButton");
-        adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
-
-        player.ResetPlayer();
     }
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
+        player.LoadPlayer();
         moreKeysButton.SetActive(false);
         passPhraseButton.SetActive(false);
 
@@ -106,7 +98,6 @@ public class ChestStatus : MonoBehaviour
         Camera.main.orthographicSize = Screen.height / 6;
         Camera.main.transform.position = new Vector2(Screen.width / 2, Screen.height / cameraHeightFactor);
 
-        player.LoadPlayer();
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
         DrawKeys();
@@ -115,12 +106,9 @@ public class ChestStatus : MonoBehaviour
         // Choose which of locked balls will be the best prize
         SetBestPrize();
 
-        // Set ad stuff back to normal as they are shrinked in x axis for visibility by default
-        adCancelBg.transform.localScale = new Vector3(1, 1, 1);
-        adCancelWarning.transform.localScale = new Vector3(1, 1, 1);
-
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.InitializeAdCancel(" keys", keyIcon);
+        adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
+        adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
     }
 
     // Show no thanks button after all the keys are used
@@ -344,8 +332,8 @@ public class ChestStatus : MonoBehaviour
         // Incase the success funcion is called from the rewathing the ad after skipping once,
         // Hide the warning buttons and toggle the variable indicating that the warning has been seen
         showedAdCancelWarning = true;
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.gameObject.SetActive(false);
+        bestPrize.gameObject.SetActive(true);
     }
 
     public void ClickExitButton()
@@ -371,41 +359,42 @@ public class ChestStatus : MonoBehaviour
     }
 
     // Button that shows watch the ad till the end and receive the gift in the warning of ad cancel
-    public void ReceiveKeysButtonClick()
+    public void ReceiveButtonClick()
     {
-        if (adWarningReceiveButton.GetComponent<Button>().IsInteractable())
+        GameObject receiveButton = adCancel.GetReceiveButton();
+        if (receiveButton.GetComponent<Button>().IsInteractable())
         {
             // Run animation of clicking receive coins and watch the ad button
-            adWarningReceiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            receiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
             // Approximately when animation is finished, load the ad screen
-            StartCoroutine(ReceiveKeysButtonCoroutine(0.2f));
+            StartCoroutine(ReceiveButtonCoroutine(0.2f));
         }
     }
 
-    public IEnumerator ReceiveKeysButtonCoroutine(float time)
+    public IEnumerator ReceiveButtonCoroutine(float time)
     {
         yield return new WaitForSeconds(time);
 
         AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, GetKeysFail);
     }
 
-    public void ContinuePlayingButtonClick()
+    public void CancelButtonClick()
     {
-        if (adWarningContinueButton.GetComponent<Button>().IsInteractable())
+        GameObject cancelButton = adCancel.GetCancelButton();
+        if (cancelButton.GetComponent<Button>().IsInteractable())
         {
             // Wait for given time and load the ad screen
-            adWarningContinueButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            cancelButton.GetComponent<TriggerButton>().ClickButton(0.2f);
             // Approximately when animation is finished, load the ad screen
-            StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
+            StartCoroutine(CancelButtonCoroutine(0.2f));
         }
     }
 
-    public IEnumerator ContinuePlayingButtonCoroutine(float time)
+    public IEnumerator CancelButtonCoroutine(float time)
     {
         yield return new WaitForSeconds(time);
 
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.gameObject.SetActive(false);
     }
 
     // Incase ad has been cancelled, show the warning screen
@@ -413,13 +402,14 @@ public class ChestStatus : MonoBehaviour
     {
         if (!showedAdCancelWarning)
         {
-            adCancelBg.SetActive(true);
-            adCancelWarning.SetActive(true);
+            adCancel.gameObject.SetActive(true);
+            // Hide ball
+            bestPrize.gameObject.SetActive(false);
         }
         else
         {
-            adCancelBg.SetActive(false);
-            adCancelWarning.SetActive(false);
+            adCancel.gameObject.SetActive(false);
+            bestPrize.gameObject.SetActive(true);
         }
 
         showedAdCancelWarning = true;
@@ -429,7 +419,7 @@ public class ChestStatus : MonoBehaviour
     private void GetKeysFail()
     {
         showedAdCancelWarning = true;
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.gameObject.SetActive(false);
+        bestPrize.gameObject.SetActive(true);
     }
 }

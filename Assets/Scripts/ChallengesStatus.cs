@@ -28,6 +28,10 @@ public class ChallengesStatus : MonoBehaviour
     GameObject playChallenge;
     GameObject exitButton;
 
+    AdCancel adCancel;
+
+    bool showedAdCancelWarning = false;
+
     // To store all levels to scroll from
     List<PastChallenge> pastChallenges;
     // To store currently selected level
@@ -38,6 +42,7 @@ public class ChallengesStatus : MonoBehaviour
         server = FindObjectOfType<Server>();
         navigator = FindObjectOfType<Navigator>();
         scoreboard = FindObjectOfType<Scoreboard>();
+        adCancel = FindObjectOfType<AdCancel>();
 
         diamondLives = GameObject.Find("DiamondLives");
         videoLives = GameObject.Find("VideoLives");
@@ -62,12 +67,156 @@ public class ChallengesStatus : MonoBehaviour
         playChallenge.SetActive(false);
 
         player = FindObjectOfType<Player>();
-        
+        player.LoadPlayer();
         GetCurrentBallSprite();
 
         scoreboard.SetDiamonds(player.diamonds);
 
         server.GetPastChallenges();
+
+        adCancel.InitializeAdCancel(" life", currentBallSprite);
+        adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
+        adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
+    }
+
+    public void ClickGetLifeForVideoButton()
+    {
+        if (videoLives.GetComponent<Button>().IsInteractable())
+        {
+            // Run the trigger button animation and disable button for its duration
+            videoLives.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is over, load get more coins ad
+            StartCoroutine(LoadGetLifeForVideoCoroutine(0.2f));
+        }
+    }
+
+    public IEnumerator LoadGetLifeForVideoCoroutine(float time)
+    {
+        // Wait for given time and load the main scene
+        yield return new WaitForSeconds(time);
+
+        AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
+    }
+
+    public void ReceiveButtonClick()
+    {
+        GameObject receiveButton = adCancel.GetReceiveButton();
+        if (receiveButton.GetComponent<Button>().IsInteractable())
+        {
+            // Run animation of clicking receive coins and watch the ad button
+            receiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is finished, load the ad screen
+            StartCoroutine(ReceiveButtonCoroutine(0.2f));
+        }
+    }
+
+    public IEnumerator ReceiveButtonCoroutine(float time)
+    {
+        // Wait for given time and load the ad screen
+        yield return new WaitForSeconds(time);
+        // Load the ad screen
+        AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
+    }
+
+    private void GetLifeCancel()
+    {
+        // Show the warning stuff if it is the first time of cancelling
+        if (!showedAdCancelWarning)
+        {
+            adCancel.gameObject.SetActive(true);
+        }
+        else
+        {
+            adCancel.gameObject.SetActive(false);
+        }
+
+        showedAdCancelWarning = true;
+    }
+
+    private void GetLifeFail()
+    {
+        // Close the warning stuff if for some reason video failed
+        showedAdCancelWarning = true;
+        adCancel.gameObject.SetActive(false);
+    }
+
+    private void GetLifeSuccess()
+    {
+        // Incase this is coming from after warning stuff being showed, hide it
+        showedAdCancelWarning = true;
+        adCancel.gameObject.SetActive(false);
+        server.GetLifeForVideoOrDiamond(selectedChallenge.id, 1);
+    }
+
+    public void CancelButtonClick()
+    {
+        GameObject cancelButton = adCancel.GetCancelButton();
+        if (cancelButton.GetComponent<Button>().IsInteractable())
+        {
+            // Wait for given time and load the ad screen
+            cancelButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            // Approximately when animation is finished, load the ad screen
+            StartCoroutine(CancelButtonCoroutine(0.2f));
+        }
+    }
+
+    public IEnumerator CancelButtonCoroutine(float time)
+    {
+        // Wait for given time and hide the ad and warning stuff
+        yield return new WaitForSeconds(time);
+
+        adCancel.gameObject.SetActive(false);
+    }
+
+    public void GetLifeForVideoOrDiamondSuccess(string challengeId, int count)
+    {
+        Debug.Log("successfully updated lifes for the level: " + challengeId);
+        for (int i = 0; i < pastChallenges.Count; i++)
+        {
+            if (pastChallenges[i].id == challengeId)
+            {
+                // Yuo have successfully watched an ad or paid with diamond
+                pastChallenges[i].lives = count;
+
+                if (count == 5)
+                {
+                    DecreasePlayerDiamonds();
+                }
+
+                // Loop through all challenge game objects and find the one that holds the same id
+                foreach (Transform child in allChallengesScrollContent.transform)
+                {
+                    Debug.Log(child.GetComponent<ChallengeItem>().GetId());
+                    if (child.GetComponent<ChallengeItem>().GetId() == challengeId)
+                    {
+                        Debug.Log("gameobject ids match");
+                        GameObject challengeInstance = child.gameObject;
+                        // Make that level change its lives from 0 to 1
+                        SetChallengeIconLives(challengeInstance, pastChallenges[i].lives);
+                        // If selected challenge has not been changed
+                        // so player waited for the server response then show play button
+                        if (selectedChallenge.id == challengeId)
+                        {
+                            diamondLives.SetActive(false);
+                            videoLives.SetActive(false);
+                            playChallenge.SetActive(true);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public void GetLifeForVideoOrDiamondError(string challengeId, int count)
+    {
+        if (count == 1)
+        {
+            Debug.Log("Error trying to get lives for video: " + challengeId);
+        } else
+        {
+            Debug.Log("Error trying to get lives for diamond: " + challengeId);
+        }
     }
 
     public void ClickExitButton()
@@ -108,25 +257,6 @@ public class ChallengesStatus : MonoBehaviour
         GetLivesForDiamond();
     }
 
-    public void ClickGetLifeForVideoButton()
-    {
-        if (videoLives.GetComponent<Button>().IsInteractable())
-        {
-            // Run the trigger button animation and disable button for its duration
-            videoLives.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is over, load get more coins ad
-            StartCoroutine(LoadGetLifeForVideoCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator LoadGetLifeForVideoCoroutine(float time)
-    {
-        // Wait for given time and load the main scene
-        yield return new WaitForSeconds(time);
-
-        GetLifeForVideo();
-    }
-
     public void ClickPlaySelectedChallengeButton()
     {
         if (playChallenge.GetComponent<Button>().IsInteractable())
@@ -146,7 +276,6 @@ public class ChallengesStatus : MonoBehaviour
         PlaySelectedChallenge();
     }
 
-
     private void GetCurrentBallSprite()
     {
         for (int i = 0; i < ballSprites.Length; i++)
@@ -154,7 +283,6 @@ public class ChallengesStatus : MonoBehaviour
             if (ballSprites[i].name == player.currentBall)
             {
                 currentBallSprite = ballSprites[i];
-                //Debug.Log(ballSprites[i]);
             }
         }
     }
@@ -228,24 +356,14 @@ public class ChallengesStatus : MonoBehaviour
 
     private void GetLivesForDiamond()
     {
-        server.GetLivesForDiamond();
+        server.GetLifeForVideoOrDiamond(selectedChallenge.id, 5);
     }
 
-    public void GetLivesForDiamondSuccess()
+    private void DecreasePlayerDiamonds()
     {
-        Debug.Log("-1 diamond");
         player.diamonds--;
+        scoreboard.SetDiamonds(player.diamonds);
         player.SavePlayer();
-    }
-
-    public void GetLivesForDiamondError()
-    {
-        Debug.Log("Error trying to get 5 lives for a diamond");
-    }
-
-    private void GetLifeForVideo()
-    {
-        Debug.Log("-1 video");
     }
 
     private void PlaySelectedChallenge()
@@ -266,6 +384,7 @@ public class ChallengesStatus : MonoBehaviour
 
             // Set challenge index into a challnge item script of each challenge
             challengeInstance.GetComponent<ChallengeItem>().SetIndex(i);
+            challengeInstance.GetComponent<ChallengeItem>().SetId(pastChallenges[i].id);
 
             // If the level is not locked open the lock frame
             if (pastChallenges[i].status != "locked" || i == 0)

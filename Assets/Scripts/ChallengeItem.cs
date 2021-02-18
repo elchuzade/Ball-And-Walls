@@ -9,6 +9,7 @@ public class ChallengeItem : MonoBehaviour
         lockedFrame = transform.Find("LockedFrame").gameObject;
     }
 
+    private string id;
     private int index;
     private bool locked;
 
@@ -34,5 +35,15 @@ public class ChallengeItem : MonoBehaviour
     public bool GetLocked()
     {
         return locked;
+    }
+
+    public void SetId(string _id)
+    {
+        id = _id;
+    }
+
+    public string GetId()
+    {
+        return id;
     }
 }

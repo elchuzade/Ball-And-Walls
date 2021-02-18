@@ -9,6 +9,12 @@ public class Server : MonoBehaviour
 {
     /* CHALLENGE */
 
+    public class Header
+    {
+        public string deviceId;
+        public string deviceOS;
+    }
+
     // Challenge data
     public class ChallengeWall
     {
@@ -151,48 +157,52 @@ public class Server : MonoBehaviour
 
     List<PastChallenge> pastChallenges = new List<PastChallenge>();
 
-    string deviceId;
-    string deviceOS;
+    Header header = new Header();
 
     void Awake()
     {
-        deviceId = SystemInfo.deviceUniqueIdentifier;
-        deviceOS = SystemInfo.operatingSystem;
+        header.deviceId = SystemInfo.deviceUniqueIdentifier;
+        header.deviceOS = SystemInfo.operatingSystem;
     }
 
     /* ---------- CHALLENGES SCENE ---------- */
 
-    public void GetLivesForDiamond()
+    public void GetLifeForVideoOrDiamond(string challengeId, int count)
     {
-        //string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/" + deviceId + "/unlocked";
-        //StartCoroutine(UnlockChallengeCoroutine(currentChallengeUrl));
+        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/device/lives/" + count;
+        StartCoroutine(GetLifeForVideoOrDiamondCoroutine(currentChallengeUrl, challengeId, count));
     }
 
-    //private IEnumerator UnlockChallengeCoroutine(string url)
-    //{
-    //    using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-    //    {
-    //        // Send request and wait for the desired reqsponse.
-    //        yield return webRequest.SendWebRequest();
+    private IEnumerator GetLifeForVideoOrDiamondCoroutine(string url, string challengeId, int count)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            string message = JsonUtility.ToJson(header);
+            string headerMessage = BuildHeaders(message);
+            webRequest.SetRequestHeader("token", headerMessage);
 
-    //        if (webRequest.isNetworkError)
-    //        {
-    //            Debug.Log(webRequest.downloadHandler.text);
-    //            // Set the error of video link received from the server
-    //            challengesStatus.UnlockChallengeError();
-    //        }
-    //        else
-    //        {
-    //            Debug.Log(webRequest.downloadHandler.text);
-    //            challengesStatus.UnlockChallengeSuccess();
-    //        }
-    //    }
-    //}
+            // Send request and wait for the desired response.
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+
+                challengesStatus.GetLifeForVideoOrDiamondError(challengeId, count);
+                Debug.Log(webRequest.downloadHandler.text);
+            }
+            else
+            {
+
+                challengesStatus.GetLifeForVideoOrDiamondSuccess(challengeId, count);
+                Debug.Log(webRequest.downloadHandler.text);
+            }
+        }
+    }
 
     // UNLOCK A CHALLENGE BY ID
     public void UnlockChallenge(string challengeId)
     {
-        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/" + deviceId + "/unlocked";
+        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/device/" + "/unlocked";
         StartCoroutine(UnlockChallengeCoroutine(currentChallengeUrl));
     }
 
@@ -200,7 +210,11 @@ public class Server : MonoBehaviour
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
-            // Send request and wait for the desired reqsponse.
+            string message = JsonUtility.ToJson(header);
+            string headerMessage = BuildHeaders(message);
+            webRequest.SetRequestHeader("token", headerMessage);
+
+            // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError)
@@ -229,7 +243,7 @@ public class Server : MonoBehaviour
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
-            // Send request and wait for the desired reqsponse.
+            // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError)
@@ -309,7 +323,7 @@ public class Server : MonoBehaviour
     // GET PAST CHALLENGES
     public void GetPastChallenges()
     {
-        string pastChallengesUrl = ballAndWallsApi + "/api/v1/challenges/past/" + deviceId;
+        string pastChallengesUrl = ballAndWallsApi + "/api/v1/challenges/past/device";
         StartCoroutine(GetPastChallengesCoroutine(pastChallengesUrl));
     }
 
@@ -320,16 +334,11 @@ public class Server : MonoBehaviour
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
-            string message = "{'deviceId':'13C387F6-88DA-4381-83','_id':'602192a7a2142d00155b65bb'}";
-            string encoded = Encoder(message);
+            string message = JsonUtility.ToJson(header);
+            string headerMessage  = BuildHeaders(message);
+            webRequest.SetRequestHeader("token", headerMessage);
 
-            string encodedEscape = Uri.EscapeUriString(encoded);
-
-            encodedEscape = encodedEscape.Replace("(", "&#40&#40&#40");
-            encodedEscape = encodedEscape.Replace(")", "&#41&#41&#41");
-
-            webRequest.SetRequestHeader("token", encodedEscape);
-            // Send request and wait for the desired reqsponse.
+            // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError)
@@ -385,40 +394,34 @@ public class Server : MonoBehaviour
     {
         string playerUrl = ballAndWallsApi + "/api/v1/players/player";
 
-        PlayerJson playerObject = new PlayerJson();
-        playerObject.deviceId = deviceId;
-        playerObject.deviceOS = deviceOS;
-
-        string playerJson = JsonUtility.ToJson(playerObject);
-
-        StartCoroutine(CreatePlayerCoroutine(playerUrl, playerJson));
+        StartCoroutine(CreatePlayerCoroutine(playerUrl));
     }
 
     // This one is called when the game is just launched
     // Either create a new player or move on
-    private IEnumerator CreatePlayerCoroutine(string url, string player)
+    private IEnumerator CreatePlayerCoroutine(string url)
     {
-        var jsonBinary = System.Text.Encoding.UTF8.GetBytes(player);
-        DownloadHandlerBuffer downloadHandlerBuffer = new DownloadHandlerBuffer();
-        UploadHandlerRaw uploadHandlerRaw = new UploadHandlerRaw(jsonBinary);
-        uploadHandlerRaw.contentType = "application/json";
-
-        UnityWebRequest webRequest =
-            new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
-
-        yield return webRequest.SendWebRequest();
-
-        if (webRequest.isNetworkError)
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
-            Debug.Log(webRequest.downloadHandler.text);
-            // Set the error received from creating a player
-            loadStatus.CreatePlayerError();
-        } 
-        else
-        {
-            Debug.Log(webRequest.downloadHandler.text);
-            // Make the success actions received from creating a player
-            loadStatus.CreatePlayerSuccess();
+            string message = JsonUtility.ToJson(header);
+            string headerMessage = BuildHeaders(message);
+            webRequest.SetRequestHeader("token", headerMessage);
+
+            // Send request and wait for the desired response.
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+                Debug.Log(webRequest.downloadHandler.text);
+                // Set the error received from creating a player
+                loadStatus.CreatePlayerError();
+            }
+            else
+            {
+                Debug.Log(webRequest.downloadHandler.text);
+                // Make the success actions received from creating a player
+                loadStatus.CreatePlayerSuccess();
+            }
         }
     }
 
@@ -435,7 +438,7 @@ public class Server : MonoBehaviour
         playerData.keys = player.keys;
         playerData.nextLevelIndex = player.nextLevelIndex;
         playerData.currentBall = player.currentBall;
-        playerData.deviceId = deviceId;
+        playerData.deviceId = header.deviceId;
         playerData.unlockedBalls = new List<string>();
 
         player.unlockedBalls.ForEach(b =>
@@ -480,7 +483,11 @@ public class Server : MonoBehaviour
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
-            // Send request and wait for the desired reqsponse.
+            string message = JsonUtility.ToJson(header);
+            string headerMessage = BuildHeaders(message);
+            webRequest.SetRequestHeader("token", headerMessage);
+
+            // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError)
@@ -515,7 +522,7 @@ public class Server : MonoBehaviour
         string nameUrl = ballAndWallsApi + "/api/v1/players/name/";
 
         PlayerName nameObject = new PlayerName();
-        nameObject.deviceId = deviceId;
+        nameObject.deviceId = header.deviceId;
         nameObject.playerName = playerName;
 
         string nameJson = JsonUtility.ToJson(nameObject);
@@ -554,7 +561,7 @@ public class Server : MonoBehaviour
     // GET LEADERBOARD LIST
     public void GetLeaderboard()
     {
-        string leaderboardUrl = ballAndWallsApi + "/api/v1/players/leaderboard/" + deviceId;
+        string leaderboardUrl = ballAndWallsApi + "/api/v1/players/leaderboard/device";
         StartCoroutine(LeaderboardCoroutine(leaderboardUrl));
     }
 
@@ -563,7 +570,11 @@ public class Server : MonoBehaviour
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
-            // Send request and wait for the desired reqsponse.
+            string message = JsonUtility.ToJson(header);
+            string headerMessage = BuildHeaders(message);
+            webRequest.SetRequestHeader("token", headerMessage);
+
+            // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError)

@@ -11,39 +11,30 @@ public class ShopStatus : MonoBehaviour
     Navigator navigator;
     // Amount of coins that player will receive if he watches ad video
     [SerializeField] int adCoinsAmount;
+    // To pass to ad cancel
+    [SerializeField] Sprite coinIcon;
 
     GameObject playButton;
     GameObject getCoinsButton;
     GameObject exitButton;
-    // Continue watching and receive a reward button when player wanted to skip the video
-    GameObject adWarningReceiveButton;
-    // Reject reward and continue playing game button when player wanted to skip the video
-    GameObject adWarningContinueButton;
 
-    // Background of window that pops up if player wants to switch off reward ad
-    GameObject adCancelBg;
-    // Window with buttons that pops up if player wants to switch off reward ad
-    GameObject adCancelWarning;
+    AdCancel adCancel;
 
     // Track if ad cancel warning has already been shown, not to annoy each time showing the same window
     bool showedAdCancelWarning = false;
 
-    // All itemsa are held here
+    // All items are held here
     GameObject items;
 
     void Awake()
     {
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
+        adCancel = FindObjectOfType<AdCancel>();
 
         playButton = GameObject.Find("PlayButton");
         getCoinsButton = GameObject.Find("GetCoinsButton");
         exitButton = GameObject.Find("ExitButton");
-
-        adCancelBg = GameObject.Find("AdCancelBg");
-        adCancelWarning = GameObject.Find("ShopAdCancelWarning");
-        adWarningReceiveButton = GameObject.Find("AdWarningReceiveButton");
-        adWarningContinueButton = GameObject.Find("AdWarningContinueButton");
 
         items = GameObject.Find("Items");
     }
@@ -64,13 +55,9 @@ public class ShopStatus : MonoBehaviour
         // Set current player diamonds to the scoreboard
         scoreboard.SetDiamonds(player.diamonds);
 
-        // Set ad stuff back to normal as they are shrinked in x axis for visibility by default
-        adCancelBg.transform.localScale = new Vector3(1, 1, 1);
-        adCancelWarning.transform.localScale = new Vector3(1, 1, 1);
-
-        // Hide ad stuff until the ad is actually skipped by player
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.InitializeAdCancel(" coins", coinIcon);
+        adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
+        adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
     }
 
     public bool CheckUnlockStatus(string ballName)
@@ -225,19 +212,20 @@ public class ShopStatus : MonoBehaviour
         AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 
-    public void ReceiveCoinsButtonClick()
+    public void ReceiveButtonClick()
     {
-        if (adWarningReceiveButton.GetComponent<Button>().IsInteractable())
+        GameObject receiveButton = adCancel.GetReceiveButton();
+        if (receiveButton.GetComponent<Button>().IsInteractable())
         {
             // Run animation of clicking receive coins and watch the ad button
-            adWarningReceiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            receiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
             // Approximately when animation is finished, load the ad screen
-            StartCoroutine(ReceiveCoinsButtonCoroutine(0.2f));
+            StartCoroutine(ReceiveButtonCoroutine(0.2f));
         }
     }
 
     // This is similar to LoadGetMoreCoins. But for consistency, it is better to keep it separately
-    public IEnumerator ReceiveCoinsButtonCoroutine(float time)
+    public IEnumerator ReceiveButtonCoroutine(float time)
     {
         // Wait for given time and load the ad screen
         yield return new WaitForSeconds(time);
@@ -245,24 +233,24 @@ public class ShopStatus : MonoBehaviour
         AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 
-    public void ContinuePlayingButtonClick()
+    public void CancelButtonClick()
     {
-        if (adWarningContinueButton.GetComponent<Button>().IsInteractable())
+        GameObject cancelButton = adCancel.GetCancelButton();
+        if (cancelButton.GetComponent<Button>().IsInteractable())
         {
             // Wait for given time and load the ad screen
-            adWarningContinueButton.GetComponent<TriggerButton>().ClickButton(0.2f);
+            cancelButton.GetComponent<TriggerButton>().ClickButton(0.2f);
             // Approximately when animation is finished, load the ad screen
-            StartCoroutine(ContinuePlayingButtonCoroutine(0.2f));
+            StartCoroutine(CancelButtonCoroutine(0.2f));
         }
     }
 
-    public IEnumerator ContinuePlayingButtonCoroutine(float time)
+    public IEnumerator CancelButtonCoroutine(float time)
     {
         yield return new WaitForSeconds(time);
 
         // Wait for some time and hide all the ad stuff, since player has cancelled reward and refused to watch the ad
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.gameObject.SetActive(false);
     }
 
     private void GetCoinsCancel()
@@ -271,14 +259,12 @@ public class ShopStatus : MonoBehaviour
         if (!showedAdCancelWarning)
         {
             // If it is the first time, show him a warnigng screen with ad stuff
-            adCancelBg.SetActive(true);
-            adCancelWarning.SetActive(true);
+            adCancel.gameObject.SetActive(true);
         }
         else
         {
             // else hide a warning screen with ad stuff
-            adCancelBg.SetActive(false);
-            adCancelWarning.SetActive(false);
+            adCancel.gameObject.SetActive(false);
         }
 
         // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
@@ -290,8 +276,7 @@ public class ShopStatus : MonoBehaviour
         // If a video for receiving coins fails, hide the warning page about cancelling, not to annoy the player
         // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
         showedAdCancelWarning = true;
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.gameObject.SetActive(false);
     }
 
     public void GetCoinsSuccess()
@@ -306,7 +291,6 @@ public class ShopStatus : MonoBehaviour
 
         // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
         showedAdCancelWarning = true;
-        adCancelBg.SetActive(false);
-        adCancelWarning.SetActive(false);
+        adCancel.gameObject.SetActive(false);
     }
 }
