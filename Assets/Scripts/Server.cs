@@ -46,6 +46,10 @@ public class Server : MonoBehaviour
         public string direction;
         public Vector3 position;
     }
+    public class ChallengeLives
+    {
+        public int lives;
+    }
     // Current challenge to play
     public class ChallengeLevel
     {
@@ -55,6 +59,7 @@ public class Server : MonoBehaviour
         public ChallengeBarrier[] barriers;
         public ChallengePortal[] portals;
         public string background;
+        public int lives;
     }
 
     /* CHALLENGES */
@@ -119,24 +124,22 @@ public class Server : MonoBehaviour
     }
 
     // LOCAL TESTING
-    string abboxAdsApi = "http://localhost:5001";
-    string abboxMessengerApi = "http://localhost:5001";
+    //string abboxAdsApi = "http://localhost:5001";
     string ballAndWallsApi = "http://localhost:5001";
 
     // STAGING
-    //private string abboxAdsApi = "https://staging.ads.abbox.com";
-    //private string abboxMessengerApi = "https://staging.messenger.abbox.com";
-    //private string ballAndWallsApi = "https://staging.ballandwalls.abboxgames.com";
+    string abboxAdsApi = "https://staging.ads.abbox.com";
+    //string ballAndWallsApi = "https://staging.ballandwalls.abboxgames.com";
 
     // PRODUCTION
-    //private string abboxAdsApi = "https://ads.abbox.com";
-    //private string abboxMessengerApi = "https://messenger.abbox.com";
-    //private string ballAndWallsApi = "https://ballandwalls.abboxgames.com";
+    //string abboxAdsApi = "https://ads.abbox.com";
+    //string ballAndWallsApi = "https://ballandwalls.abboxgames.com";
 
     List<ChallengeWall> walls = new List<ChallengeWall>();
     List<ChallengeBarrier> barriers = new List<ChallengeBarrier>();
     List<ChallengePortal> portals = new List<ChallengePortal>();
     ChallengeBall ball = new ChallengeBall();
+    ChallengeLives lives = new ChallengeLives();
     ChallengeBallCatcher ballCatcher = new ChallengeBallCatcher();
 
     List<LeaderboardItem> top = new List<LeaderboardItem>();
@@ -243,6 +246,10 @@ public class Server : MonoBehaviour
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
+            string message = JsonUtility.ToJson(header);
+            string headerMessage = BuildHeaders(message);
+            webRequest.SetRequestHeader("token", headerMessage);
+
             // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
 
@@ -273,7 +280,8 @@ public class Server : MonoBehaviour
         string[] portalsData = JsonHelper.GetJsonObjectArray(jsonData, "portals");
         string ballData = JsonHelper.GetJsonObject(jsonData, "ball");
         string ballCatcherData = JsonHelper.GetJsonObject(jsonData, "ballCatcher");
-
+        string livesData = JsonHelper.GetJsonObject(jsonData, "lives");
+        
         // Set challenge level background
         //ChallengeLevel challengeLevel = JsonUtility.FromJson<ChallengeLevel>(jsonData);
         //StartCoroutine(ExtractCurrentChallengeBackgroundImage(challengeLevel));
@@ -290,6 +298,8 @@ public class Server : MonoBehaviour
             ChallengeBarrier barrier = JsonUtility.FromJson<ChallengeBarrier>(barriersData[i]);
             barriers.Add(barrier);
         }
+        // Parse lives data
+        lives = JsonUtility.FromJson<ChallengeLives>(livesData);
         // Parse ball data
         ball = JsonUtility.FromJson<ChallengeBall>(ballData);
         // Parse ball catcher data
@@ -301,7 +311,7 @@ public class Server : MonoBehaviour
             portals.Add(portal);
         }
         // Send leaderboard data to leaderboard scene
-        challengeStatus.CurrentChallengeSuccess(walls, barriers, portals, ball, ballCatcher);
+        challengeStatus.CurrentChallengeSuccess(walls, barriers, portals, ball, ballCatcher, lives.lives);
     }
 
     private IEnumerator ExtractCurrentChallengeBackgroundImage(ChallengeLevel challengeLevel)
@@ -510,7 +520,7 @@ public class Server : MonoBehaviour
 
     public void GetVideoLink()
     {
-        string videoUrl = "https://ads.abbox.com" + "/api/v1/videos";
+        string videoUrl = abboxAdsApi + "/api/v1/videos";
         StartCoroutine(GetAdLinkCoroutine(videoUrl));
     }
 

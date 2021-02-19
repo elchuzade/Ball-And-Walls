@@ -152,6 +152,8 @@ public class ChallengeStatus : MonoBehaviour
         {
             lives--;
             SetLives();
+            // Save current lives in the server
+            server.GetLifeForVideoOrDiamond(PlayerPrefs.GetString("challengeId"), lives);
 
             player.lives--;
             player.SavePlayer();
@@ -183,8 +185,11 @@ public class ChallengeStatus : MonoBehaviour
         List<ChallengeBarrier> barriersData,
         List<ChallengePortal> portalsData,
         ChallengeBall ballData,
-        ChallengeBallCatcher ballCatcherData)
+        ChallengeBallCatcher ballCatcherData,
+        int _lives)
     {
+        lives = _lives;
+        SetLives();
         // Set ball position and direction
         ball.transform.position = ballData.position;
         

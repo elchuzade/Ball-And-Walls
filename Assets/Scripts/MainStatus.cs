@@ -47,7 +47,7 @@ public class MainStatus : MonoBehaviour
 
         server.SavePlayerData(player);
 
-        AdManager.ShowBanner();
+        //AdManager.ShowBanner();
         player.ResetPlayer();
         player.LoadPlayer();
 

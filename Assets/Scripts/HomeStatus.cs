@@ -87,13 +87,13 @@ public class HomeStatus : MonoBehaviour
     {
         // This is in start so it can destroy the old item before accessing it
         player = FindObjectOfType<Player>();
+        AdManager.ShowBanner();
 
         player.LoadPlayer();
 
         forwardButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
         SetButtonFunctions();
 
-        AdManager.ShowBanner();
         // Hide the white plane that is there for helping design the level on canvas
         GameObject.Find("GamePlane").SetActive(false);
         // Hide all the supposedely invisible buttons
