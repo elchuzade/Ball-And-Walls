@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using static Utilities;
-using System;
 
 public class Server : MonoBehaviour
 {
@@ -46,9 +45,11 @@ public class Server : MonoBehaviour
         public string direction;
         public Vector3 position;
     }
-    public class ChallengeLives
+    public class ChallengeReward
     {
         public int lives;
+        public int diamonds;
+        public int coins;
     }
     // Current challenge to play
     public class ChallengeLevel
@@ -139,7 +140,7 @@ public class Server : MonoBehaviour
     List<ChallengeBarrier> barriers = new List<ChallengeBarrier>();
     List<ChallengePortal> portals = new List<ChallengePortal>();
     ChallengeBall ball = new ChallengeBall();
-    ChallengeLives lives = new ChallengeLives();
+    ChallengeReward reward = new ChallengeReward();
     ChallengeBallCatcher ballCatcher = new ChallengeBallCatcher();
 
     List<LeaderboardItem> top = new List<LeaderboardItem>();
@@ -170,13 +171,13 @@ public class Server : MonoBehaviour
 
     /* ---------- CHALLENGES SCENE ---------- */
 
-    public void GetLifeForVideoOrDiamond(string challengeId, int count)
+    public void GetLifeForVideoOrDiamond(string challengeId, int count, bool allChallenges)
     {
         string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/device/lives/" + count;
-        StartCoroutine(GetLifeForVideoOrDiamondCoroutine(currentChallengeUrl, challengeId, count));
+        StartCoroutine(GetLifeForVideoOrDiamondCoroutine(currentChallengeUrl, challengeId, count, allChallenges));
     }
 
-    private IEnumerator GetLifeForVideoOrDiamondCoroutine(string url, string challengeId, int count)
+    private IEnumerator GetLifeForVideoOrDiamondCoroutine(string url, string challengeId, int count, bool allChallenges)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
@@ -189,27 +190,39 @@ public class Server : MonoBehaviour
 
             if (webRequest.isNetworkError)
             {
-
-                challengesStatus.GetLifeForVideoOrDiamondError(challengeId, count);
+                if (allChallenges)
+                {
+                    challengesStatus.GetLifeForVideoOrDiamondError(challengeId, count);
+                } else
+                {
+                    // This one will always give one life
+                    challengeStatus.GetLifeForVideoError(challengeId);
+                }
                 Debug.Log(webRequest.downloadHandler.text);
             }
             else
             {
-
-                challengesStatus.GetLifeForVideoOrDiamondSuccess(challengeId, count);
+                if (allChallenges)
+                {
+                    challengesStatus.GetLifeForVideoOrDiamondSuccess(challengeId, count);
+                } else
+                {
+                    // This one will always give one life
+                    challengeStatus.GetLifeForVideoSuccess(challengeId, count);
+                }
                 Debug.Log(webRequest.downloadHandler.text);
             }
         }
     }
 
     // UNLOCK A CHALLENGE BY ID
-    public void UnlockChallenge(string challengeId)
+    public void ChangeChallengeStatus(string challengeId, string status)
     {
-        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/device/" + "/unlocked";
-        StartCoroutine(UnlockChallengeCoroutine(currentChallengeUrl));
+        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/device/" + status;
+        StartCoroutine(ChangeChallengeStatusCoroutine(currentChallengeUrl, status));
     }
 
-    private IEnumerator UnlockChallengeCoroutine(string url)
+    private IEnumerator ChangeChallengeStatusCoroutine(string url, string status)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
@@ -224,12 +237,33 @@ public class Server : MonoBehaviour
             {
                 Debug.Log(webRequest.downloadHandler.text);
                 // Set the error of video link received from the server
-                challengesStatus.UnlockChallengeError();
+                if (status == "unlocked")
+                {
+                   challengesStatus.UnlockChallengeError();
+                }
+                else if (status == "tried")
+                {
+                    challengesStatus.TriedChallengeError();
+                } else if (status == "solved")
+                {
+                    challengeStatus.SolvedChallengeError();
+                }
             }
             else
             {
                 Debug.Log(webRequest.downloadHandler.text);
-                challengesStatus.UnlockChallengeSuccess();
+                if (status == "unlocked")
+                {
+                    challengesStatus.UnlockChallengeSuccess();
+                }
+                else if (status == "tried")
+                {
+                    challengesStatus.TriedChallengeSuccess();
+                }
+                else if (status == "solved")
+                {
+                    challengeStatus.SolvedChallengeSuccess();
+                }
             }
         }
     }
@@ -270,6 +304,7 @@ public class Server : MonoBehaviour
 
     private void PopulateChallengeData(string jsonData)
     {
+        Debug.Log(jsonData);
         // Clear the lists incase they already had data in them
         walls.Clear();
         barriers.Clear();
@@ -280,7 +315,7 @@ public class Server : MonoBehaviour
         string[] portalsData = JsonHelper.GetJsonObjectArray(jsonData, "portals");
         string ballData = JsonHelper.GetJsonObject(jsonData, "ball");
         string ballCatcherData = JsonHelper.GetJsonObject(jsonData, "ballCatcher");
-        string livesData = JsonHelper.GetJsonObject(jsonData, "lives");
+        string rewardData = JsonHelper.GetJsonObject(jsonData, "reward");
         
         // Set challenge level background
         //ChallengeLevel challengeLevel = JsonUtility.FromJson<ChallengeLevel>(jsonData);
@@ -298,12 +333,17 @@ public class Server : MonoBehaviour
             ChallengeBarrier barrier = JsonUtility.FromJson<ChallengeBarrier>(barriersData[i]);
             barriers.Add(barrier);
         }
-        // Parse lives data
-        lives = JsonUtility.FromJson<ChallengeLives>(livesData);
+        // Parse reward data
+        reward = JsonUtility.FromJson<ChallengeReward>(rewardData);
         // Parse ball data
         ball = JsonUtility.FromJson<ChallengeBall>(ballData);
         // Parse ball catcher data
         ballCatcher = JsonUtility.FromJson<ChallengeBallCatcher>(ballCatcherData);
+
+        ChallengeLevel level = JsonUtility.FromJson<ChallengeLevel>(jsonData);
+
+        StartCoroutine(ExtractCurrentChallengeBackgroundImage(level));
+
         // Parse after data
         for (int i = 0; i < portalsData.Length; i++)
         {
@@ -311,7 +351,10 @@ public class Server : MonoBehaviour
             portals.Add(portal);
         }
         // Send leaderboard data to leaderboard scene
-        challengeStatus.CurrentChallengeSuccess(walls, barriers, portals, ball, ballCatcher, lives.lives);
+        challengeStatus.CurrentChallengeSuccess(
+            walls, barriers, portals, ball,
+            ballCatcher, reward.lives,
+            reward.diamonds, reward.coins);
     }
 
     private IEnumerator ExtractCurrentChallengeBackgroundImage(ChallengeLevel challengeLevel)
@@ -324,8 +367,7 @@ public class Server : MonoBehaviour
             if (www.texture != null)
             {
                 Sprite sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-
-                challengesStatus.SetScreenshotImage(sprite);
+                challengeStatus.SetBackgroundImage(sprite);
             }
         }
     }

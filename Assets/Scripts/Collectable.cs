@@ -2,7 +2,7 @@
 using MoreMountains.NiceVibrations;
 using System.Collections;
 
-public enum Type { Key, Coin }
+public enum Type { Key, Coin, Diamond }
 
 public class Collectable : MonoBehaviour
 {

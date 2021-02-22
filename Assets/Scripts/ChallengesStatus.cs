@@ -145,7 +145,7 @@ public class ChallengesStatus : MonoBehaviour
         // Incase this is coming from after warning stuff being showed, hide it
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
-        server.GetLifeForVideoOrDiamond(selectedChallenge.id, 1);
+        server.GetLifeForVideoOrDiamond(selectedChallenge.id, 1, true);
     }
 
     public void CancelButtonClick()
@@ -273,7 +273,9 @@ public class ChallengesStatus : MonoBehaviour
         // Wait for given time and load the main scene
         yield return new WaitForSeconds(time);
 
-        PlaySelectedChallenge();
+        // Set selected challenge level id to player prefs
+        PlayerPrefs.SetString("challengeId", selectedChallenge.id);
+        server.ChangeChallengeStatus(selectedChallenge.id, "tried");
     }
 
     private void GetCurrentBallSprite()
@@ -290,7 +292,7 @@ public class ChallengesStatus : MonoBehaviour
     public void UnlockChallengeSuccess()
     {
         // Decrease diamonds successfully unlocked challenge
-        Debug.Log("decareasing diamonds");
+        DecreasePlayerDiamonds();
     }
 
     public void UnlockChallengeError()
@@ -318,10 +320,11 @@ public class ChallengesStatus : MonoBehaviour
     {
         selectedChallenge = pastChallenges[level.GetComponent<ChallengeItem>().GetIndex()];
 
-        server.UnlockChallenge(selectedChallenge.id);
+        server.ChangeChallengeStatus(selectedChallenge.id, "unlocked");
 
         level.GetComponent<ChallengeItem>().SetLocked(false);
         level.transform.Find("LevelTop").gameObject.SetActive(true);
+        SetChallengeIconLives(level, 5);
     }
 
     private void ClickChallengeLevel(GameObject level)
@@ -356,7 +359,7 @@ public class ChallengesStatus : MonoBehaviour
 
     private void GetLivesForDiamond()
     {
-        server.GetLifeForVideoOrDiamond(selectedChallenge.id, 5);
+        server.GetLifeForVideoOrDiamond(selectedChallenge.id, 5, true);
     }
 
     private void DecreasePlayerDiamonds()
@@ -366,10 +369,13 @@ public class ChallengesStatus : MonoBehaviour
         player.SavePlayer();
     }
 
-    private void PlaySelectedChallenge()
+    public void TriedChallengeError()
     {
-        // Set selected challenge level id to player prefs
-        PlayerPrefs.SetString("challengeId", selectedChallenge.id);
+        Debug.Log("Could not play challenge");
+    }
+
+    public void TriedChallengeSuccess()
+    {
         navigator.LoadChallengeLevel();
     }
 

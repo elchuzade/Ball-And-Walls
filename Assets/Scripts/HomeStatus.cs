@@ -125,21 +125,24 @@ public class HomeStatus : MonoBehaviour
         // Set the background based on the ball
         SetBackground();
 
-        if (challengeLevel)
+        if (!challengeLevel)
         {
-            adCancel.InitializeAdCancel(" life", lifeIcon);
+            adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
+            adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
+            adCancel.InitializeAdCancel(" hint", hintIcon);
         } else
         {
-            adCancel.InitializeAdCancel(" hint", hintIcon);
+            adCancel.InitializeAdCancel(" life", lifeIcon);
         }
-        adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
-        adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
     }
 
     public void SetLifeIcon(Sprite icon)
     {
         lifeIcon = icon;
-        adCancel.InitializeAdCancel(" life", lifeIcon);
+        if (!challengeLevel)
+        {
+            adCancel.InitializeAdCancel(" life", lifeIcon);
+        }
     }
 
     private void SetButtonFunctions()
@@ -330,6 +333,13 @@ public class HomeStatus : MonoBehaviour
         // If a ball collides with a coin add it to the level keys and to the scoreboard in canvas
         coins++;
         scoreboard.SetCoins(player.coins + coins);
+    }
+
+    public void CollectDiamond()
+    {
+        // If a ball collides with a coin add it to the level keys and to the scoreboard in canvas
+        diamonds++;
+        scoreboard.SetDiamonds(player.diamonds + diamonds);
     }
 
     public void CollectDiamonds()

@@ -84,6 +84,7 @@ public class ShopStatus : MonoBehaviour
 
     public bool GetPlayerLoaded()
     {
+        Debug.Log(player.unlockedBalls.Count);
         if (player != null && player.unlockedBalls.Count > 0)
         {
             return true;
