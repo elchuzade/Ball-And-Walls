@@ -6,8 +6,6 @@ using MoreMountains.NiceVibrations;
 
 public class BallCatcher : MonoBehaviour
 {
-    [SerializeField] bool challengeLevel;
-
     // List of words to show when level is passed
     string[] winWords = { "Congrats!", "Excellent!", "Good Job!", "Perfect!", "Amazing!", "Superb!", "Great!", "Wonderful!", "Brilliant!" };
 
@@ -96,8 +94,8 @@ public class BallCatcher : MonoBehaviour
         player.LoadPlayer();
         // Assing random number to amount of coins to drop from 7 to 13
         dropCoinsAmount = Random.Range(7, 14);
-        // Assing random number to amount of coins to drop from 7 to 13
-        dropDiamondsAmount = Random.Range(7, 14);
+        // Assing random number to amount of diamonds to drop from 5 to 8
+        dropDiamondsAmount = Random.Range(5, 9);
     }
 
     void FixedUpdate()
@@ -113,7 +111,7 @@ public class BallCatcher : MonoBehaviour
             MoveDroppedCoins();
         }
 
-        if (challengeLevel)
+        if (homeStatus.GetChallengeLevel() != 0)
         {
             // If the diamonds have reached their destination move them to canvas
             if (diamondsDropped)
@@ -314,12 +312,6 @@ public class BallCatcher : MonoBehaviour
         // If the ball catcher has hit the ball, level should be passed
         if (collision.gameObject.tag == "Ball")
         {
-            if (challengeLevel)
-            {
-                Server server = FindObjectOfType<Server>();
-                server.ChangeChallengeStatus(PlayerPrefs.GetString("challengeId"), "solved");
-            }
-
             // Disable all buttons from canvas so after the level is passed buttons do not get clicked during win animation
             homeStatus.DisableAllButtons();
 
@@ -329,7 +321,7 @@ public class BallCatcher : MonoBehaviour
             }
 
             // Show an ad before every 5th level except the 100th one which is the last level
-            if (!challengeLevel && (player.nextLevelIndex) % 5 == 0 && player.nextLevelIndex != 99)
+            if (homeStatus.GetChallengeLevel() == 0 && (player.nextLevelIndex) % 5 == 0 && player.nextLevelIndex != 99)
             {
                 AdManager.ShowStandardAd(() => { }, () => { }, () => { });
             }
@@ -338,15 +330,6 @@ public class BallCatcher : MonoBehaviour
             {
                 AudioSource audio = GetComponent<AudioSource>();
                 audio.Play();
-            }
-
-            // Make angles for all coins that will drop and then drop them
-            MakeDropCoinAngles();
-
-            if (challengeLevel)
-            {
-                // Make angles for all diamonds that will drop and then drop them
-                MakeDropDiamondAngles();
             }
 
             // Hide ball catcher image to not clutter when coins are dropping
@@ -377,19 +360,31 @@ public class BallCatcher : MonoBehaviour
             winWordText = winText.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             winWordText.text = winWord;
 
-            // Add coins that were collected from this level
-            player.coins += homeStatus.GetCoins();
-
-            if (challengeLevel)
-            {
-                // Add diamonds that were collected from this level
-                player.diamonds += homeStatus.GetDiamonds();
-            }
-
             // Check if in this level player has collected any keys, add them if so
             if (player.keys < homeStatus.GetKeys())
             {
                 player.keys += homeStatus.GetKeys() - player.keys;
+            }
+
+            if (homeStatus.GetChallengeLevel() != 0)
+            {
+                if (!homeStatus.GetChallengeSolved())
+                {
+                    // Make angles for all coins that will drop and then drop them
+                    MakeDropCoinAngles();
+                    // Make angles for all diamonds that will drop and then drop them
+                    MakeDropDiamondAngles();
+                    // Add diamonds that were collected from this level
+                    player.diamonds += homeStatus.GetDiamonds();
+                    // Add coins that were collected from this level
+                    player.coins += homeStatus.GetCoins();
+                }
+            } else
+            {
+                // Make angles for all coins that will drop and then drop them
+                MakeDropCoinAngles();
+                // Add coins that were collected from this level
+                player.coins += homeStatus.GetCoins();
             }
 
             // Destroy the ball
@@ -403,12 +398,11 @@ public class BallCatcher : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
 
-        if (challengeLevel)
+        if (homeStatus.GetChallengeLevel() != 0)
         {
-            player.coins += homeStatus.GetCoins();
-            player.diamonds += homeStatus.GetDiamonds();
+            player.unlockedChallenges[homeStatus.GetChallengeLevel() - 1] = -2;
             player.SavePlayer();
-            navigator.LoadChallengesScene();
+            navigator.LoadMainScene();
         } else
         {
             // Update the next level for the player
@@ -423,7 +417,6 @@ public class BallCatcher : MonoBehaviour
             }
             else
             {
-                player.coins += homeStatus.GetCoins();
                 player.SavePlayer();
                 navigator.LoadNextLevel(player.nextLevelIndex);
             }

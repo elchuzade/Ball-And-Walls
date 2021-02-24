@@ -1,49 +1,107 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class ChallengeItem : MonoBehaviour
 {
-    GameObject lockedFrame;
+    [SerializeField] GameObject lockFrame;
+    [SerializeField] GameObject lives;
+    [SerializeField] GameObject selectFrame;
 
-    void Awake()
+    [SerializeField] int levelIndex;
+    [SerializeField] int levelCoins;
+    [SerializeField] int levelDiamonds;
+    [SerializeField] Text challengeLevel;
+    [SerializeField] GameObject diamondsText;
+    [SerializeField] GameObject coinsText;
+    [SerializeField] GameObject solvedText;
+
+    private bool unlocked;
+
+    private int status;
+
+    private void Awake()
     {
-        lockedFrame = transform.Find("LockedFrame").gameObject;
+        lockFrame.SetActive(true);
+
+        gameObject.GetComponent<Button>().onClick.AddListener(() => SelectChallenge());
     }
 
-    private string id;
-    private int index;
-    private bool locked;
-
-    public void SetIndex(int _index)
+    public void SelectChallenge()
     {
-        index = _index;
-    }
-
-    public int GetIndex()
-    {
-        return index;
-    }
-
-    public void SetLocked(bool _locked)
-    {
-        locked = _locked;
-        if (!_locked)
+        if (unlocked)
         {
-            lockedFrame.SetActive(false);
+            ChallengesStatus challengesStatus = FindObjectOfType<ChallengesStatus>();
+            challengesStatus.SelectChallenge(gameObject);
+            SelectChallengeStatus(true);
         }
     }
 
-    public bool GetLocked()
+    public int GetChallengeStatus()
     {
-        return locked;
+        return status;
     }
 
-    public void SetId(string _id)
+    public int GetChallengeIndex()
     {
-        id = _id;
+        return levelIndex;
     }
 
-    public string GetId()
+    public void SelectChallengeStatus(bool status)
     {
-        return id;
+        if (status)
+        {
+            selectFrame.SetActive(true);
+        } else
+        {
+            selectFrame.SetActive(false);
+        }
+    }
+
+    public void SetData(int challengeStatus, Sprite _ball)
+    {
+        status = challengeStatus;
+        if (challengeStatus == -2)
+        {
+            unlocked = true;
+            solvedText.SetActive(true);
+            diamondsText.SetActive(false);
+            coinsText.SetActive(false);
+            lockFrame.SetActive(false);
+        }
+        else if (challengeStatus != -1)
+        {
+            unlocked = true;
+            lockFrame.SetActive(false);
+            SetLives(challengeStatus, _ball);
+            string coinsString = "";
+            string diamondsString = "";
+
+            coinsString += levelCoins;
+            diamondsString += levelDiamonds;
+
+            diamondsText.transform.Find("Text").GetComponent<Text>().text = diamondsString;
+            coinsText.transform.Find("Text").GetComponent<Text>().text = coinsString;
+        }
+    }
+
+    public void SetLives(int _lives, Sprite _ball)
+    {
+        // Incase lives are set after watching video or spending diamond
+        if (status != _lives)
+        {
+            status = _lives;
+        }
+
+        for (int i = 0; i < lives.transform.childCount; i++)
+        {
+            lives.transform.GetChild(i).GetComponent<Image>().sprite = _ball;
+            if (i < _lives)
+            {
+                lives.transform.GetChild(i).GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+            } else
+            {
+                lives.transform.GetChild(i).GetComponent<Image>().color = new Color32(255, 255, 255, 25);
+            }
+        }
     }
 }

@@ -28,6 +28,11 @@ public class Navigator : MonoBehaviour
         SceneManager.LoadScene("Level-" + nextLevelIndex);
     }
 
+    public void LoadChallengeLevel(int challengeLevelIndex)
+    {
+        SceneManager.LoadScene("Challenge_Level-" + challengeLevelIndex);
+    }
+
     public void LoadChestRoom()
     {
         SceneManager.LoadScene("ChestScene");

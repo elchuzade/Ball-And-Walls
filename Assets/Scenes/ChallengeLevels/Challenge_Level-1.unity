@@ -2236,6 +2236,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 42158737037647298, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
+        type: 3}
+      propertyPath: ChallengeCoins
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 42158737037647298, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
+        type: 3}
+      propertyPath: challengeCoins
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 42158737037647298, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
+        type: 3}
+      propertyPath: challengeLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 42158737037647298, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
+        type: 3}
+      propertyPath: ChallengeDiamonds
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 42158737037647298, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
+        type: 3}
+      propertyPath: challengeDiamonds
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6414495972381686432, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6590224219401749073, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
         type: 3}
       propertyPath: m_Name
@@ -2845,12 +2875,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BallCatcher
       objectReference: {fileID: 0}
-    - target: {fileID: 5689082986981646530, guid: d66bef2f684f947c0ab8cac142d03c8f,
-        type: 3}
-      propertyPath: coinPrefab
-      value: 
-      objectReference: {fileID: 7440827632312565995, guid: a119fad96e9da4fa4853ba31a82d5868,
-        type: 3}
     - target: {fileID: 5689082986981646531, guid: d66bef2f684f947c0ab8cac142d03c8f,
         type: 3}
       propertyPath: m_RootOrder

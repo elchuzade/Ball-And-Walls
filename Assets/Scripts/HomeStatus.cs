@@ -25,7 +25,8 @@ public class HomeStatus : MonoBehaviour
     bool showedPointer = false;
     int tutorialStep = 0;
 
-    [SerializeField] bool challengeLevel;
+    // Index of a challenge level, if 0 it means it is a normal level
+    [SerializeField] int challengeLevel;
 
     [SerializeField] bool tutorial;
     // To pass to ad cancel for normal level
@@ -66,21 +67,51 @@ public class HomeStatus : MonoBehaviour
     int coins = 0;
     int diamonds = 0;
 
+    // Challenge level
+    int lives;
+    Sprite currentBallSprite;
+    GameObject livesParent;
+    GameObject extraLife;
+    GameObject extraLifeButton;
+
+    GameObject passPhrase;
+    // This is to not mess around with solved status changing it to its lives value
+    bool solved;
+
+    [SerializeField] int challengeCoins;
+    [SerializeField] int challengeDiamonds;
+
     void Awake()
     {
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
-        hintButton = GameObject.Find("HintButton");
         homeButton = GameObject.Find("HomeButton");
         resetButton = GameObject.Find("ResetButton");
         forwardButton = GameObject.Find("ForwardButton");
         ballDirectionArrow = GameObject.Find("BallDirectionArrow");
         adCancel = FindObjectOfType<AdCancel>();
+        adCancel.transform.localScale = new Vector3(1, 1, 1);
 
         navigator = FindObjectOfType<Navigator>();
         ball = FindObjectOfType<Ball>();
         // In order to get proper locations of walls (in case hint button is clicked)
         walls = GameObject.Find("Walls").transform;
+
+        // Hide the white plane that is there for helping design the level on canvas
+        GameObject.Find("GamePlane").SetActive(false);
+
+        if (challengeLevel > 0)
+        {
+            livesParent = GameObject.Find("Lives");
+            extraLife = GameObject.Find("ExtraLife");
+            extraLifeButton = GameObject.Find("ExtraLifeButton");
+            passPhrase = GameObject.Find("PassPhrase");
+            extraLife.SetActive(false);
+            extraLife.transform.localScale = new Vector3(1, 1, 1);
+        } else
+        {
+            hintButton = GameObject.Find("HintButton");
+        }
     }
 
     void Start()
@@ -91,11 +122,19 @@ public class HomeStatus : MonoBehaviour
 
         player.LoadPlayer();
 
-        forwardButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
+        lives = player.unlockedChallenges[challengeLevel - 1];
+        if (lives == -1)
+        {
+            // Level is locked
+            navigator.LoadMainScene();
+        } else if (lives == -2)
+        {
+            solved = true;
+            lives = 5;
+        }
+
         SetButtonFunctions();
 
-        // Hide the white plane that is there for helping design the level on canvas
-        GameObject.Find("GamePlane").SetActive(false);
         // Hide all the supposedely invisible buttons
         resetButton.SetActive(false);
         forwardButton.SetActive(false);
@@ -108,38 +147,52 @@ public class HomeStatus : MonoBehaviour
             Camera.main.orthographicSize = 667;
         }
 
-        // Set initial keys coins diamonds and canvas values
-        keys = player.keys;
         scoreboard.SetCoins(player.coins + coins);
         scoreboard.SetDiamonds(player.diamonds + diamonds);
-        scoreboard.SetKeys(keys);
-
-        // Hide shop and hint in tutorial levels
-        if (player.nextLevelIndex <= 3 || player.nextLevelIndex == 100)
-        {
-            hintButton.SetActive(false);
-        }
     
         // Set the ball based on which ball index is selected in player data
         SetBallPrefab();
         // Set the background based on the ball
         SetBackground();
 
-        if (!challengeLevel)
+        if (challengeLevel > 0)
         {
-            adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
-            adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
-            adCancel.InitializeAdCancel(" hint", hintIcon);
+            extraLifeButton.GetComponent<Button>().onClick.AddListener(() => ExtraLifeButtonClick());
+            GetCurrentBallSprite();
+            SetLives();
+
+            adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ExtraLifeReceiveButtonClick());
+            adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => ExtraLifeCancelButtonClick());
+            adCancel.InitializeAdCancel(" life", hintIcon);
+
+            passPhrase.GetComponent<Button>().onClick.AddListener(() => navigator.LoadMainScene());
         } else
         {
-            adCancel.InitializeAdCancel(" life", lifeIcon);
+            // Hide shop and hint in tutorial levels
+            if (player.nextLevelIndex <= 3 || player.nextLevelIndex == 100)
+            {
+                hintButton.SetActive(false);
+            }
+
+            // Set initial keys coins diamonds and canvas values
+            keys = player.keys;
+            scoreboard.SetKeys(keys);
+
+            adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => UseHintReceiveButtonClick());
+            adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => UseHintCancelButtonClick());
+            adCancel.InitializeAdCancel(" hint", hintIcon);
         }
+    }
+
+    public int GetChallengeLevel()
+    {
+        return challengeLevel;
     }
 
     public void SetLifeIcon(Sprite icon)
     {
         lifeIcon = icon;
-        if (!challengeLevel)
+        if (challengeLevel == 0)
         {
             adCancel.InitializeAdCancel(" life", lifeIcon);
         }
@@ -147,8 +200,11 @@ public class HomeStatus : MonoBehaviour
 
     private void SetButtonFunctions()
     {
+        if (challengeLevel == 0)
+        {
+            hintButton.GetComponent<Button>().onClick.AddListener(() => ClickHintButton());
+        }
         homeButton.GetComponent<Button>().onClick.AddListener(() => ClickHomeButton());
-        hintButton.GetComponent<Button>().onClick.AddListener(() => ClickHintButton());
         resetButton.GetComponent<Button>().onClick.AddListener(() => ClickResetButton());
         forwardButton.GetComponent<Button>().onClick.AddListener(() => ClickForwardButton());
     }
@@ -158,77 +214,50 @@ public class HomeStatus : MonoBehaviour
         return shuffle;
     }
 
-    public void ReceiveButtonClick()
+    public void ExtraLifeReceiveButtonClick()
     {
-        GameObject receiveButton = adCancel.GetReceiveButton();
-        if (receiveButton.GetComponent<Button>().IsInteractable())
+        AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+    }
+
+    public void ExtraLifeCancelButtonClick()
+    {
+        navigator.LoadMainScene();
+    }
+
+    public void ExtraLifeButtonClick()
+    {
+        extraLife.SetActive(false);
+        AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+    }
+
+    private void ExtraLifeSuccess()
+    {
+        lives++;
+
+        if (!solved)
         {
-            // Run animation of clicking receive coins and watch the ad button
-            receiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is finished, load the ad screen
-            StartCoroutine(ReceiveHintButtonCoroutine(0.2f));
+            player.unlockedChallenges[challengeLevel - 1] = lives;
+            player.SavePlayer();
         }
-    }
 
-    public IEnumerator ReceiveHintButtonCoroutine(float time)
-    {
-        // Wait for given time and load the ad screen
-        yield return new WaitForSeconds(time);
-        // Load the ad screen
-        AdManager.ShowStandardAd(UseHintSuccess, UseHintCancel, UseHintFail);
-    }
-
-    public void CancelButtonClick()
-    {
-        GameObject cancelButton = adCancel.GetCancelButton();
-        if (cancelButton.GetComponent<Button>().IsInteractable())
-        {
-            // Wait for given time and load the ad screen
-            cancelButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is finished, load the ad screen
-            StartCoroutine(CancelButtonCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator CancelButtonCoroutine(float time)
-    {
-        // Wait for given time and hide the ad and warning stuff
-        yield return new WaitForSeconds(time);
-
+        SetLives();
+        // Incase this is coming from after warning stuff being showed, hide it
+        showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
     }
 
-    private void SetBallPrefab()
+    public void UseHintReceiveButtonClick()
     {
-        for (int i = 0; i < balls.Length; i++)
-        {
-            // Get sprite name from sprite renderer because it is in the game
-            if (balls[i].GetComponent<SpriteRenderer>().sprite.name == player.currentBall)
-            {
-                // Instantiate a ball from all balls array and player data ball index, set its parent to ballStuff
-                GameObject ballPrefab = Instantiate(balls[i], ball.transform.position, ball.transform.rotation);
+        AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
+    }
 
-                ballPrefab.transform.SetParent(ball.gameObject.transform);
-                break;
-            }
-        }
+    public void UseHintCancelButtonClick()
+    {
+        adCancel.gameObject.SetActive(false);
     }
 
     public void ClickHintButton()
     {
-        if (hintButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run button click animation and show the hint ad window
-            hintButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            StartCoroutine(HintButtonCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator HintButtonCoroutine(float time)
-    {
-        // Wait for given time for animation to finish
-        yield return new WaitForSeconds(time);
-
         // If the level is tutorial for how to use hint button
         if (player.nextLevelIndex == 4)
         {
@@ -243,11 +272,11 @@ public class HomeStatus : MonoBehaviour
         else
         {
             // Run the ad for hint
-            AdManager.ShowStandardAd(UseHintSuccess, UseHintCancel, UseHintFail);
+            AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
         }
     }
 
-    private void UseHintCancel()
+    private void RewardAdCancel()
     {
         // Show the warning stuff if it is the first time of cancelling
         if (!showedAdCancelWarning)
@@ -255,13 +284,19 @@ public class HomeStatus : MonoBehaviour
             adCancel.gameObject.SetActive(true);
         } else
         {
-            adCancel.gameObject.SetActive(false);
+            if (challengeLevel > 0)
+            {
+                navigator.LoadMainScene();
+            } else
+            {
+                adCancel.gameObject.SetActive(false);
+            }
         }
 
         showedAdCancelWarning = true;
     }
 
-    private void UseHintFail()
+    private void RewardAdFail()
     {
         // Close the warning stuff if for some reason video failed
         showedAdCancelWarning = true;
@@ -282,6 +317,22 @@ public class HomeStatus : MonoBehaviour
         adCancel.gameObject.SetActive(false);
     }
 
+    private void SetBallPrefab()
+    {
+        for (int i = 0; i < balls.Length; i++)
+        {
+            // Get sprite name from sprite renderer because it is in the game
+            if (balls[i].GetComponent<SpriteRenderer>().sprite.name == player.currentBall)
+            {
+                // Instantiate a ball from all balls array and player data ball index, set its parent to ballStuff
+                GameObject ballPrefab = Instantiate(balls[i], ball.transform.position, ball.transform.rotation);
+
+                ballPrefab.transform.SetParent(ball.gameObject.transform);
+                break;
+            }
+        }
+    }
+
     public void LaunchBall()
     {
         // Set the ball launched status to be access by other scripts
@@ -299,7 +350,10 @@ public class HomeStatus : MonoBehaviour
         forwardButton.SetActive(true);
 
         // hide hint and shop button when the ball is in movement, those should be access when ball is idle
-        hintButton.SetActive(false);
+        if (challengeLevel == 0)
+        {
+            hintButton.SetActive(false);
+        }
         homeButton.SetActive(false);
         // Hide arrow that shows where the ball will move when launched
         ballDirectionArrow.SetActive(false);
@@ -351,11 +405,19 @@ public class HomeStatus : MonoBehaviour
 
     public int GetCoins()
     {
+        if (challengeLevel > 0)
+        {
+            return challengeCoins;
+        }
         return coins;
     }
 
     public int GetDiamonds()
     {
+        if (challengeLevel > 0)
+        {
+            return challengeDiamonds;
+        }
         return diamonds;
     }
 
@@ -364,26 +426,19 @@ public class HomeStatus : MonoBehaviour
         return keys;
     }
 
-    public void ClickResetButton()
+    // Not to give coins and diamonds if you solved the level twice
+    public bool GetChallengeSolved()
     {
-        if (resetButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run the button click animation and reset the level
-            resetButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            StartCoroutine(ResetButtonCoroutine(0.2f));
-        }
+        return solved;
     }
 
-    public IEnumerator ResetButtonCoroutine(float time)
+    public void ClickResetButton()
     {
         // If the ball has not been reset yet, reset it. This is to remove double clicks
         if (!ball.GetBallReset())
         {
             ball.ResetBall();
         }
-
-        yield return new WaitForSeconds(time);
-
         // Hide the forward and reset buttons
         resetButton.SetActive(false);
         forwardButton.SetActive(false);
@@ -391,69 +446,79 @@ public class HomeStatus : MonoBehaviour
 
     public void ClickForwardButton()
     {
-        if (forwardButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run the button click animation and accelerate the ball
-            forwardButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Show disable cross on the button when clicked
-            forwardButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Disable);
-            StartCoroutine(ForwardButtonCoroutine(0.2f));
-        }
+        ball.ForwardBall();
+        // Switch disable button
+        forwardButton.GetComponent<Button>().interactable = false;
+        forwardButton.transform.Find("Disabled").gameObject.SetActive(true);
     }
 
-    public IEnumerator ForwardButtonCoroutine(float time)
+    private void SetLives()
     {
-        // WAit for given time and run the ball's forward function that will accelerate the ball speed
-        yield return new WaitForSeconds(time);
-        // Make button not clickable any more until level reset or passed
-        forwardButton.GetComponent<Button>().interactable = false;
-        ball.ForwardBall();
+        for (int i = 0; i < livesParent.transform.childCount; i++)
+        {
+            livesParent.transform.GetChild(i).GetComponent<Image>().sprite = currentBallSprite;
+            if (i < lives)
+            {
+                livesParent.transform.GetChild(i).GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+            }
+            else
+            {
+                livesParent.transform.GetChild(i).GetComponent<Image>().color = new Color32(255, 255, 255, 25);
+            }
+        }
     }
 
     public void ResetLevel()
     {
-        // This is accessed by a ball when it is reset
-        resetButton.SetActive(false);
-        forwardButton.SetActive(false);
+        if (challengeLevel > 0)
+        {
+            lives--;
 
-        forwardButton.GetComponent<TriggerButton>().SetButtonState(ButtonStates.Enable);
-        forwardButton.GetComponent<Button>().interactable = true;
+            if (lives > -1)
+            {
+                if (!solved)
+                {
+                    player.unlockedChallenges[challengeLevel - 1] = lives;
+                    player.SavePlayer();
+                }
+                SetLives();
+            }
 
+            if (lives == 0)
+            {
+                extraLife.SetActive(true);
+            }
+            homeButton.SetActive(true);
+        }
+        else
+        {
+            // If it is not a tutorial level, show the shop and hint buttons
+            if (player.nextLevelIndex > 4)
+            {
+                hintButton.SetActive(true);
+            }
+            if (player.nextLevelIndex > 4)
+            {
+                homeButton.SetActive(true);
+            }
+        }
         // Seet ball to idle state
         ballLaunched = false;
         // Show the ball direction arrow again
         ballDirectionArrow.SetActive(true);
-        // If it is not a tutorial level, show the shop and hint buttons
-        if (player.nextLevelIndex > 4)
-        {
-            hintButton.SetActive(true);
-        }
-        if (player.nextLevelIndex > 4)
-        {
-            homeButton.SetActive(true);
-        }
-        if (challengeLevel)
-        {
-            homeButton.SetActive(true);
-            ChallengeStatus challengeLevelScript = FindObjectOfType<ChallengeStatus>();
-            challengeLevelScript.DecreaseLife();
-        }
+
+        // This is accessed by a ball when it is reset
+        resetButton.SetActive(false);
+        forwardButton.SetActive(false);
+
+        forwardButton.GetComponent<Button>().interactable = true;
+        forwardButton.transform.Find("Disabled").gameObject.SetActive(false);
+
+        forwardButton.GetComponent<Button>().interactable = true;
     }
 
     public void ClickHomeButton()
     {
-        if (homeButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run the button click animation and load the home scene
-            homeButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            StartCoroutine(LoadHomeSceneCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator LoadHomeSceneCoroutine(float time)
-    {
-        // Wait for given time for animation to finish and load the shop scene
-        yield return new WaitForSeconds(time);
         navigator.LoadMainScene();
     }
     
@@ -626,7 +691,21 @@ public class HomeStatus : MonoBehaviour
         resetButton.GetComponent<Button>().interactable = false;
         homeButton.GetComponent<Button>().interactable = false;
         forwardButton.GetComponent<Button>().interactable = false;
-        hintButton.GetComponent<Button>().interactable = false;
+        if (challengeLevel == 0)
+        {
+            hintButton.GetComponent<Button>().interactable = false;
+        }
+    }
+
+    private void GetCurrentBallSprite()
+    {
+        for (int i = 0; i < balls.Length; i++)
+        {
+            if (balls[i].name == player.currentBall)
+            {
+                currentBallSprite = balls[i].GetComponent<SpriteRenderer>().sprite;
+            }
+        }
     }
 
     private void SetBackground()

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class PlayerData
 {
     public List<string> unlockedBalls = new List<string>() { "default" };
+    public List<int> unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
     public string currentBall = "default";
     public int coins = 0;
     public int keys = 0;
@@ -17,6 +18,7 @@ public class PlayerData
     public PlayerData (Player player)
     {
         unlockedBalls = player.unlockedBalls;
+        unlockedChallenges = player.unlockedChallenges;
         currentBall = player.currentBall;
         coins = player.coins;
         keys = player.keys;

@@ -14,70 +14,6 @@ public class Server : MonoBehaviour
         public string deviceOS;
     }
 
-    // Challenge data
-    public class ChallengeWall
-    {
-        public string type;
-        public Color32 color;
-        public Vector3 position;
-        public Vector3 rotation;
-    }
-    public class ChallengeBarrier
-    {
-        public string type;
-        public Color32 color;
-        public Vector3 position;
-        public Vector3 rotation;
-    }
-    public class ChallengePortal
-    {
-        public string type;
-        public Vector3 position;
-        public Vector3 rotation;
-    }
-    public class ChallengeBallCatcher
-    {
-        public Vector3 position;
-    }
-    public class ChallengeBall
-    {
-        // East, West, North, South
-        public string direction;
-        public Vector3 position;
-    }
-    public class ChallengeReward
-    {
-        public int lives;
-        public int diamonds;
-        public int coins;
-    }
-    // Current challenge to play
-    public class ChallengeLevel
-    {
-        public ChallengeBall ball;
-        public ChallengeBallCatcher ballCatcher;
-        public ChallengeWall[] walls;
-        public ChallengeBarrier[] barriers;
-        public ChallengePortal[] portals;
-        public string background;
-        public int lives;
-    }
-
-    /* CHALLENGES */
-
-    // Every challenge in the list including current challenge
-    public class PastChallenge
-    {
-        public int tried;
-        public int solved;
-        public int coins;
-        public int diamonds;
-        public int lives;
-        public string status;
-        public string screenshot;
-        public string id;
-    }
-
     /* LEADERBOARD */
 
     // Change player name
@@ -125,23 +61,16 @@ public class Server : MonoBehaviour
     }
 
     // LOCAL TESTING
-    //string abboxAdsApi = "http://localhost:5001";
+    string abboxAdsApi = "http://localhost:5002";
     string ballAndWallsApi = "http://localhost:5001";
 
     // STAGING
-    string abboxAdsApi = "https://staging.ads.abbox.com";
+    //string abboxAdsApi = "https://staging.ads.abbox.com";
     //string ballAndWallsApi = "https://staging.ballandwalls.abboxgames.com";
 
     // PRODUCTION
     //string abboxAdsApi = "https://ads.abbox.com";
     //string ballAndWallsApi = "https://ballandwalls.abboxgames.com";
-
-    List<ChallengeWall> walls = new List<ChallengeWall>();
-    List<ChallengeBarrier> barriers = new List<ChallengeBarrier>();
-    List<ChallengePortal> portals = new List<ChallengePortal>();
-    ChallengeBall ball = new ChallengeBall();
-    ChallengeReward reward = new ChallengeReward();
-    ChallengeBallCatcher ballCatcher = new ChallengeBallCatcher();
 
     List<LeaderboardItem> top = new List<LeaderboardItem>();
     List<LeaderboardItem> before = new List<LeaderboardItem>();
@@ -154,12 +83,6 @@ public class Server : MonoBehaviour
     [SerializeField] LoadStatus loadStatus;
     // This is to call the functions in leaderboard scene
     [SerializeField] LeaderboardStatus leaderboardStatus;
-    // This is to call the functions in challenges scene
-    [SerializeField] ChallengesStatus challengesStatus;
-    // This is to call the functions in challenge scene
-    [SerializeField] ChallengeStatus challengeStatus;
-
-    List<PastChallenge> pastChallenges = new List<PastChallenge>();
 
     Header header = new Header();
 
@@ -167,276 +90,6 @@ public class Server : MonoBehaviour
     {
         header.deviceId = SystemInfo.deviceUniqueIdentifier;
         header.deviceOS = SystemInfo.operatingSystem;
-    }
-
-    /* ---------- CHALLENGES SCENE ---------- */
-
-    public void GetLifeForVideoOrDiamond(string challengeId, int count, bool allChallenges)
-    {
-        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/device/lives/" + count;
-        StartCoroutine(GetLifeForVideoOrDiamondCoroutine(currentChallengeUrl, challengeId, count, allChallenges));
-    }
-
-    private IEnumerator GetLifeForVideoOrDiamondCoroutine(string url, string challengeId, int count, bool allChallenges)
-    {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-        {
-            string message = JsonUtility.ToJson(header);
-            string headerMessage = BuildHeaders(message);
-            webRequest.SetRequestHeader("token", headerMessage);
-
-            // Send request and wait for the desired response.
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.isNetworkError)
-            {
-                if (allChallenges)
-                {
-                    challengesStatus.GetLifeForVideoOrDiamondError(challengeId, count);
-                } else
-                {
-                    // This one will always give one life
-                    challengeStatus.GetLifeForVideoError(challengeId);
-                }
-                Debug.Log(webRequest.downloadHandler.text);
-            }
-            else
-            {
-                if (allChallenges)
-                {
-                    challengesStatus.GetLifeForVideoOrDiamondSuccess(challengeId, count);
-                } else
-                {
-                    // This one will always give one life
-                    challengeStatus.GetLifeForVideoSuccess(challengeId, count);
-                }
-                Debug.Log(webRequest.downloadHandler.text);
-            }
-        }
-    }
-
-    // UNLOCK A CHALLENGE BY ID
-    public void ChangeChallengeStatus(string challengeId, string status)
-    {
-        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId + "/device/" + status;
-        StartCoroutine(ChangeChallengeStatusCoroutine(currentChallengeUrl, status));
-    }
-
-    private IEnumerator ChangeChallengeStatusCoroutine(string url, string status)
-    {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-        {
-            string message = JsonUtility.ToJson(header);
-            string headerMessage = BuildHeaders(message);
-            webRequest.SetRequestHeader("token", headerMessage);
-
-            // Send request and wait for the desired response.
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.isNetworkError)
-            {
-                Debug.Log(webRequest.downloadHandler.text);
-                // Set the error of video link received from the server
-                if (status == "unlocked")
-                {
-                   challengesStatus.UnlockChallengeError();
-                }
-                else if (status == "tried")
-                {
-                    challengesStatus.TriedChallengeError();
-                } else if (status == "solved")
-                {
-                    challengeStatus.SolvedChallengeError();
-                }
-            }
-            else
-            {
-                Debug.Log(webRequest.downloadHandler.text);
-                if (status == "unlocked")
-                {
-                    challengesStatus.UnlockChallengeSuccess();
-                }
-                else if (status == "tried")
-                {
-                    challengesStatus.TriedChallengeSuccess();
-                }
-                else if (status == "solved")
-                {
-                    challengeStatus.SolvedChallengeSuccess();
-                }
-            }
-        }
-    }
-
-    // GET CHALLENGE DATA BY ID
-    public void GetCurrentChallenge(string challengeId)
-    {
-        string currentChallengeUrl = ballAndWallsApi + "/api/v1/challenges/" + challengeId;
-        StartCoroutine(GetCurrentChallengeCoroutine(currentChallengeUrl));
-    }
-
-    // This one is for the current challenge level
-    private IEnumerator GetCurrentChallengeCoroutine(string url)
-    {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-        {
-            string message = JsonUtility.ToJson(header);
-            string headerMessage = BuildHeaders(message);
-            webRequest.SetRequestHeader("token", headerMessage);
-
-            // Send request and wait for the desired response.
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.isNetworkError)
-            {
-                // Set the error of video link received from the server
-                challengeStatus.CurrentChallengeError();
-            }
-            else
-            {
-                // Parse the response from server to retrieve all data fields
-                string levelData = JsonHelper.GetJsonObject(webRequest.downloadHandler.text, "data");
-
-                PopulateChallengeData(levelData);
-            }
-        }
-    }
-
-    private void PopulateChallengeData(string jsonData)
-    {
-        Debug.Log(jsonData);
-        // Clear the lists incase they already had data in them
-        walls.Clear();
-        barriers.Clear();
-        portals.Clear();
-        // Extract string arrays of top, before, after and stirng of you data
-        string[] wallsData = JsonHelper.GetJsonObjectArray(jsonData, "walls");
-        string[] barriersData = JsonHelper.GetJsonObjectArray(jsonData, "barriers");
-        string[] portalsData = JsonHelper.GetJsonObjectArray(jsonData, "portals");
-        string ballData = JsonHelper.GetJsonObject(jsonData, "ball");
-        string ballCatcherData = JsonHelper.GetJsonObject(jsonData, "ballCatcher");
-        string rewardData = JsonHelper.GetJsonObject(jsonData, "reward");
-        
-        // Set challenge level background
-        //ChallengeLevel challengeLevel = JsonUtility.FromJson<ChallengeLevel>(jsonData);
-        //StartCoroutine(ExtractCurrentChallengeBackgroundImage(challengeLevel));
-
-        // Parse walls data
-        for (int i = 0; i < wallsData.Length; i++)
-        {
-            ChallengeWall wall = JsonUtility.FromJson<ChallengeWall>(wallsData[i]);
-            walls.Add(wall);
-        }
-        // Parse barriers data
-        for (int i = 0; i < barriersData.Length; i++)
-        {
-            ChallengeBarrier barrier = JsonUtility.FromJson<ChallengeBarrier>(barriersData[i]);
-            barriers.Add(barrier);
-        }
-        // Parse reward data
-        reward = JsonUtility.FromJson<ChallengeReward>(rewardData);
-        // Parse ball data
-        ball = JsonUtility.FromJson<ChallengeBall>(ballData);
-        // Parse ball catcher data
-        ballCatcher = JsonUtility.FromJson<ChallengeBallCatcher>(ballCatcherData);
-
-        ChallengeLevel level = JsonUtility.FromJson<ChallengeLevel>(jsonData);
-
-        StartCoroutine(ExtractCurrentChallengeBackgroundImage(level));
-
-        // Parse after data
-        for (int i = 0; i < portalsData.Length; i++)
-        {
-            ChallengePortal portal = JsonUtility.FromJson<ChallengePortal>(portalsData[i]);
-            portals.Add(portal);
-        }
-        // Send leaderboard data to leaderboard scene
-        challengeStatus.CurrentChallengeSuccess(
-            walls, barriers, portals, ball,
-            ballCatcher, reward.lives,
-            reward.diamonds, reward.coins);
-    }
-
-    private IEnumerator ExtractCurrentChallengeBackgroundImage(ChallengeLevel challengeLevel)
-    {
-        if (challengeLevel.background != null)
-        {
-            WWW www = new WWW(challengeLevel.background);
-
-            yield return www;
-            if (www.texture != null)
-            {
-                Sprite sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                challengeStatus.SetBackgroundImage(sprite);
-            }
-        }
-    }
-
-    // GET PAST CHALLENGES
-    public void GetPastChallenges()
-    {
-        string pastChallengesUrl = ballAndWallsApi + "/api/v1/challenges/past/device";
-        StartCoroutine(GetPastChallengesCoroutine(pastChallengesUrl));
-    }
-
-    // This one is for the big challenge in challenges scene
-    // This does not have data to build up a challenge level
-    // Only teasing stuff, like screenshot, rewards, try-solve, background
-    private IEnumerator GetPastChallengesCoroutine(string url)
-    {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-        {
-            string message = JsonUtility.ToJson(header);
-            string headerMessage  = BuildHeaders(message);
-            webRequest.SetRequestHeader("token", headerMessage);
-
-            // Send request and wait for the desired response.
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.isNetworkError)
-            {
-                Debug.Log(webRequest.downloadHandler.text);
-                // Set the error of video link received from the server
-                challengesStatus.PastChallengesError();
-            }
-            else
-            {
-                Debug.Log(webRequest.downloadHandler.text);
-                // Parse the response from server to retrieve all data fields
-                string[] levelsData = JsonHelper.GetJsonObjectArray(webRequest.downloadHandler.text, "data");
-
-                if (levelsData != null)
-                {
-                    // Parse top data to leaderboard item to populate the list
-                    for (int i = 0; i < levelsData.Length; i++)
-                    {
-                        PastChallenge pastChallengeLevel = JsonUtility.FromJson<PastChallenge>(levelsData[i]);
-                        pastChallenges.Add(pastChallengeLevel);
-                    }
-                }
-
-                // Set all past challenges
-                challengesStatus.PastChallengesSuccess(pastChallenges);
-                // Set first past challenge as current challenge since it is the latest
-                challengesStatus.SetSelectedChallenge(pastChallenges[0]);
-            }
-        }
-    }
-
-    public IEnumerator ExtractPastChallengeScreenshotImage(PastChallenge challengeLevel)
-    {
-        if (challengeLevel.screenshot != null)
-        {
-            WWW www = new WWW(challengeLevel.screenshot);
-
-            yield return www;
-            if (www.texture != null)
-            {
-                Sprite sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-
-                challengesStatus.SetScreenshotImage(sprite);
-            }
-        }
     }
 
     /* ---------- LOAD SCENE ---------- */
@@ -513,6 +166,10 @@ public class Server : MonoBehaviour
         UnityWebRequest webRequest =
             new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
 
+        string message = JsonUtility.ToJson(header);
+        string headerMessage = BuildHeaders(message);
+        webRequest.SetRequestHeader("token", headerMessage);
+
         yield return webRequest.SendWebRequest();
 
         if (webRequest.isNetworkError)
@@ -527,6 +184,12 @@ public class Server : MonoBehaviour
             // Make the success actions received from creating a player
             mainStatus.SavePlayerDataSuccess();
         }
+    }
+
+    public void GetVideoLink()
+    {
+        string videoUrl = abboxAdsApi + "/api/v1/videos";
+        StartCoroutine(GetAdLinkCoroutine(videoUrl));
     }
 
     // This one is for TV in main scene
@@ -558,12 +221,6 @@ public class Server : MonoBehaviour
                 mainStatus.SetVideoLinkSuccess(videoInfo.video);
             }
         }
-    }
-
-    public void GetVideoLink()
-    {
-        string videoUrl = abboxAdsApi + "/api/v1/videos";
-        StartCoroutine(GetAdLinkCoroutine(videoUrl));
     }
 
     /* ---------- LEADERBOARD SCENE ---------- */

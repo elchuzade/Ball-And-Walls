@@ -84,7 +84,6 @@ public class ShopStatus : MonoBehaviour
 
     public bool GetPlayerLoaded()
     {
-        Debug.Log(player.unlockedBalls.Count);
         if (player != null && player.unlockedBalls.Count > 0)
         {
             return true;
@@ -156,61 +155,19 @@ public class ShopStatus : MonoBehaviour
         return false;
     }
 
-    public void PlayLevel()
+    public void ClickPlayButton()
     {
-        if (playButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run the trigger button animation and disable button for its duration
-            playButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is over, load the game scene
-            StartCoroutine(LoadGameSceneCoroutine(0.2f));
-        }
+        navigator.LoadNextLevel(player.nextLevelIndex);
     }
 
-    public void GetMoreCoins()
+    public void ClickGetCoins()
     {
-        if (getCoinsButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run the trigger button animation and disable button for its duration
-            getCoinsButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is over, load get more coins ad
-            StartCoroutine(LoadGetMoreCoinsCoroutine(0.2f));
-        }
+        AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 
     public void ClickExitButton()
     {
-        if (exitButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run the trigger button animation and disable button for its duration
-            exitButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is over, load get more coins ad
-            StartCoroutine(LoadMainSceneCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator LoadMainSceneCoroutine(float time)
-    {
-        // Wait for given time and load the main scene
-        yield return new WaitForSeconds(time);
-
         navigator.LoadMainScene();
-    }
-
-    public IEnumerator LoadGameSceneCoroutine(float time)
-    {
-        // Wait for given time and load the game scene
-        yield return new WaitForSeconds(time);
-
-        navigator.LoadNextLevel(player.nextLevelIndex);
-    }
-
-    public IEnumerator LoadGetMoreCoinsCoroutine(float time)
-    {
-        // Wait for given time and load the ad screen
-        yield return new WaitForSeconds(time);
-
-        AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 
     public void ReceiveButtonClick()

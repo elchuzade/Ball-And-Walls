@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4069077140708245382}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -375, y: -667, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8699499540276217249}
@@ -133,6 +133,11 @@ PrefabInstance:
         you will not
 
         receive'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2430971185244488176, guid: b8988e09f4dbb4fed87458d0f0597c1d,
+        type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2430971185244488177, guid: b8988e09f4dbb4fed87458d0f0597c1d,
         type: 3}
@@ -244,10 +249,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2430971185244488178, guid: b8988e09f4dbb4fed87458d0f0597c1d,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 36e57a5a0b4ff425a90fedbfcac008c2,
+        type: 3}
+    - target: {fileID: 2430971185244488178, guid: b8988e09f4dbb4fed87458d0f0597c1d,
+        type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2430971185244488178, guid: b8988e09f4dbb4fed87458d0f0597c1d,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2430971185244488179, guid: b8988e09f4dbb4fed87458d0f0597c1d,
         type: 3}
       propertyPath: m_Name
       value: Warning
+      objectReference: {fileID: 0}
+    - target: {fileID: 2430971185244488179, guid: b8988e09f4dbb4fed87458d0f0597c1d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4111598819176342320, guid: b8988e09f4dbb4fed87458d0f0597c1d,
         type: 3}
@@ -357,6 +383,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Background
+      objectReference: {fileID: 0}
+    - target: {fileID: 4666451201154667508, guid: e3c779efb781a4aa8bb87b024bc82e83,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4666451201154667509, guid: e3c779efb781a4aa8bb87b024bc82e83,
         type: 3}

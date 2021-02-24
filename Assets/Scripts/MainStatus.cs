@@ -11,9 +11,9 @@ public class MainStatus : MonoBehaviour
     GameObject playButton;
     GameObject shopButton;
 
-
     Player player;
     Navigator navigator;
+    Scoreboard scoreboard;
 
     TV tv;
     GameObject tvLight;
@@ -26,6 +26,7 @@ public class MainStatus : MonoBehaviour
 
     void Awake()
     {
+        scoreboard = FindObjectOfType<Scoreboard>();
         server = FindObjectOfType<Server>();
         navigator = FindObjectOfType<Navigator>();
 
@@ -48,13 +49,15 @@ public class MainStatus : MonoBehaviour
         server.SavePlayerData(player);
 
         //AdManager.ShowBanner();
-        player.ResetPlayer();
         player.LoadPlayer();
 
         server.GetVideoLink();
 
         // Set whether haptics and sound buttons are enabled or disabled initially
         SetButtonInitialState();
+
+        scoreboard.SetCoins(player.coins);
+        scoreboard.SetDiamonds(player.diamonds);
     }
 
     void Update()
@@ -112,7 +115,6 @@ public class MainStatus : MonoBehaviour
     // Set error actions of video link from server file
     public void SetVideoLinkError(string response)
     {
-        Debug.Log(response);
         SwitchOffLightOff();
     }
 
