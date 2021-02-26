@@ -14,10 +14,6 @@ public class ShopStatus : MonoBehaviour
     // To pass to ad cancel
     [SerializeField] Sprite coinIcon;
 
-    GameObject playButton;
-    GameObject getCoinsButton;
-    GameObject exitButton;
-
     AdCancel adCancel;
 
     // Track if ad cancel warning has already been shown, not to annoy each time showing the same window
@@ -31,10 +27,6 @@ public class ShopStatus : MonoBehaviour
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
         adCancel = FindObjectOfType<AdCancel>();
-
-        playButton = GameObject.Find("PlayButton");
-        getCoinsButton = GameObject.Find("GetCoinsButton");
-        exitButton = GameObject.Find("ExitButton");
 
         items = GameObject.Find("Items");
     }
@@ -56,7 +48,7 @@ public class ShopStatus : MonoBehaviour
         scoreboard.SetDiamonds(player.diamonds);
 
         adCancel.InitializeAdCancel(" coins", coinIcon);
-        adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
+        adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ClickGetCoins());
         adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
     }
 
@@ -170,44 +162,8 @@ public class ShopStatus : MonoBehaviour
         navigator.LoadMainScene();
     }
 
-    public void ReceiveButtonClick()
-    {
-        GameObject receiveButton = adCancel.GetReceiveButton();
-        if (receiveButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run animation of clicking receive coins and watch the ad button
-            receiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is finished, load the ad screen
-            StartCoroutine(ReceiveButtonCoroutine(0.2f));
-        }
-    }
-
-    // This is similar to LoadGetMoreCoins. But for consistency, it is better to keep it separately
-    public IEnumerator ReceiveButtonCoroutine(float time)
-    {
-        // Wait for given time and load the ad screen
-        yield return new WaitForSeconds(time);
-        // Load the ad screen
-        AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
-    }
-
     public void CancelButtonClick()
     {
-        GameObject cancelButton = adCancel.GetCancelButton();
-        if (cancelButton.GetComponent<Button>().IsInteractable())
-        {
-            // Wait for given time and load the ad screen
-            cancelButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is finished, load the ad screen
-            StartCoroutine(CancelButtonCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator CancelButtonCoroutine(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        // Wait for some time and hide all the ad stuff, since player has cancelled reward and refused to watch the ad
         adCancel.gameObject.SetActive(false);
     }
 

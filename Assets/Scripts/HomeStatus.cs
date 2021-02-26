@@ -46,6 +46,7 @@ public class HomeStatus : MonoBehaviour
 
     // Canvas objects
     GameObject gameBackground;
+    GameObject levelIndex;
     GameObject hintButton;
     GameObject homeButton;
     GameObject resetButton;
@@ -89,6 +90,8 @@ public class HomeStatus : MonoBehaviour
         resetButton = GameObject.Find("ResetButton");
         forwardButton = GameObject.Find("ForwardButton");
         ballDirectionArrow = GameObject.Find("BallDirectionArrow");
+        levelIndex = GameObject.Find("LevelIndex");
+
         adCancel = FindObjectOfType<AdCancel>();
         adCancel.transform.localScale = new Vector3(1, 1, 1);
 
@@ -122,15 +125,19 @@ public class HomeStatus : MonoBehaviour
 
         player.LoadPlayer();
 
-        lives = player.unlockedChallenges[challengeLevel - 1];
-        if (lives == -1)
+        if (challengeLevel > 0)
         {
-            // Level is locked
-            navigator.LoadMainScene();
-        } else if (lives == -2)
-        {
-            solved = true;
-            lives = 5;
+            lives = player.unlockedChallenges[challengeLevel - 1];
+            if (lives == -1)
+            {
+                // Level is locked
+                navigator.LoadMainScene();
+            }
+            else if (lives == -2)
+            {
+                solved = true;
+                lives = 5;
+            }
         }
 
         SetButtonFunctions();
@@ -138,6 +145,8 @@ public class HomeStatus : MonoBehaviour
         // Hide all the supposedely invisible buttons
         resetButton.SetActive(false);
         forwardButton.SetActive(false);
+
+        levelIndex.GetComponent<Text>().text = player.nextLevelIndex.ToString();
 
         // Change the camera zoom based on the screen ration, for very tall or very wide screens
         if ((float)Screen.height / Screen.width > 2)
@@ -184,6 +193,7 @@ public class HomeStatus : MonoBehaviour
         }
     }
 
+    // To access from ball catcher to know whether to drop diamonds or not
     public int GetChallengeLevel()
     {
         return challengeLevel;
@@ -192,7 +202,7 @@ public class HomeStatus : MonoBehaviour
     public void SetLifeIcon(Sprite icon)
     {
         lifeIcon = icon;
-        if (challengeLevel == 0)
+        if (challengeLevel > 0)
         {
             adCancel.InitializeAdCancel(" life", lifeIcon);
         }
@@ -349,7 +359,8 @@ public class HomeStatus : MonoBehaviour
         }
         forwardButton.SetActive(true);
 
-        // hide hint and shop button when the ball is in movement, those should be access when ball is idle
+        // Hide hint and shop button when the ball is in movement, those should be access when ball is idle
+        // In not challenge level
         if (challengeLevel == 0)
         {
             hintButton.SetActive(false);
@@ -496,9 +507,6 @@ public class HomeStatus : MonoBehaviour
             if (player.nextLevelIndex > 4)
             {
                 hintButton.SetActive(true);
-            }
-            if (player.nextLevelIndex > 4)
-            {
                 homeButton.SetActive(true);
             }
         }
