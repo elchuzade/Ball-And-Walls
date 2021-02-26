@@ -43,7 +43,6 @@ public class ChestStatus : MonoBehaviour
     bool bestPrizeReceived = false;
     Navigator navigator;
 
-    GameObject exitButton;
     GameObject moreKeysButton;
     GameObject passPhraseButton;
 
@@ -78,7 +77,6 @@ public class ChestStatus : MonoBehaviour
         key2animator = key2.GetComponent<Animator>();
         key3animator = key3.GetComponent<Animator>();
 
-        exitButton = GameObject.Find("ExitButton");
         moreKeysButton = GameObject.Find("MoreKeysButton");
         passPhraseButton = GameObject.Find("PassPhrase");
     }
@@ -187,9 +185,6 @@ public class ChestStatus : MonoBehaviour
                 bestPrizeObject.transform.SetParent(bestPrize.transform);
             }
         }
-
-
-
     }
 
     public Sprite GetBestPrizeSprite()
@@ -287,36 +282,11 @@ public class ChestStatus : MonoBehaviour
 
     public void ClickPassPhrase()
     {
-        // Run the animation of a click of get more keys button and run the ad
-        if (passPhraseButton.GetComponent<Button>().IsInteractable())
-        {
-            passPhraseButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            StartCoroutine(LoadPassPhraseCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator LoadPassPhraseCoroutine(float time)
-    {
-        // Wait for given time and load the ad
-        yield return new WaitForSeconds(time);
-
-        NextLevel();
+        CloseChest();
     }
 
     public void GetMoreKeys()
     {
-        // Run the animation of a click of get more keys button and run the ad
-        if (moreKeysButton.GetComponent<Button>().IsInteractable())
-        {
-            moreKeysButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            StartCoroutine(LoadGetMoreKeysCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator LoadGetMoreKeysCoroutine(float time)
-    {
-        // Wait for given time and load the ad
-        yield return new WaitForSeconds(time);
         AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, CloseChest);
     }
 
@@ -338,18 +308,6 @@ public class ChestStatus : MonoBehaviour
 
     public void ClickExitButton()
     {
-        if (exitButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run the trigger button animation and disable button for its duration
-            exitButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is over, load level scene
-            StartCoroutine(LoadCloseChest(0.2f));
-        }
-    }
-
-    public IEnumerator LoadCloseChest(float time)
-    {
-        yield return new WaitForSeconds(time);
         CloseChest();
     }
 
@@ -361,39 +319,11 @@ public class ChestStatus : MonoBehaviour
     // Button that shows watch the ad till the end and receive the gift in the warning of ad cancel
     public void ReceiveButtonClick()
     {
-        GameObject receiveButton = adCancel.GetReceiveButton();
-        if (receiveButton.GetComponent<Button>().IsInteractable())
-        {
-            // Run animation of clicking receive coins and watch the ad button
-            receiveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is finished, load the ad screen
-            StartCoroutine(ReceiveButtonCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator ReceiveButtonCoroutine(float time)
-    {
-        yield return new WaitForSeconds(time);
-
         AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, GetKeysFail);
     }
 
     public void CancelButtonClick()
     {
-        GameObject cancelButton = adCancel.GetCancelButton();
-        if (cancelButton.GetComponent<Button>().IsInteractable())
-        {
-            // Wait for given time and load the ad screen
-            cancelButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            // Approximately when animation is finished, load the ad screen
-            StartCoroutine(CancelButtonCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator CancelButtonCoroutine(float time)
-    {
-        yield return new WaitForSeconds(time);
-
         adCancel.gameObject.SetActive(false);
     }
 
