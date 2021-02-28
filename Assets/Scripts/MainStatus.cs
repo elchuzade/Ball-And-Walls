@@ -45,7 +45,6 @@ public class MainStatus : MonoBehaviour
 
         //AdManager.ShowBanner();
         player.LoadPlayer();
-
         server.GetVideoLink();
 
         // Set whether haptics and sound buttons are enabled or disabled initially

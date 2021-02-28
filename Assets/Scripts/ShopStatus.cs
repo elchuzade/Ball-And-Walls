@@ -50,6 +50,15 @@ public class ShopStatus : MonoBehaviour
         adCancel.InitializeAdCancel(" coins", coinIcon);
         adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ClickGetCoins());
         adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
+        SetBallItems();
+    }
+
+    private void SetBallItems()
+    {
+        for (int i = 0; i < items.transform.childCount; i++)
+        {
+            items.transform.GetChild(i).GetComponent<Item>().CheckBallData();
+        }
     }
 
     public bool CheckUnlockStatus(string ballName)

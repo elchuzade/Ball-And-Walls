@@ -42,9 +42,10 @@ public class LoadStatus : MonoBehaviour
     private IEnumerator LoadGame()
     {
         yield return new WaitForSeconds(0);
-        if (player.nextLevelIndex == 0)
+        if (player.nextLevelIndex == 0 && !player.playerCreated)
         {
             PlayerPrefs.SetInt("Haptics", 1);
+            PlayerPrefs.SetInt("Sounds", 1);
             player.ResetPlayer();
             navigator.LoadMainScene();
         }

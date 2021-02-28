@@ -5,13 +5,13 @@ using System.Collections;
 
 public class ChestStatus : MonoBehaviour
 {
-    private List<string> allBalls = new List<string>()
-        { "abbox", "atom", "basketball", "beach", "blackhole", "bomb",
-        "bowling", "burger", "button", "candy", "coin", "cookie",
-        "darts", "default", "disco", "donut", "eye", "flower",
-        "football", "gear", "hypnose", "yinyang", "meteor", "pokemon",
-        "pool", "pumpkin", "radiation", "saturn", "smile", "snowball",
-        "sun", "tennis", "virus", "volleyball", "watermelon", "wheel" };
+    //private List<string> allBalls = new List<string>()
+    //    { "abbox", "atom", "basketball", "beach", "blackhole", "bomb",
+    //    "bowling", "burger", "button", "candy", "coin", "cookie",
+    //    "darts", "default", "disco", "donut", "eye", "flower",
+    //    "football", "gear", "hypnose", "yinyang", "meteor", "pokemon",
+    //    "pool", "pumpkin", "radiation", "saturn", "smile", "snowball",
+    //    "sun", "tennis", "virus", "volleyball", "watermelon", "wheel" };
 
     // Match this with the prefabs given to the BestPrizesPrefabs 23 balls
     private List<string> allBestPrizeBalls = new List<string>()
@@ -171,7 +171,7 @@ public class ChestStatus : MonoBehaviour
 
         // Get a random number in the range of locked keys and choose the best prize
         int bestPrizeIndex = new System.Random().Next(0, allBestPrizeBalls.Count);
-
+        Debug.Log(bestPrizeIndex);
         bestPrizeName = bestPrizes[bestPrizeIndex];
 
         for (int i = 0; i < allBestPrizeBalls.Count; i++)

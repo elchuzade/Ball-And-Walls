@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public int lives = 0;
     public int nextLevelIndex = 1;
     public string playerName = "";
+    public int selectedChallenge = -1;
     public bool playerCreated = false;
 
     void Awake()
@@ -46,6 +47,7 @@ public class Player : MonoBehaviour
         nextLevelIndex = 1;
         lives = 0;
         playerName = "";
+        selectedChallenge = 4;
         playerCreated = false;
         SaveSystem.SavePlayer(this);
     }
@@ -68,6 +70,7 @@ public class Player : MonoBehaviour
         keys = data.keys;
         lives = data.lives;
         diamonds = data.diamonds;
+        selectedChallenge = data.selectedChallenge;
         nextLevelIndex = data.nextLevelIndex;
     }
 }

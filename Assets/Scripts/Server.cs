@@ -19,7 +19,6 @@ public class Server : MonoBehaviour
     // Change player name
     public class PlayerName
     {
-        public string deviceId;
         public string playerName;
     }
     // Each row of leaderboard
@@ -30,47 +29,37 @@ public class Server : MonoBehaviour
         public string currentBall;
     }
 
-    /* LOADING */
-
-    // Create a new player
-    private class PlayerJson
-    {
-        public string deviceOS;
-        public string deviceId;
-    }
-
     /* MAIN */
 
     // Video Link
     public class VideoJson
     {
-        public string video;
-        public string name;
-        public string website;
+        public string video; // link to video
+        public string name; // product title
+        public string website; // link to follow on click
     }
 
     public class PlayerData
     {
         public int coins;
         public int diamonds;
-        public int keys;
         public int nextLevelIndex;
         public string currentBall;
         public List<string> unlockedBalls;
-        public string deviceId;
+        public List<int> unlockedChallenges;
     }
 
     // LOCAL TESTING
-    string abboxAdsApi = "http://localhost:5002";
-    string ballAndWallsApi = "http://localhost:5001";
+    //string abboxAdsApi = "http://localhost:5002";
+    //string ballAndWallsApi = "http://localhost:5001";
 
     // STAGING
     //string abboxAdsApi = "https://staging.ads.abbox.com";
     //string ballAndWallsApi = "https://staging.ballandwalls.abboxgames.com";
 
     // PRODUCTION
-    //string abboxAdsApi = "https://ads.abbox.com";
-    //string ballAndWallsApi = "https://ballandwalls.abboxgames.com";
+    string abboxAdsApi = "https://ads.abbox.com";
+    string ballAndWallsApi = "https://ballandwalls.abboxgames.com";
 
     List<LeaderboardItem> top = new List<LeaderboardItem>();
     List<LeaderboardItem> before = new List<LeaderboardItem>();
@@ -98,7 +87,6 @@ public class Server : MonoBehaviour
     public void CreatePlayer()
     {
         string playerUrl = ballAndWallsApi + "/api/v1/players/player";
-
         StartCoroutine(CreatePlayerCoroutine(playerUrl));
     }
 
@@ -140,15 +128,19 @@ public class Server : MonoBehaviour
         PlayerData playerData = new PlayerData();
         playerData.coins = player.coins;
         playerData.diamonds = player.diamonds;
-        playerData.keys = player.keys;
         playerData.nextLevelIndex = player.nextLevelIndex;
         playerData.currentBall = player.currentBall;
-        playerData.deviceId = header.deviceId;
         playerData.unlockedBalls = new List<string>();
+        playerData.unlockedChallenges = new List<int>();
 
         player.unlockedBalls.ForEach(b =>
         {
             playerData.unlockedBalls.Add(b);
+        });
+
+        player.unlockedChallenges.ForEach(c =>
+        {
+            playerData.unlockedChallenges.Add(c);
         });
 
         string playerDataJson = JsonUtility.ToJson(playerData);
@@ -228,10 +220,9 @@ public class Server : MonoBehaviour
     // CHANGE PLAYER NAME
     public void ChangePlayerName(string playerName)
     {
-        string nameUrl = ballAndWallsApi + "/api/v1/players/name/";
+        string nameUrl = ballAndWallsApi + "/api/v1/players/name";
 
         PlayerName nameObject = new PlayerName();
-        nameObject.deviceId = header.deviceId;
         nameObject.playerName = playerName;
 
         string nameJson = JsonUtility.ToJson(nameObject);
@@ -270,7 +261,7 @@ public class Server : MonoBehaviour
     // GET LEADERBOARD LIST
     public void GetLeaderboard()
     {
-        string leaderboardUrl = ballAndWallsApi + "/api/v1/players/leaderboard/device";
+        string leaderboardUrl = ballAndWallsApi + "/api/v1/players/leaderboard";
         StartCoroutine(LeaderboardCoroutine(leaderboardUrl));
     }
 
