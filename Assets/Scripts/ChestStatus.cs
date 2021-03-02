@@ -107,6 +107,7 @@ public class ChestStatus : MonoBehaviour
         adCancel.InitializeAdCancel(" keys", keyIcon);
         adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
         adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
+        adCancel.gameObject.SetActive(false);
     }
 
     // Show no thanks button after all the keys are used

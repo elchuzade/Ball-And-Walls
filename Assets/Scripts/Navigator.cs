@@ -38,11 +38,6 @@ public class Navigator : MonoBehaviour
         SceneManager.LoadScene("ChestScene");
     }
 
-    public void LoadChallengeLevel()
-    {
-        SceneManager.LoadScene("ChallengeLevel");
-    }
-
     public void LoadChallengesScene()
     {
         SceneManager.LoadScene("ChallengesScene");

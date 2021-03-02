@@ -1,14 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class AdCancel : MonoBehaviour
 {
-    // This defines what type of method you're going to call
-    public delegate void TestDelegate();
-    // This is the variable holding the method you're going to call
-    public TestDelegate m_methodToCall;
     // Continue watching and receive a reward button when player wanted to skip the video
     [SerializeField] GameObject receiveButton;
     // Continue watching and receive a reward button's text when player wanted to skip the video
@@ -28,7 +22,6 @@ public class AdCancel : MonoBehaviour
     void Start()
     {
         transform.localScale = new Vector3(1, 1, 1);
-        gameObject.SetActive(false);
     }
 
     public void InitializeAdCancel(string _text, Sprite _icon)

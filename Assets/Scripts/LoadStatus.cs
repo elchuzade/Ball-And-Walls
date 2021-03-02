@@ -21,7 +21,11 @@ public class LoadStatus : MonoBehaviour
 
         if (!player.playerCreated)
         {
+            Debug.Log("creating");
             server.CreatePlayer();
+        } else
+        {
+            StartCoroutine(LoadGame());
         }
     }
 

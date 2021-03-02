@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using MoreMountains.NiceVibrations;
 
@@ -33,6 +34,8 @@ public class BallCatcher : MonoBehaviour
 
     GameObject scoreboardCoinPrefab;
     GameObject scoreboardDiamondPrefab;
+    // To show every 10 levels
+    GameObject challengeUnlock;
 
     // Number of coins dropped
     int dropCoinsAmount;
@@ -72,6 +75,10 @@ public class BallCatcher : MonoBehaviour
     int collectedCoins = 0;
     int collectedDiamonds = 0;
 
+    // To add coins at the very end of coins move animations inside update
+    bool coinsAdded;
+    bool diamondsAdded;
+
     void Awake()
     {
         homeStatus = FindObjectOfType<HomeStatus>();
@@ -80,6 +87,7 @@ public class BallCatcher : MonoBehaviour
         scoreboardCoinPrefab = GameObject.Find("TotalCoinsIcon");
         scoreboardDiamondPrefab = GameObject.Find("TotalDiamondsIcon");
         canvas = GameObject.Find("Canvas");
+        challengeUnlock = GameObject.Find("ChallengeUnlock");
 
         // Animate scoreboard coin zooming when coins go to it
         coinsIcon = scoreboardCoinPrefab.GetComponent<TriggerAnimation>();
@@ -92,6 +100,15 @@ public class BallCatcher : MonoBehaviour
         player = FindObjectOfType<Player>();
 
         player.LoadPlayer();
+
+        GameObject playChallengeButton = challengeUnlock.transform.Find("Warning").Find("PlayButton").gameObject;
+        GameObject passChallengeButton = challengeUnlock.transform.Find("Warning").Find("PassPhrase").gameObject;
+
+        playChallengeButton.GetComponent<Button>().onClick.AddListener(() => PlayChallengeLevel());
+        passChallengeButton.GetComponent<Button>().onClick.AddListener(() => LoadNextLevel());
+
+        challengeUnlock.transform.localScale = new Vector3(1, 1, 1);
+        challengeUnlock.SetActive(false);
         // Assing random number to amount of coins to drop from 7 to 13
         dropCoinsAmount = Random.Range(7, 14);
         // Assing random number to amount of diamonds to drop from 5 to 8
@@ -188,6 +205,15 @@ public class BallCatcher : MonoBehaviour
                         triggerAnimTriggered = true;
                     }
                 }
+                else if (collectedCoins == dropCoinsAmount)
+                {
+                    if (!coinsAdded)
+                    {
+                        coinsAdded = true;
+                        // Add coins that were collected from this level
+                        player.coins += homeStatus.GetCoins();
+                    }
+                }
             }
         }
     }
@@ -222,6 +248,15 @@ public class BallCatcher : MonoBehaviour
                         triggerAnimTriggered = true;
                     }
                 }
+                else if (collectedDiamonds == dropDiamondsAmount)
+                {
+                    if (!diamondsAdded)
+                    {
+                        diamondsAdded = true;
+                        // Add coins that were collected from this level
+                        player.diamonds += homeStatus.GetDiamonds();
+                    }
+                }
             }
         }
     }
@@ -236,7 +271,7 @@ public class BallCatcher : MonoBehaviour
         // For every coins to be dropped
         for (int i = 0; i < dropCoinsAmount; i++)
         {
-            // Make arandom angle 
+            // Make a random angle 
             int angle = Random.Range(0, 360 / dropCoinsAmount);
             // Add it to the drop angles list
             dropCoinAngles.Add(angle + i * 360 / dropCoinsAmount);
@@ -286,7 +321,7 @@ public class BallCatcher : MonoBehaviour
         }
     }
 
-    // Access from challenge status
+    // Access from home status with challenges
     public void SetDiamondsCoins(int diamonds, int coins)
     {
         dropCoinsAmount = coins;
@@ -321,7 +356,7 @@ public class BallCatcher : MonoBehaviour
             }
 
             // Show an ad before every 5th level except the 100th one which is the last level
-            if (homeStatus.GetChallengeLevel() == 0 && (player.nextLevelIndex) % 5 == 0 && player.nextLevelIndex != 99)
+            if (homeStatus.GetChallengeLevel() == 0 && player.nextLevelIndex % 5 == 0 && player.nextLevelIndex != 100)
             {
                 AdManager.ShowStandardAd(() => { }, () => { }, () => { });
             }
@@ -360,6 +395,8 @@ public class BallCatcher : MonoBehaviour
             winWordText = winText.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             winWordText.text = winWord;
 
+            StartCoroutine(DestroyWinWord(2, winText));
+
             // Check if in this level player has collected any keys, add them if so
             if (player.keys < homeStatus.GetKeys())
             {
@@ -374,10 +411,6 @@ public class BallCatcher : MonoBehaviour
                     MakeDropCoinAngles();
                     // Make angles for all diamonds that will drop and then drop them
                     MakeDropDiamondAngles();
-                    // Add diamonds that were collected from this level
-                    player.diamonds += homeStatus.GetDiamonds();
-                    // Add coins that were collected from this level
-                    player.coins += homeStatus.GetCoins();
                 }
             } else
             {
@@ -394,32 +427,67 @@ public class BallCatcher : MonoBehaviour
         }
     }
 
+    private IEnumerator DestroyWinWord(int time, GameObject winText)
+    {
+        yield return new WaitForSeconds(time);
+
+        Destroy(winText);
+    }
+
     private IEnumerator LoadNextScreen(int time)
     {
         yield return new WaitForSeconds(time);
 
         if (homeStatus.GetChallengeLevel() != 0)
         {
+            // Challenge level, when passed send to main scene
             player.unlockedChallenges[homeStatus.GetChallengeLevel() - 1] = -2;
             player.SavePlayer();
             navigator.LoadMainScene();
         } else
         {
-            // Update the next level for the player
-            player.nextLevelIndex++;
+            // If player has passed every 10'th level, unlock him a challenge
+            if (homeStatus.GetChallengeLevel() == 0 && player.nextLevelIndex % 10 == 0 && player.nextLevelIndex != 100)
+            {
+                int challengeIndex = player.nextLevelIndex / 10;
+                if (player.unlockedChallenges[challengeIndex] == -1)
+                {
+                    player.unlockedChallenges[challengeIndex] = 5;
+                    player.SavePlayer();
+                }
 
-            // Wait for some time then update player data and load either next level or chest room
-            if (player.keys == 3)
-            {
-                player.keys = 0;
+                // Update the next level for the player
+                player.nextLevelIndex++;
                 player.SavePlayer();
-                navigator.LoadChestRoom();
-            }
-            else
+
+                challengeUnlock.SetActive(true);
+            } else
             {
+                // Update the next level for the player
+                player.nextLevelIndex++;
                 player.SavePlayer();
-                navigator.LoadNextLevel(player.nextLevelIndex);
+
+                LoadNextLevel();
             }
+        }
+    }
+
+    private void PlayChallengeLevel()
+    {
+        navigator.LoadChallengeLevel(player.nextLevelIndex / 10);
+    }
+
+    private void LoadNextLevel()
+    {
+        // Wait for some time then update player data and load either next level or chest room
+        if (player.keys == 3)
+        {
+            player.keys = 0;
+            player.SavePlayer();
+            navigator.LoadChestRoom();
+        } else
+        {
+            navigator.LoadNextLevel(player.nextLevelIndex);
         }
     }
 }

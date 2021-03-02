@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class HomeStatus : MonoBehaviour
 {
     Player player;
+    BallCatcher ballCatcher;
     // This is to indicate that the wall on this level should be shuffled
     [SerializeField] bool shuffle = true;
 
@@ -84,6 +85,7 @@ public class HomeStatus : MonoBehaviour
 
     void Awake()
     {
+        ballCatcher = FindObjectOfType<BallCatcher>();
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
         homeButton = GameObject.Find("HomeButton");
@@ -93,7 +95,6 @@ public class HomeStatus : MonoBehaviour
         levelIndex = GameObject.Find("LevelIndex");
 
         adCancel = FindObjectOfType<AdCancel>();
-        adCancel.transform.localScale = new Vector3(1, 1, 1);
 
         navigator = FindObjectOfType<Navigator>();
         ball = FindObjectOfType<Ball>();
@@ -123,10 +124,32 @@ public class HomeStatus : MonoBehaviour
         player = FindObjectOfType<Player>();
         AdManager.ShowBanner();
 
-        player.LoadPlayer();
+        SetButtonFunctions();
+
+        // Hide all the supposedely invisible buttons
+        resetButton.SetActive(false);
+        forwardButton.SetActive(false);
+
+        // Change the camera zoom based on the screen ration, for very tall or very wide screens
+        if ((float)Screen.height / Screen.width > 2)
+        {
+            Camera.main.orthographicSize = 800;
+        } else {
+            Camera.main.orthographicSize = 667;
+        }
+
+        scoreboard.SetCoins(player.coins);
+        scoreboard.SetDiamonds(player.diamonds);
+    
+        // Set the ball based on which ball index is selected in player data
+        SetBallPrefab();
+        // Set the background based on the ball
+        SetBackground();
 
         if (challengeLevel > 0)
         {
+            ballCatcher.SetDiamondsCoins(challengeDiamonds, challengeCoins);
+
             lives = player.unlockedChallenges[challengeLevel - 1];
             if (lives == -1)
             {
@@ -138,34 +161,8 @@ public class HomeStatus : MonoBehaviour
                 solved = true;
                 lives = 5;
             }
-        }
 
-        SetButtonFunctions();
-
-        // Hide all the supposedely invisible buttons
-        resetButton.SetActive(false);
-        forwardButton.SetActive(false);
-
-        levelIndex.GetComponent<Text>().text = player.nextLevelIndex.ToString();
-
-        // Change the camera zoom based on the screen ration, for very tall or very wide screens
-        if ((float)Screen.height / Screen.width > 2)
-        {
-            Camera.main.orthographicSize = 800;
-        } else {
-            Camera.main.orthographicSize = 667;
-        }
-
-        scoreboard.SetCoins(player.coins + coins);
-        scoreboard.SetDiamonds(player.diamonds + diamonds);
-    
-        // Set the ball based on which ball index is selected in player data
-        SetBallPrefab();
-        // Set the background based on the ball
-        SetBackground();
-
-        if (challengeLevel > 0)
-        {
+            levelIndex.GetComponent<Text>().text = challengeLevel.ToString();
             extraLifeButton.GetComponent<Button>().onClick.AddListener(() => ExtraLifeButtonClick());
             GetCurrentBallSprite();
             SetLives();
@@ -177,6 +174,7 @@ public class HomeStatus : MonoBehaviour
             passPhrase.GetComponent<Button>().onClick.AddListener(() => navigator.LoadMainScene());
         } else
         {
+            levelIndex.GetComponent<Text>().text = player.nextLevelIndex.ToString();
             // Hide shop and hint in tutorial levels
             if (player.nextLevelIndex <= 3 || player.nextLevelIndex == 100)
             {
@@ -191,6 +189,7 @@ public class HomeStatus : MonoBehaviour
             adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => UseHintCancelButtonClick());
             adCancel.InitializeAdCancel(" hint", hintIcon);
         }
+        adCancel.gameObject.SetActive(false);
     }
 
     // To access from ball catcher to know whether to drop diamonds or not
@@ -397,6 +396,8 @@ public class HomeStatus : MonoBehaviour
     {
         // If a ball collides with a coin add it to the level keys and to the scoreboard in canvas
         coins++;
+        Debug.Log(coins);
+        Debug.Log(player.coins);
         scoreboard.SetCoins(player.coins + coins);
     }
 
@@ -405,13 +406,6 @@ public class HomeStatus : MonoBehaviour
         // If a ball collides with a coin add it to the level keys and to the scoreboard in canvas
         diamonds++;
         scoreboard.SetDiamonds(player.diamonds + diamonds);
-    }
-
-    public void CollectDiamonds()
-    {
-        // If a ball collides with a coin add it to the level keys and to the scoreboard in canvas
-        diamonds++;
-        scoreboard.SetCoins(player.diamonds + diamonds);
     }
 
     public int GetCoins()

@@ -51,15 +51,15 @@ public class Server : MonoBehaviour
 
     // LOCAL TESTING
     //string abboxAdsApi = "http://localhost:5002";
-    //string ballAndWallsApi = "http://localhost:5001";
+    //string ballAndWallsApi = "http://localhost:5001/game0001";
 
     // STAGING
     //string abboxAdsApi = "https://staging.ads.abbox.com";
-    //string ballAndWallsApi = "https://staging.ballandwalls.abboxgames.com";
+    //string ballAndWallsApi = "https://staging.api.abboxgames.com/game0001";
 
     // PRODUCTION
     string abboxAdsApi = "https://ads.abbox.com";
-    string ballAndWallsApi = "https://ballandwalls.abboxgames.com";
+    string ballAndWallsApi = "https://api.abboxgames.com/game0001";
 
     List<LeaderboardItem> top = new List<LeaderboardItem>();
     List<LeaderboardItem> before = new List<LeaderboardItem>();
@@ -86,7 +86,7 @@ public class Server : MonoBehaviour
     // CREATE NEW PLAYER
     public void CreatePlayer()
     {
-        string playerUrl = ballAndWallsApi + "/api/v1/players/player";
+        string playerUrl = ballAndWallsApi + "/player";
         StartCoroutine(CreatePlayerCoroutine(playerUrl));
     }
 
@@ -123,7 +123,7 @@ public class Server : MonoBehaviour
     // SAVE PLAYER DATA
     public void SavePlayerData(Player player)
     {
-        string playerDataUrl = ballAndWallsApi + "/api/v1/players/data";
+        string playerDataUrl = ballAndWallsApi + "/data";
 
         PlayerData playerData = new PlayerData();
         playerData.coins = player.coins;
@@ -220,7 +220,7 @@ public class Server : MonoBehaviour
     // CHANGE PLAYER NAME
     public void ChangePlayerName(string playerName)
     {
-        string nameUrl = ballAndWallsApi + "/api/v1/players/name";
+        string nameUrl = ballAndWallsApi + "/name";
 
         PlayerName nameObject = new PlayerName();
         nameObject.playerName = playerName;
@@ -261,7 +261,7 @@ public class Server : MonoBehaviour
     // GET LEADERBOARD LIST
     public void GetLeaderboard()
     {
-        string leaderboardUrl = ballAndWallsApi + "/api/v1/players/leaderboard";
+        string leaderboardUrl = ballAndWallsApi + "/leaderboard";
         StartCoroutine(LeaderboardCoroutine(leaderboardUrl));
     }
 
@@ -279,6 +279,7 @@ public class Server : MonoBehaviour
 
             if (webRequest.isNetworkError)
             {
+                Debug.Log("err");
                 // Set the error of leaderboard data received from the server
                 Debug.Log(webRequest.downloadHandler.text);
             }

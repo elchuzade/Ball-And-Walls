@@ -43,6 +43,8 @@ public class MainStatus : MonoBehaviour
         player = FindObjectOfType<Player>();
         server.SavePlayerData(player);
 
+        //player.ResetPlayer();
+
         //AdManager.ShowBanner();
         player.LoadPlayer();
         server.GetVideoLink();

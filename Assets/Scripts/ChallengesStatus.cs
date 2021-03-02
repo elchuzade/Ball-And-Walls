@@ -14,6 +14,7 @@ public class ChallengesStatus : MonoBehaviour
     Sprite currentBallSprite;
 
     GameObject allChallengesScrollContent;
+    GameObject allChallengesScrollbar;
 
     GameObject diamondLives;
     GameObject videoLives;
@@ -39,6 +40,7 @@ public class ChallengesStatus : MonoBehaviour
         playChallenge = GameObject.Find("PlayChallenge");
 
         allChallengesScrollContent = GameObject.Find("AllChallengesScrollContent");
+        allChallengesScrollbar = GameObject.Find("AllChallengesScrollbar");
     }
 
     // Start is called before the first frame update
@@ -64,6 +66,10 @@ public class ChallengesStatus : MonoBehaviour
         adCancel.InitializeAdCancel(" life", currentBallSprite);
         adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
         adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
+
+        adCancel.gameObject.SetActive(false);
+
+        allChallengesScrollbar.GetComponent<Scrollbar>().value = 0.001f;
 
         PopulateChallenges();
     }

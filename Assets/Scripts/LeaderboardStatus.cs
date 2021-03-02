@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
@@ -114,7 +113,7 @@ public class LeaderboardStatus : MonoBehaviour
     private void SwapSaveButton()
     {
         // Fetch data from server and choose the button to show
-        if (player.playerName.Length >= 2)
+        if (player.nameChanged)
         {
             // The name sent from the server
             arrow.SetActive(false);
@@ -132,10 +131,10 @@ public class LeaderboardStatus : MonoBehaviour
     private void SetButtonFunctions()
     {
         // Set edit button function and close edit window button
-        changeNameCanvasButton.GetComponent<Button>().onClick.AddListener(() => ClickChangeNameButton());
+        changeNameCanvasButton.GetComponent<Button>().onClick.AddListener(() => ClickEditButton());
         changeNameCloseButton.GetComponent<Button>().onClick.AddListener(() => CloseChangeName());
         changeNameSaveButton.GetComponent<Button>().onClick.AddListener(() => ClickSaveName());
-        changeNameGetDiamondsButton.GetComponent<Button>().onClick.AddListener(() => ClickGetDiamonds());
+        changeNameGetDiamondsButton.GetComponent<Button>().onClick.AddListener(() => ClickSaveName());
 
         exitButton.GetComponent<Button>().onClick.AddListener(() => ClickExitButton());
     }
@@ -180,6 +179,7 @@ public class LeaderboardStatus : MonoBehaviour
         {
             player.playerName = name;
             player.diamonds += 3;
+            player.nameChanged = true;
             player.SavePlayer();
             player.LoadPlayer();
             scoreboard.SetDiamonds(player.diamonds);
@@ -228,9 +228,6 @@ public class LeaderboardStatus : MonoBehaviour
                 you = youData;
                 // Set the name in the change name field to prepopulate
                 nameInput.text = youData.playerName;
-                Debug.Log(you.playerName);
-                Debug.Log(you.currentBall);
-                Debug.Log(you.rank);
             }
         }
         if (afterData != null)
@@ -439,70 +436,18 @@ public class LeaderboardStatus : MonoBehaviour
     // Close Leadersboard Scene
     public void ClickExitButton()
     {
-        if (exitButton.GetComponent<Button>().IsInteractable())
-        {
-            // Trigge rthe click animation on exit button of the chest room top left
-            exitButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            StartCoroutine(LoadCloseLeadersboardCoroutine(0.2f));
-        }
+        navigator.LoadMainScene();
     }
 
     // Close Leadersboard Scene
-    public void ClickChangeNameButton()
+    public void ClickEditButton()
     {
-        if (changeNameCanvasButton.GetComponent<Button>().IsInteractable())
-        {
-            arrow.SetActive(false);
-            // Trigge rthe click animation on exit button of the chest room top left
-            changeNameCanvasButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            StartCoroutine(LoadChangeNameCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator LoadChangeNameCoroutine(float time)
-    {
-        yield return new WaitForSeconds(time);
-        changeName.SetActive(!changeName.activeSelf);
-    }
-
-    public IEnumerator LoadCloseLeadersboardCoroutine(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        navigator.LoadMainScene();
+        changeName.SetActive(true);
     }
 
     public void ClickSaveName()
     {
-        // When name is changed and save button is shown instead of get diamonds
-        if (changeNameSaveButton.GetComponent<Button>().IsInteractable())
-        {
-            changeNameSaveButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            StartCoroutine(LoadSaveNameCoroutine(0.2f));
-        }
-    }
-
-    public void ClickGetDiamonds()
-    {
-        if (changeNameGetDiamondsButton.GetComponent<Button>().IsInteractable())
-        {
-            changeNameGetDiamondsButton.GetComponent<TriggerButton>().ClickButton(0.2f);
-            StartCoroutine(LoadGetDiamondsCoroutine(0.2f));
-        }
-    }
-
-    public IEnumerator LoadSaveNameCoroutine(float time)
-    {
-        yield return new WaitForSeconds(time);
-
         SaveName();
-    }
-
-    public IEnumerator LoadGetDiamondsCoroutine(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        GetDiamonds();
     }
 
     // This is for invisible button that covers the rest of the screen when modal is open
@@ -514,12 +459,6 @@ public class LeaderboardStatus : MonoBehaviour
 
     // Save name
     public void SaveName()
-    {
-        server.ChangePlayerName(nameInput.text);
-    }
-
-    // Save name and get 3 diamonds
-    public void GetDiamonds()
     {
         server.ChangePlayerName(nameInput.text);
     }

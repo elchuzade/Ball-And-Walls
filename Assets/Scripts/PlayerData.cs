@@ -14,6 +14,7 @@ public class PlayerData
     public int nextLevelIndex = 1;
     public string playerName = "";
     public bool playerCreated = false;
+    public bool nameChanged = false;
     public int selectedChallenge = -1;
 
     public PlayerData (Player player)
@@ -29,5 +30,6 @@ public class PlayerData
         playerName = player.playerName;
         playerCreated = player.playerCreated;
         selectedChallenge = player.selectedChallenge;
+        nameChanged = player.nameChanged;
     }
 }

@@ -51,6 +51,7 @@ public class ShopStatus : MonoBehaviour
         adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ClickGetCoins());
         adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
         SetBallItems();
+        adCancel.gameObject.SetActive(false);
     }
 
     private void SetBallItems()
