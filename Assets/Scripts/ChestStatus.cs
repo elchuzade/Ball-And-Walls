@@ -83,6 +83,12 @@ public class ChestStatus : MonoBehaviour
 
     void Start()
     {
+        if ((float)Screen.width / Screen.height > 0.7)
+        {
+            GameObject canvas = GameObject.Find("Canvas");
+            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
+        }
+
         player = FindObjectOfType<Player>();
         player.LoadPlayer();
         moreKeysButton.SetActive(false);

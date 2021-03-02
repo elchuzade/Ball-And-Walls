@@ -46,6 +46,12 @@ public class ChallengesStatus : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if ((float)Screen.width / Screen.height > 0.7)
+        {
+            GameObject canvas = GameObject.Find("Canvas");
+            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
+        }
+
         playChallenge.GetComponent<Button>().onClick.AddListener(() => ClickPlayButton());
         diamondLives.GetComponent<Button>().onClick.AddListener(() => ClickGetLivesForDiamondButton());
         videoLives.GetComponent<Button>().onClick.AddListener(() => ClickGetLifeForVideoButton());
