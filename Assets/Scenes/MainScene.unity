@@ -269,6 +269,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+--- !u!1 &320322720 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6921220380051161582, guid: 65bf3fc9f4bf99645b34688c739c2ec6,
+    type: 3}
+  m_PrefabInstance: {fileID: 496847244}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &320322724
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320322720}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c32fcc860e8d04469b0afb7ee20e9aa9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &365073483
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,6 +572,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: PLAY
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457649969052170419, guid: 65bf3fc9f4bf99645b34688c739c2ec6,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457649969052170419, guid: 65bf3fc9f4bf99645b34688c739c2ec6,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 0.61960787
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457649969052170419, guid: 65bf3fc9f4bf99645b34688c739c2ec6,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 0.77254903
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457649969052170419, guid: 65bf3fc9f4bf99645b34688c739c2ec6,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457649969052170419, guid: 65bf3fc9f4bf99645b34688c739c2ec6,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457649969052170419, guid: 65bf3fc9f4bf99645b34688c739c2ec6,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4288595455
       objectReference: {fileID: 0}
     - target: {fileID: 6921220380051161582, guid: 65bf3fc9f4bf99645b34688c739c2ec6,
         type: 3}
@@ -914,8 +969,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4288595199
+  m_fontColor: {r: 1, g: 0.77003044, b: 0.6179246, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1730,6 +1785,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1581948611565647916, guid: 2008e9231c9f6483dba3ac7d86ccb959,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.61960787
+      objectReference: {fileID: 0}
+    - target: {fileID: 1581948611565647916, guid: 2008e9231c9f6483dba3ac7d86ccb959,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.77254903
+      objectReference: {fileID: 0}
+    - target: {fileID: 1581948611565647916, guid: 2008e9231c9f6483dba3ac7d86ccb959,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1855944310651174387, guid: 2008e9231c9f6483dba3ac7d86ccb959,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2047,6 +2117,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LeaderboardButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 7667431302417439201, guid: 9e96743e24ed84a2e8efb0f44d3c4c37,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.61960787
+      objectReference: {fileID: 0}
+    - target: {fileID: 7667431302417439201, guid: 9e96743e24ed84a2e8efb0f44d3c4c37,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.77254903
+      objectReference: {fileID: 0}
+    - target: {fileID: 7667431302417439201, guid: 9e96743e24ed84a2e8efb0f44d3c4c37,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5966781649835847824, guid: 9e96743e24ed84a2e8efb0f44d3c4c37, type: 3}

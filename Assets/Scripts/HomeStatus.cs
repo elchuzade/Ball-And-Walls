@@ -83,6 +83,8 @@ public class HomeStatus : MonoBehaviour
     [SerializeField] int challengeCoins;
     [SerializeField] int challengeDiamonds;
 
+    GameObject ballStuff;
+
     void Awake()
     {
         ballCatcher = FindObjectOfType<BallCatcher>();
@@ -100,6 +102,8 @@ public class HomeStatus : MonoBehaviour
         ball = FindObjectOfType<Ball>();
         // In order to get proper locations of walls (in case hint button is clicked)
         walls = GameObject.Find("Walls").transform;
+
+        ballStuff = GameObject.Find("BallStuff");
 
         // Hide the white plane that is there for helping design the level on canvas
         GameObject.Find("GamePlane").SetActive(false);
@@ -242,6 +246,7 @@ public class HomeStatus : MonoBehaviour
     public void ExtraLifeButtonClick()
     {
         extraLife.SetActive(false);
+        ballStuff.SetActive(true);
         AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
 
@@ -402,8 +407,6 @@ public class HomeStatus : MonoBehaviour
     {
         // If a ball collides with a coin add it to the level keys and to the scoreboard in canvas
         coins++;
-        Debug.Log(coins);
-        Debug.Log(player.coins);
         scoreboard.SetCoins(player.coins + coins);
     }
 
@@ -498,6 +501,7 @@ public class HomeStatus : MonoBehaviour
             if (lives == 0)
             {
                 extraLife.SetActive(true);
+                ballStuff.SetActive(false);
             }
             homeButton.SetActive(true);
         }

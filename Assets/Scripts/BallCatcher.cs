@@ -79,6 +79,8 @@ public class BallCatcher : MonoBehaviour
     bool coinsAdded;
     bool diamondsAdded;
 
+    int powerUp;
+
     void Awake()
     {
         homeStatus = FindObjectOfType<HomeStatus>();
@@ -101,6 +103,8 @@ public class BallCatcher : MonoBehaviour
 
         player.LoadPlayer();
 
+        SetPowerUp();
+
         GameObject playChallengeButton = challengeUnlock.transform.Find("Warning").Find("PlayButton").gameObject;
         GameObject passChallengeButton = challengeUnlock.transform.Find("Warning").Find("PassPhrase").gameObject;
 
@@ -110,7 +114,9 @@ public class BallCatcher : MonoBehaviour
         challengeUnlock.transform.localScale = new Vector3(1, 1, 1);
         challengeUnlock.SetActive(false);
         // Assing random number to amount of coins to drop from 7 to 13
-        dropCoinsAmount = Random.Range(7, 14);
+        int randomCoinsNumber = Random.Range(7, 14);
+        double coinsPowerUpAdded = randomCoinsNumber * powerUp / 100;
+        dropCoinsAmount = (int)System.Math.Ceiling(coinsPowerUpAdded) + randomCoinsNumber;
         // Assing random number to amount of diamonds to drop from 5 to 8
         dropDiamondsAmount = Random.Range(5, 9);
     }
@@ -488,6 +494,61 @@ public class BallCatcher : MonoBehaviour
         } else
         {
             navigator.LoadNextLevel(player.nextLevelIndex);
+        }
+    }
+
+    private void SetPowerUp()
+    {
+        switch (player.currentBall)
+        {
+            case "bowling":
+                powerUp = 10;
+                break;
+            case "beach":
+            case "pool":
+                powerUp = 15;
+                break;
+            case "tennis":
+            case "volleyball":
+            case "football":
+            case "basketball":
+                powerUp = 15;
+                break;
+            case "watermelon":
+            case "donut":
+            case "cookie":
+            case "pumpkin":
+            case "candy":
+                powerUp = 20;
+                break;
+            case "sun":
+            case "meteor":
+            case "blackhole":
+            case "saturn":
+                powerUp = 30;
+                break;
+            case "smile":
+            case "default":
+            case "pokemon":
+            case "flower":
+            case "darts":
+            case "virus":
+            case "hypnose":
+            case "wheel":
+            case "coin":
+            case "bomb":
+            case "atom":
+            case "inyan":
+            case "gear":
+            case "eye":
+            case "disco":
+            case "button":
+            case "burger":
+            case "abbox":
+            case "snowball":
+            case "radiation":
+                powerUp = 1000;
+                break;
         }
     }
 }

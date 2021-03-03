@@ -123,7 +123,7 @@ public class ChestStatus : MonoBehaviour
         key2.GetComponent<Image>().color = new Color32(0, 0, 0, 0);
         key3.GetComponent<Image>().color = new Color32(0, 0, 0, 0);
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         if (adsButton.activeSelf)
         {

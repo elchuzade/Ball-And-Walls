@@ -2833,6 +2833,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 294458252}
     m_Modifications:
+    - target: {fileID: 1740107955696292812, guid: 9a8372ec927364d289c94e65bcc59c27,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2051304323256182158, guid: 9a8372ec927364d289c94e65bcc59c27,
         type: 3}
       propertyPath: m_Color.b
@@ -6683,7 +6688,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ball & Walls
+  m_text: store
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 340576bd01219480188a1e8d1683eed5, type: 2}
   m_sharedMaterial: {fileID: -7034783566830306858, guid: 340576bd01219480188a1e8d1683eed5,
@@ -6693,8 +6698,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4288595455
+  m_fontColor: {r: 1, g: 0.77254903, b: 0.61960787, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
