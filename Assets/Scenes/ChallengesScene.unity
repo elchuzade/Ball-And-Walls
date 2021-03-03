@@ -374,7 +374,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 136135600}
   m_HandleRect: {fileID: 199905594}
   m_Direction: 0
-  m_Value: 0.50000006
+  m_Value: 0.5
   m_Size: 0.2987013
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2415,7 +2415,7 @@ PrefabInstance:
     - target: {fileID: 8391986909566609447, guid: 381dab1a0778544a2839d9d301fa4c29,
         type: 3}
       propertyPath: levelDiamonds
-      value: 15
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 381dab1a0778544a2839d9d301fa4c29, type: 3}
@@ -3345,7 +3345,7 @@ PrefabInstance:
     - target: {fileID: 8391986909566609447, guid: 381dab1a0778544a2839d9d301fa4c29,
         type: 3}
       propertyPath: levelDiamonds
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 381dab1a0778544a2839d9d301fa4c29, type: 3}
@@ -3963,7 +3963,7 @@ PrefabInstance:
     - target: {fileID: 8391986909566609447, guid: 381dab1a0778544a2839d9d301fa4c29,
         type: 3}
       propertyPath: levelDiamonds
-      value: 20
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 381dab1a0778544a2839d9d301fa4c29, type: 3}
