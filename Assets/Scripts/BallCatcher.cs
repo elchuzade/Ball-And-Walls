@@ -501,54 +501,76 @@ public class BallCatcher : MonoBehaviour
     {
         switch (player.currentBall)
         {
+            case "default":
             case "bowling":
-                powerUp = 10;
-                break;
-            case "beach":
             case "pool":
-                powerUp = 15;
-                break;
             case "tennis":
             case "volleyball":
             case "football":
             case "basketball":
+                powerUp = 0;
+                break;
+            case "inyan":
+            case "beach":
                 powerUp = 15;
                 break;
             case "watermelon":
-            case "donut":
-            case "cookie":
-            case "pumpkin":
-            case "candy":
+            case "darts":
+            case "gear":
+            case "pokemon":
                 powerUp = 20;
                 break;
-            case "sun":
-            case "meteor":
-            case "blackhole":
-            case "saturn":
+            case "button":
+                powerUp = 25;
+                break;
+            case "pumpkin":
                 powerUp = 30;
                 break;
             case "smile":
-            case "default":
-            case "pokemon":
-            case "flower":
-            case "darts":
-            case "virus":
-            case "hypnose":
-            case "wheel":
-            case "coin":
-            case "bomb":
-            case "atom":
-            case "inyan":
-            case "gear":
-            case "eye":
-            case "disco":
-            case "button":
             case "burger":
-            case "abbox":
-            case "snowball":
-            case "radiation":
-                powerUp = 1000;
+                powerUp = 40;
                 break;
+            case "snowball":
+                powerUp = 45;
+                break;
+            case "cookie":
+            case "hypnose":
+            case "flower":
+                powerUp = 50;
+                break;
+            case "donut":
+                powerUp = 55;
+                break;
+            case "saturn":
+                powerUp = 60;
+                break;
+            case "wheel":
+            case "bomb":
+            case "virus":
+                powerUp = 70;
+                break;
+            case "disco":
+            case "candy":
+                powerUp = 80;
+                break;
+            case "sun":
+            case "coin":
+                powerUp = 100;
+                break;
+            case "meteor":
+                powerUp = 200;
+                break;
+            case "blackhole":
+            case "radiation":
+            case "eye":
+                powerUp = 250;
+                break;
+            case "atom":
+                powerUp = 300;
+                break;
+            case "abbox":
+                powerUp = 1000;
+                break;    
         }
     }
 }
