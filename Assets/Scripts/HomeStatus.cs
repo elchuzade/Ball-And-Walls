@@ -128,8 +128,6 @@ public class HomeStatus : MonoBehaviour
         player = FindObjectOfType<Player>();
         AdManager.ShowBanner();
 
-        player.ResetPlayer();
-
         SetButtonFunctions();
 
         // Hide all the supposedely invisible buttons
