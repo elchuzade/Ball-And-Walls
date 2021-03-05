@@ -508,10 +508,10 @@ public class BallCatcher : MonoBehaviour
             case "volleyball":
             case "football":
             case "basketball":
+            case "beach":
                 powerUp = 0;
                 break;
             case "inyan":
-            case "beach":
                 powerUp = 15;
                 break;
             case "watermelon":
@@ -553,11 +553,11 @@ public class BallCatcher : MonoBehaviour
             case "candy":
                 powerUp = 80;
                 break;
-            case "sun":
             case "coin":
                 powerUp = 100;
                 break;
             case "meteor":
+            case "sun":
                 powerUp = 200;
                 break;
             case "blackhole":
@@ -566,10 +566,10 @@ public class BallCatcher : MonoBehaviour
                 powerUp = 250;
                 break;
             case "atom":
-                powerUp = 300;
+                powerUp = 270;
                 break;
             case "abbox":
-                powerUp = 1000;
+                powerUp = 500;
                 break;    
         }
     }
