@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour
 {
     public List<string> unlockedBalls = new List<string>() { "default" };
-    public List<int> unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+    public List<int> unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
     public string currentBall = "default";
     public int coins = 0;
     public int diamonds = 0;
@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
     public void ResetPlayer()
     {
         unlockedBalls = new List<string>() { "default" };
-        unlockedChallenges = new List<int>() { -2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5 }; // - 2 solved, -1 locked
+        unlockedChallenges = new List<int>() { -2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5}; // - 2 solved, -1 locked
         currentBall = "default";
         coins = 44444;
         keys = 0;
