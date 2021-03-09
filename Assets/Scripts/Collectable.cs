@@ -47,23 +47,12 @@ public class Collectable : MonoBehaviour
             // If the item that holds this script was a key add 1 key to player
             if (type == Type.Key)
             {
-                if (PlayerPrefs.GetInt("Sounds") == 1)
-                {
-                    AudioSource audio3 = GetComponent<AudioSource>();
-                    audio3.Play();
-                }
-
                 homeStatus.CollectKey();
             }
+
             // If the item that holds this script was a coin add 1 coin to player
             else if (type == Type.Coin)
             {
-                if (PlayerPrefs.GetInt("Sounds") == 1)
-                {
-                    AudioSource audio2 = GetComponent<AudioSource>();
-                    audio2.Play();
-                }
-
                 homeStatus.CollectCoin();
             }
             // Run all the actions needed for destroying this collectable item after 1 second
