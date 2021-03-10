@@ -241,6 +241,10 @@ public class Server : MonoBehaviour
         UnityWebRequest webRequest =
             new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
 
+        string message = JsonUtility.ToJson(header);
+        string headerMessage = BuildHeaders(message);
+        webRequest.SetRequestHeader("token", headerMessage);
+
         yield return webRequest.SendWebRequest();
 
         if (webRequest.isNetworkError)
