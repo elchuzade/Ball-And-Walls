@@ -22,7 +22,6 @@ public class ChallengeItem : MonoBehaviour
     private void Awake()
     {
         lockFrame.SetActive(true);
-
         gameObject.GetComponent<Button>().onClick.AddListener(() => SelectChallenge());
     }
 

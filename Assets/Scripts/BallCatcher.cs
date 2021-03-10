@@ -454,9 +454,9 @@ public class BallCatcher : MonoBehaviour
                 int challengeIndex = player.nextLevelIndex / 10;
                 // Since array starts with index 0 for screenshots
                 homeStatus.SetUnlockChallengeIcon(challengeIndex - 1);
-                if (player.unlockedChallenges[challengeIndex] == -1)
+                if (player.unlockedChallenges[challengeIndex - 1] == -1)
                 {
-                    player.unlockedChallenges[challengeIndex] = 5;
+                    player.unlockedChallenges[challengeIndex - 1] = 5;
                     player.SavePlayer();
                 }
 
@@ -568,7 +568,10 @@ public class BallCatcher : MonoBehaviour
                 break;
             case "abbox":
                 powerUp = 500;
-                break;    
+                break;
+            default:
+                powerUp = 0;
+                break;
         }
     }
 }

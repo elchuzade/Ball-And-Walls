@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public int lives = 0;
     public int nextLevelIndex = 1;
     public string playerName = "";
-    public int selectedChallenge = -1;
+    public int selectedChallenge = 0;
     public bool nameChanged = false;
     public bool playerCreated = false;
 
@@ -39,16 +39,16 @@ public class Player : MonoBehaviour
     public void ResetPlayer()
     {
         unlockedBalls = new List<string>() { "default" };
-        unlockedChallenges = new List<int>() { -2, 4, 0, 4, 4, 4, 4, 4, 4, 4, 4, -2, -2, -2, -2 }; // - 2 solved, -1 locked
+        unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; // - 2 solved, -1 locked
         currentBall = "default";
-        coins = 44444;
+        coins = 0;
         keys = 0;
         playerName = "";
-        diamonds = 555;
+        diamonds = 0;
         nextLevelIndex = 1;
         lives = 0;
         playerName = "";
-        selectedChallenge = 4;
+        selectedChallenge = 0;
         playerCreated = false;
         nameChanged = false;
         SaveSystem.SavePlayer(this);

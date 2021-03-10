@@ -107,6 +107,7 @@ public class ChallengesStatus : MonoBehaviour
             GameObject challenge = allChallengesScrollContent.transform.GetChild(i).gameObject;
             challenge.GetComponent<ChallengeItem>().SetData(player.unlockedChallenges[i], currentBallSprite);
         }
+        SelectChallenge(allChallengesScrollContent.transform.GetChild(0).gameObject);
     }
 
     public void ClickGetLifeForVideoButton()

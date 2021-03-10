@@ -158,7 +158,7 @@ public class HomeStatus : MonoBehaviour
         SetBackground();
         if (challengeLevel > 0)
         {
-            ballCatcher.SetDiamondsCoins(challengeDiamonds, challengeCoins);
+            ballCatcher.SetDiamondsCoins(5, 10);
 
             lives = player.unlockedChallenges[challengeLevel - 1];
             if (lives == -1)
@@ -718,10 +718,8 @@ public class HomeStatus : MonoBehaviour
     {
         for (int i = 0; i < balls.Length; i++)
         {
-            Debug.Log(balls[i].name);
             if (balls[i].name == player.currentBall)
             {
-                Debug.Log("tesst" + player.currentBall);
                 currentBallSprite = balls[i].GetComponent<SpriteRenderer>().sprite;
             }
         }
@@ -738,8 +736,10 @@ public class HomeStatus : MonoBehaviour
             case "volleyball":
             case "football":
             case "basketball":
+            case "darts":
                 SetBallBackground("STADIUM");
                 break;
+            case "burger":
             case "watermelon":
             case "donut":
             case "cookie":
@@ -757,7 +757,6 @@ public class HomeStatus : MonoBehaviour
             case "default":
             case "pokemon":
             case "flower":
-            case "darts":
             case "virus":
             case "hypnose":
             case "wheel":
@@ -769,10 +768,12 @@ public class HomeStatus : MonoBehaviour
             case "eyeball":
             case "disco":
             case "button":
-            case "burger":
             case "abbox":
             case "snowball":
             case "radiation":
+                SetBallBackground("DEFAULT");
+                break;
+            default: 
                 SetBallBackground("DEFAULT");
                 break;
         }
