@@ -568,7 +568,10 @@ public class BallCatcher : MonoBehaviour
                 break;
             case "abbox":
                 powerUp = 500;
-                break;    
+                break;
+            default:
+                powerUp = 0;
+                break;
         }
     }
 }
