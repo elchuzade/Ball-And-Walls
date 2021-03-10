@@ -51,15 +51,15 @@ public class Server : MonoBehaviour
 
     // LOCAL TESTING
     //string abboxAdsApi = "http://localhost:5002";
-    //string ballAndWallsApi = "http://localhost:5001/game0001";
+    //string ballAndWallsApi = "http://localhost:5001/ballAndWalls";
 
     // STAGING
     //string abboxAdsApi = "https://staging.ads.abbox.com";
-    //string ballAndWallsApi = "https://staging.api.abboxgames.com/game0001";
+    //string ballAndWallsApi = "https://staging.api.abboxgames.com/ballAndWalls";
 
     // PRODUCTION
     string abboxAdsApi = "https://ads.abbox.com";
-    string ballAndWallsApi = "https://api.abboxgames.com/game0001";
+    string ballAndWallsApi = "https://api.abboxgames.com/ballAndWalls";
 
     List<LeaderboardItem> top = new List<LeaderboardItem>();
     List<LeaderboardItem> before = new List<LeaderboardItem>();

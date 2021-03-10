@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public class HomeStatus : MonoBehaviour
@@ -126,6 +125,7 @@ public class HomeStatus : MonoBehaviour
     {
         // This is in start so it can destroy the old item before accessing it
         player = FindObjectOfType<Player>();
+        player.LoadPlayer();
         AdManager.ShowBanner();
 
         SetButtonFunctions();
@@ -155,7 +155,7 @@ public class HomeStatus : MonoBehaviour
         SetBallPrefab();
         // Set the background based on the ball
         SetBackground();
-
+        Debug.Log(challengeLevel);
         if (challengeLevel > 0)
         {
             ballCatcher.SetDiamondsCoins(challengeDiamonds, challengeCoins);
@@ -171,7 +171,7 @@ public class HomeStatus : MonoBehaviour
                 solved = true;
                 lives = 5;
             }
-
+            Debug.Log("fetting current ball sprite");
             levelIndex.GetComponent<Text>().text = challengeLevel.ToString();
             extraLifeButton.GetComponent<Button>().onClick.AddListener(() => ExtraLifeButtonClick());
             GetCurrentBallSprite();
@@ -184,6 +184,7 @@ public class HomeStatus : MonoBehaviour
             passPhrase.GetComponent<Button>().onClick.AddListener(() => navigator.LoadMainScene());
         } else
         {
+            Debug.Log(player.nextLevelIndex);
             levelIndex.GetComponent<Text>().text = player.nextLevelIndex.ToString();
             // Hide shop and hint in tutorial levels
             if (player.nextLevelIndex <= 3 || player.nextLevelIndex == 100)
@@ -363,7 +364,7 @@ public class HomeStatus : MonoBehaviour
             FocusPointer.SetActive(false);
         }
         // If this is not the last level, show the reset button
-        if (player.nextLevelIndex != 100)
+        if (player.nextLevelIndex != 150)
         {
             resetButton.SetActive(true);
         }
@@ -711,10 +712,14 @@ public class HomeStatus : MonoBehaviour
 
     private void GetCurrentBallSprite()
     {
+        Debug.Log(balls.Length);
+        Debug.Log(player.currentBall);
         for (int i = 0; i < balls.Length; i++)
         {
+            Debug.Log(balls[i].name);
             if (balls[i].name == player.currentBall)
             {
+                Debug.Log("tesst" + player.currentBall);
                 currentBallSprite = balls[i].GetComponent<SpriteRenderer>().sprite;
             }
         }
@@ -757,7 +762,7 @@ public class HomeStatus : MonoBehaviour
             case "coin":
             case "bomb":
             case "atom":
-            case "inyan":
+            case "yinyang":
             case "gear":
             case "eye":
             case "disco":

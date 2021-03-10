@@ -49,11 +49,15 @@ public class Collectable : MonoBehaviour
             {
                 homeStatus.CollectKey();
             }
-
             // If the item that holds this script was a coin add 1 coin to player
             else if (type == Type.Coin)
             {
                 homeStatus.CollectCoin();
+            }
+            // If the item that holds this script was a diamond add 1 diamond to player
+            else if (type == Type.Diamond)
+            {
+                homeStatus.CollectDiamond();
             }
             // Run all the actions needed for destroying this collectable item after 1 second
             StartCoroutine(DestroyCollectable(1));

@@ -45,6 +45,7 @@ public class MainStatus : MonoBehaviour
         }
 
         player = FindObjectOfType<Player>();
+        //player.ResetPlayer();
         server.SavePlayerData(player);
 
         //player.ResetPlayer();

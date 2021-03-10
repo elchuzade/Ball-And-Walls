@@ -60,6 +60,7 @@ public class ChallengeItem : MonoBehaviour
     public void SetData(int challengeStatus, Sprite _ball)
     {
         status = challengeStatus;
+        SetLives(challengeStatus, _ball);
         if (challengeStatus == -2)
         {
             unlocked = true;
@@ -72,13 +73,10 @@ public class ChallengeItem : MonoBehaviour
         {
             unlocked = true;
             lockFrame.SetActive(false);
-            SetLives(challengeStatus, _ball);
             string coinsString = "";
             string diamondsString = "";
-
             coinsString += levelCoins;
             diamondsString += levelDiamonds;
-
             diamondsText.transform.Find("Text").GetComponent<Text>().text = diamondsString;
             coinsText.transform.Find("Text").GetComponent<Text>().text = coinsString;
         }
@@ -95,7 +93,7 @@ public class ChallengeItem : MonoBehaviour
         for (int i = 0; i < lives.transform.childCount; i++)
         {
             lives.transform.GetChild(i).GetComponent<Image>().sprite = _ball;
-            if (i < _lives)
+            if (i < status || status == - 2)
             {
                 lives.transform.GetChild(i).GetComponent<Image>().color = new Color32(255, 255, 255, 255);
             } else

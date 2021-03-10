@@ -26,9 +26,6 @@ public class ChallengesStatus : MonoBehaviour
 
     bool showedAdCancelWarning = false;
 
-    // To store all levels to scroll from
-    // To store currently selected level
-
     void Awake()
     {
         navigator = FindObjectOfType<Navigator>();
@@ -63,7 +60,7 @@ public class ChallengesStatus : MonoBehaviour
         AdManager.ShowBanner();
 
         player = FindObjectOfType<Player>();
-
+        //player.ResetPlayer();
         player.LoadPlayer();
         GetCurrentBallSprite();
         scoreboard.SetDiamonds(player.diamonds);

@@ -418,6 +418,7 @@ public class BallCatcher : MonoBehaviour
                 MakeDropCoinAngles();
                 // Add coins that were collected from this level
                 player.coins += homeStatus.GetCoins();
+                player.diamonds += homeStatus.GetDiamonds();
             }
 
             // Destroy the ball
@@ -505,7 +506,7 @@ public class BallCatcher : MonoBehaviour
             case "beach":
                 powerUp = 0;
                 break;
-            case "inyan":
+            case "yinyang":
                 powerUp = 15;
                 break;
             case "watermelon":
