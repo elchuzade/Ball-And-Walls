@@ -16,16 +16,16 @@ public class LoadStatus : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
-
+        player.ResetPlayer();
         player.LoadPlayer();
 
         if (!player.playerCreated)
         {
-            Debug.Log("creating");
             server.CreatePlayer();
+            StartCoroutine(LoadGame(2f));
         } else
         {
-            StartCoroutine(LoadGame());
+            StartCoroutine(LoadGame(0));
         }
     }
 
@@ -34,18 +34,18 @@ public class LoadStatus : MonoBehaviour
     {
         player.playerCreated = true;
         player.SavePlayer();
-        StartCoroutine(LoadGame());
+        StartCoroutine(LoadGame(0));
     }
 
     // Player already exists or error while creating
     public void CreatePlayerError()
     {
-        StartCoroutine(LoadGame());
+        StartCoroutine(LoadGame(0));
     }
 
-    private IEnumerator LoadGame()
+    private IEnumerator LoadGame(float time)
     {
-        yield return new WaitForSeconds(0);
+        yield return new WaitForSeconds(time);
         if (player.nextLevelIndex == 0 && !player.playerCreated)
         {
             PlayerPrefs.SetInt("Haptics", 1);
