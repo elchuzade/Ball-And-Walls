@@ -5685,7 +5685,7 @@ PrefabInstance:
     - target: {fileID: 7317348461864360869, guid: 9a8372ec927364d289c94e65bcc59c27,
         type: 3}
       propertyPath: priceTag
-      value: 1000
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a8372ec927364d289c94e65bcc59c27, type: 3}
