@@ -898,7 +898,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 15}
+  m_AnchoredPosition: {x: 0, y: 60}
   m_SizeDelta: {x: 650, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1008960918
@@ -920,7 +920,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You have reached the final stage!
+  m_text: 'You have reached the final stage!
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 340576bd01219480188a1e8d1683eed5, type: 2}
   m_sharedMaterial: {fileID: -7034783566830306858, guid: 340576bd01219480188a1e8d1683eed5,
