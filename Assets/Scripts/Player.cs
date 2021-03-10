@@ -39,12 +39,12 @@ public class Player : MonoBehaviour
     public void ResetPlayer()
     {
         unlockedBalls = new List<string>() { "default" };
-        unlockedChallenges = new List<int>() { -2, 4, 0, 4, 4, 4, 4, 4, 4, 4, 4, -2, -2, -2, -2 }; // - 2 solved, -1 locked
+        unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; // - 2 solved, -1 locked
         currentBall = "default";
-        coins = 44444;
+        coins = 0;
         keys = 0;
         playerName = "";
-        diamonds = 555;
+        diamonds = 0;
         nextLevelIndex = 1;
         lives = 0;
         playerName = "";

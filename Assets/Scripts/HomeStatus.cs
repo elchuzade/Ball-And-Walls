@@ -158,7 +158,7 @@ public class HomeStatus : MonoBehaviour
         SetBackground();
         if (challengeLevel > 0)
         {
-            ballCatcher.SetDiamondsCoins(challengeDiamonds, challengeCoins);
+            ballCatcher.SetDiamondsCoins(5, 10);
 
             lives = player.unlockedChallenges[challengeLevel - 1];
             if (lives == -1)
