@@ -676,6 +676,11 @@ PrefabInstance:
       propertyPath: AngularPointer
       value: 
       objectReference: {fileID: 2204502323765758141}
+    - target: {fileID: 3764645808678140261, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6590224219401749073, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
         type: 3}
       propertyPath: m_Name

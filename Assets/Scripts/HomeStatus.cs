@@ -183,7 +183,6 @@ public class HomeStatus : MonoBehaviour
             passPhrase.GetComponent<Button>().onClick.AddListener(() => navigator.LoadMainScene());
         } else
         {
-            Debug.Log(player.nextLevelIndex);
             levelIndex.GetComponent<Text>().text = player.nextLevelIndex.ToString();
             // Hide shop and hint in tutorial levels
             if (player.nextLevelIndex <= 3 || player.nextLevelIndex == 100)

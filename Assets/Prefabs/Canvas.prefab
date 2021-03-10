@@ -1895,7 +1895,7 @@ PrefabInstance:
         type: 3}
       propertyPath: hintIcon
       value: 
-      objectReference: {fileID: 21300000, guid: 9120e8a9a9c964e608005ddc2bbba85d,
+      objectReference: {fileID: 21300000, guid: f861a09d0946b409ea46db54d77bafe5,
         type: 3}
     - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
         type: 3}
