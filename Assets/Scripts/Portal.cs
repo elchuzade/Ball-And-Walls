@@ -64,22 +64,12 @@ public class Portal : MonoBehaviour
 
     public void SuckIntoPortal()
     {
-        if (PlayerPrefs.GetInt("Sounds") == 1)
-        {
-            AudioSource audio = GetComponent<AudioSource>();
-            audio.Play();
-        }
         // Change the ball caught status if it has been sucked into the portal
         catchBall = true;
     }
 
     private void ThrowOutOfTeleport()
     {
-        if (PlayerPrefs.GetInt("Sounds") == 1)
-        {
-            AudioSource audio = GetComponent<AudioSource>();
-            audio.Play();
-        }
         // Launch the ball in the direction of the teleport with the teleport release speed
         ball.Launch(PortalOut.transform.up * releaseSpeed);
     }
