@@ -287,7 +287,7 @@ MonoBehaviour:
   - {fileID: 1886077054384269676, guid: c7dc26f62835c43f58072d75bd0dda7f, type: 3}
   - {fileID: 4575397776943583143, guid: 604a019279f59524eb78bde7cb940b24, type: 3}
   - {fileID: 4001691472304725179, guid: c4225c5ef3ec80b42867fa2ad451d2ec, type: 3}
-  - {fileID: 4786653518949432344, guid: 1a72933bc469a49109ddaa7105e1d068, type: 3}
+  - {fileID: 2939840133514566636, guid: 78caf8445badd4848b068e6c049e618f, type: 3}
   - {fileID: 1623380379698792717, guid: d7a37e845b67f4985827cc297ef42d7d, type: 3}
   - {fileID: 7529512386764028048, guid: cf85aa92962c242cd83ced64fecd2849, type: 3}
   - {fileID: 5141709805638936867, guid: e071d54d45c544fb6afbe1b3a96520b6, type: 3}
@@ -303,7 +303,6 @@ MonoBehaviour:
   - {fileID: 8308424452446302, guid: 9ea434d10b4ff7a48889546a77fa1a11, type: 3}
   - {fileID: 1971362403695375777, guid: dd92af6b282eb447baaf37bdb25c3257, type: 3}
   - {fileID: 202993945091840929, guid: 9180e9bf612b84c0f8f7bcd66ed911d8, type: 3}
-  - {fileID: 2939840133514566636, guid: 78caf8445badd4848b068e6c049e618f, type: 3}
   bestPrize: {fileID: 979186832}
   keyIcon: {fileID: 21300000, guid: d443ee47990b44ee4860fee8f7dfb49a, type: 3}
 --- !u!4 &197296923
