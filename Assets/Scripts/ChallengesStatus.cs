@@ -79,7 +79,7 @@ public class ChallengesStatus : MonoBehaviour
 
     public void SelectChallenge(GameObject challenge)
     {
-        for (int i = 1; i < allChallengesScrollContent.transform.childCount; i++)
+        for (int i = 0; i < allChallengesScrollContent.transform.childCount; i++)
         {
             allChallengesScrollContent.transform.GetChild(i).GetComponent<ChallengeItem>().SelectChallengeStatus(false);
         }
@@ -107,6 +107,7 @@ public class ChallengesStatus : MonoBehaviour
             GameObject challenge = allChallengesScrollContent.transform.GetChild(i).gameObject;
             challenge.GetComponent<ChallengeItem>().SetData(player.unlockedChallenges[i], currentBallSprite);
         }
+        SelectChallenge(allChallengesScrollContent.transform.GetChild(0).gameObject);
     }
 
     public void ClickGetLifeForVideoButton()

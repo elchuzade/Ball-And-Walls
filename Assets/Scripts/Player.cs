@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public int lives = 0;
     public int nextLevelIndex = 1;
     public string playerName = "";
-    public int selectedChallenge = -1;
+    public int selectedChallenge = 0;
     public bool nameChanged = false;
     public bool playerCreated = false;
 
@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
         nextLevelIndex = 1;
         lives = 0;
         playerName = "";
-        selectedChallenge = 4;
+        selectedChallenge = 0;
         playerCreated = false;
         nameChanged = false;
         SaveSystem.SavePlayer(this);
