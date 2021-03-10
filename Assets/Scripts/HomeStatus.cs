@@ -7,10 +7,11 @@ public class HomeStatus : MonoBehaviour
     BallCatcher ballCatcher;
     // This is to indicate that the wall on this level should be shuffled
     [SerializeField] bool shuffle = true;
-
     // Game object that holds all the walls of the level, for easier access and looping through
     [SerializeField] Transform walls;
-
+    // To show when unlocking a new challege every 10th level
+    [SerializeField] Sprite[] challengeScreenshots;
+    [SerializeField] GameObject unlockChallengeIcon;
     // All balls prefabs, to show the one that is selected by the player
     [SerializeField] GameObject[] balls;
 
@@ -155,7 +156,6 @@ public class HomeStatus : MonoBehaviour
         SetBallPrefab();
         // Set the background based on the ball
         SetBackground();
-        Debug.Log(challengeLevel);
         if (challengeLevel > 0)
         {
             ballCatcher.SetDiamondsCoins(challengeDiamonds, challengeCoins);
@@ -171,7 +171,6 @@ public class HomeStatus : MonoBehaviour
                 solved = true;
                 lives = 5;
             }
-            Debug.Log("fetting current ball sprite");
             levelIndex.GetComponent<Text>().text = challengeLevel.ToString();
             extraLifeButton.GetComponent<Button>().onClick.AddListener(() => ExtraLifeButtonClick());
             GetCurrentBallSprite();
@@ -201,6 +200,12 @@ public class HomeStatus : MonoBehaviour
             adCancel.InitializeAdCancel(" hint", hintIcon);
         }
         adCancel.gameObject.SetActive(false);
+    }
+
+    // @access from ball catcher when deciding on showing unlock challenge view
+    public void SetUnlockChallengeIcon(int index)
+    {
+        unlockChallengeIcon.GetComponent<Image>().sprite = challengeScreenshots[index];
     }
 
     // To access from ball catcher to know whether to drop diamonds or not
@@ -712,8 +717,6 @@ public class HomeStatus : MonoBehaviour
 
     private void GetCurrentBallSprite()
     {
-        Debug.Log(balls.Length);
-        Debug.Log(player.currentBall);
         for (int i = 0; i < balls.Length; i++)
         {
             Debug.Log(balls[i].name);
@@ -730,7 +733,7 @@ public class HomeStatus : MonoBehaviour
         switch (player.currentBall)
         {
             case "bowling":
-            case "beach":
+            case "beachball":
             case "pool":
             case "tennis":
             case "volleyball":
@@ -764,7 +767,7 @@ public class HomeStatus : MonoBehaviour
             case "atom":
             case "yinyang":
             case "gear":
-            case "eye":
+            case "eyeball":
             case "disco":
             case "button":
             case "burger":

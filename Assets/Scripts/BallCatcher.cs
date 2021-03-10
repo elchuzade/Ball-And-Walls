@@ -14,6 +14,7 @@ public class BallCatcher : MonoBehaviour
     HomeStatus homeStatus;
 
     Player player;
+
     [SerializeField] GameObject winParticlesPrefab;
     [SerializeField] GameObject winTextPrefab;
     // To drop when level is passed
@@ -361,8 +362,8 @@ public class BallCatcher : MonoBehaviour
                 MMVibrationManager.Haptic(HapticTypes.Success);
             }
 
-            // Show an ad before every 5th level except the 100th one which is the last level
-            if (homeStatus.GetChallengeLevel() == 0 && player.nextLevelIndex % 5 == 0 && player.nextLevelIndex != 100)
+            // Show an ad before every 5th level except the 150th one which is the last level
+            if (homeStatus.GetChallengeLevel() == 0 && player.nextLevelIndex % 5 == 0 && player.nextLevelIndex != 150)
             {
                 AdManager.ShowStandardAd(() => { }, () => { }, () => { });
             }
@@ -448,9 +449,11 @@ public class BallCatcher : MonoBehaviour
         } else
         {
             // If player has passed every 10'th level, unlock him a challenge
-            if (homeStatus.GetChallengeLevel() == 0 && player.nextLevelIndex % 10 == 0 && player.nextLevelIndex != 100)
+            if (homeStatus.GetChallengeLevel() == 0 && player.nextLevelIndex % 10 == 0)
             {
                 int challengeIndex = player.nextLevelIndex / 10;
+                // Since array starts with index 0 for screenshots
+                homeStatus.SetUnlockChallengeIcon(challengeIndex - 1);
                 if (player.unlockedChallenges[challengeIndex] == -1)
                 {
                     player.unlockedChallenges[challengeIndex] = 5;
@@ -503,7 +506,7 @@ public class BallCatcher : MonoBehaviour
             case "volleyball":
             case "football":
             case "basketball":
-            case "beach":
+            case "beachball":
                 powerUp = 0;
                 break;
             case "yinyang":
@@ -557,7 +560,7 @@ public class BallCatcher : MonoBehaviour
                 break;
             case "blackhole":
             case "radiation":
-            case "eye":
+            case "eyeball":
                 powerUp = 250;
                 break;
             case "atom":

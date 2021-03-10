@@ -6,16 +6,16 @@ using System.Collections;
 public class ChestStatus : MonoBehaviour
 {
     //private List<string> allBalls = new List<string>()
-    //    { "abbox", "atom", "basketball", "beach", "blackhole", "bomb",
+    //    { "abbox", "atom", "basketball", "beachball", "blackhole", "bomb",
     //    "bowling", "burger", "button", "candy", "coin", "cookie",
-    //    "darts", "default", "disco", "donut", "eye", "flower",
+    //    "darts", "default", "disco", "donut", "eyeball", "flower",
     //    "football", "gear", "hypnose", "yinyang", "meteor", "pokemon",
     //    "pool", "pumpkin", "radiation", "saturn", "smile", "snowball",
     //    "sun", "tennis", "virus", "volleyball", "watermelon", "wheel" };
 
     // Match this with the prefabs given to the BestPrizesPrefabs 23 balls
     private List<string> allBestPrizeBalls = new List<string>()
-        { "basketball", "beach", "bomb", "bowling", "burger", "button",
+        { "basketball", "beachball", "bomb", "bowling", "burger", "button",
         "coin", "cookie", "darts", "donut", "flower", "football",
         "gear", "yinyang", "pokemon", "pool", "pumpkin", "saturn",
         "smile", "snowball", "tennis", "volleyball", "watermelon" };
