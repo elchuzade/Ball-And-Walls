@@ -3822,7 +3822,7 @@ GameObject:
   - component: {fileID: 1480832430}
   - component: {fileID: 1480832429}
   m_Layer: 5
-  m_Name: ChallengeScreenshot
+  m_Name: ChallengeBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

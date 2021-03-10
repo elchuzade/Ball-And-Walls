@@ -716,12 +716,13 @@ public class HomeStatus : MonoBehaviour
 
     private void GetCurrentBallSprite()
     {
+        Debug.Log(player.currentBall);
         for (int i = 0; i < balls.Length; i++)
         {
             Debug.Log(balls[i].name);
             if (balls[i].name == player.currentBall)
             {
-                Debug.Log("tesst" + player.currentBall);
+                Debug.Log("test" + player.currentBall);
                 currentBallSprite = balls[i].GetComponent<SpriteRenderer>().sprite;
             }
         }
