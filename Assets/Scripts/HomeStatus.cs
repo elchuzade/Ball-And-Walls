@@ -37,7 +37,7 @@ public class HomeStatus : MonoBehaviour
 
     // This should be changed as new balls are being added
     // This is not all balls but all unlockable balls
-    int totalBallsAmount = 23;
+    int totalBallsAmount = 22;
 
     // Background Sprites
     [SerializeField] Sprite table;
@@ -185,7 +185,7 @@ public class HomeStatus : MonoBehaviour
         {
             levelIndex.GetComponent<Text>().text = player.nextLevelIndex.ToString();
             // Hide shop and hint in tutorial levels
-            if (player.nextLevelIndex <= 3 || player.nextLevelIndex == 100)
+            if (player.nextLevelIndex <= 3 || player.nextLevelIndex == 151)
             {
                 hintButton.SetActive(false);
             }
@@ -672,7 +672,7 @@ public class HomeStatus : MonoBehaviour
             player = FindObjectOfType<Player>();
         }
         // This is to decide whether the key should be on the level or not
-        if (player.unlockedBalls.Count == totalBallsAmount)
+        if (player.unlockedBalls.Count >= totalBallsAmount)
         {
             return true;
         }

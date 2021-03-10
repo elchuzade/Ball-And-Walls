@@ -175,9 +175,8 @@ public class ChestStatus : MonoBehaviour
                 bestPrizes.Add(allBestPrizeBalls[i]);
             }
         }
-
         // Get a random number in the range of locked keys and choose the best prize
-        int bestPrizeIndex = new System.Random().Next(0, allBestPrizeBalls.Count);
+        int bestPrizeIndex = new System.Random().Next(0, bestPrizes.Count);
         bestPrizeName = bestPrizes[bestPrizeIndex];
 
         for (int i = 0; i < allBestPrizeBalls.Count; i++)
@@ -191,6 +190,8 @@ public class ChestStatus : MonoBehaviour
                 bestPrizeObject.transform.SetParent(bestPrize.transform);
             }
         }
+
+    
     }
 
     public Sprite GetBestPrizeSprite()

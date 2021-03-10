@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class PlayerData
 {
     public List<string> unlockedBalls = new List<string>() { "default" };
-    public List<int> unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+    public List<int> unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
     public string currentBall = "default";
     public int coins = 0;
     public int keys = 0;
@@ -15,7 +15,6 @@ public class PlayerData
     public string playerName = "";
     public bool playerCreated = false;
     public bool nameChanged = false;
-    public int selectedChallenge = -1;
 
     public PlayerData (Player player)
     {
@@ -29,7 +28,6 @@ public class PlayerData
         nextLevelIndex = player.nextLevelIndex;
         playerName = player.playerName;
         playerCreated = player.playerCreated;
-        selectedChallenge = player.selectedChallenge;
         nameChanged = player.nameChanged;
     }
 }
