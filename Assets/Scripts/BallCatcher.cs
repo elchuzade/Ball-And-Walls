@@ -522,6 +522,7 @@ public class BallCatcher : MonoBehaviour
                 powerUp = 25;
                 break;
             case "pumpkin":
+            case "hypnose":
                 powerUp = 30;
                 break;
             case "smile":
@@ -532,8 +533,8 @@ public class BallCatcher : MonoBehaviour
                 powerUp = 45;
                 break;
             case "cookie":
-            case "hypnose":
             case "flower":
+            case "wheel":
                 powerUp = 50;
                 break;
             case "donut":
@@ -542,13 +543,12 @@ public class BallCatcher : MonoBehaviour
             case "saturn":
                 powerUp = 60;
                 break;
-            case "wheel":
             case "bomb":
             case "virus":
+            case "candy":
                 powerUp = 70;
                 break;
             case "disco":
-            case "candy":
                 powerUp = 80;
                 break;
             case "coin":
@@ -556,7 +556,7 @@ public class BallCatcher : MonoBehaviour
                 break;
             case "meteor":
             case "sun":
-                powerUp = 200;
+                powerUp = 150;
                 break;
             case "blackhole":
             case "radiation":
