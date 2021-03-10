@@ -100,7 +100,7 @@ public class Wall : MonoBehaviour
         homeStatus.CheckPointerMove();
 
         // If the level is not the last level make it move or rotate, since last level has static walls for animation
-        if (homeStatus.GetNextLevel() != 100)
+        if (homeStatus.GetNextLevel() != 151)
         {
             // If the hint is used and correct positions are exposed
             if (showCorrectPosition)
@@ -141,7 +141,7 @@ public class Wall : MonoBehaviour
         homeStatus.CheckPointerMove();
 
         // If the level is not the last level
-        if (homeStatus.GetNextLevel() != 100)
+        if (homeStatus.GetNextLevel() != 151)
         {
             // If the ball is not launched yet and the hint button is not used yet
             if (!homeStatus.GetBallLaunched() && !showCorrectPosition)
