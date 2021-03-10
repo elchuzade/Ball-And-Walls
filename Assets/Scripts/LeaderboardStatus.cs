@@ -176,24 +176,14 @@ public class LeaderboardStatus : MonoBehaviour
 
     public void ChangeNameError()
     {
-        CloseChangeName();
-    }
-
-    public void ChangeNameSuccess(string name)
-    {
-        if (player.playerName.Length < 2)
-        {
-            player.playerName = name;
-            player.diamonds += 3;
-            player.nameChanged = true;
-            player.SavePlayer();
-            player.LoadPlayer();
-            scoreboard.SetDiamonds(player.diamonds);
-        }
         // Repopulate leaderboard data
         server.GetLeaderboard();
+    }
 
-        CloseChangeName();
+    public void ChangeNameSuccess()
+    {
+        // Repopulate leaderboard data
+        server.GetLeaderboard();
     }
 
     public void SetLeaderboardData(List<LeaderboardItem> topData, List<LeaderboardItem> beforeData, LeaderboardItem youData, List<LeaderboardItem> afterData)
@@ -467,5 +457,16 @@ public class LeaderboardStatus : MonoBehaviour
     public void SaveName()
     {
         server.ChangePlayerName(nameInput.text);
+        if (player.playerName.Length < 2)
+        {
+            player.playerName = nameInput.text;
+            player.diamonds += 3;
+            player.nameChanged = true;
+            player.SavePlayer();
+            player.LoadPlayer();
+            scoreboard.SetDiamonds(player.diamonds);
+        }
+
+        CloseChangeName();
     }
 }

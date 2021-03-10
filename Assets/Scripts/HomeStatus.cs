@@ -670,6 +670,7 @@ public class HomeStatus : MonoBehaviour
         if (!player)
         {
             player = FindObjectOfType<Player>();
+            player.LoadPlayer();
         }
         // This is to decide whether the key should be on the level or not
         if (player.unlockedBalls.Count >= totalBallsAmount)

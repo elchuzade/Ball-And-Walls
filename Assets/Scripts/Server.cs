@@ -253,7 +253,7 @@ public class Server : MonoBehaviour
         {
             Debug.Log(webRequest.downloadHandler.text);
             // Make the success actions received from creating a player
-            leaderboardStatus.ChangeNameSuccess(webRequest.downloadHandler.text);
+            leaderboardStatus.ChangeNameSuccess();
         }
     }
 
