@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/LoadScene.unity
-    guid: 45cdb08f510634d7fa44a4f5a3f83063
-  - enabled: 1
     path: Assets/Scenes/MainScene.unity
     guid: e97f54502e75e4d47b61a7c21306499a
   - enabled: 1
@@ -31,7 +28,7 @@ EditorBuildSettings:
     guid: 130d49dbf2ed9e245b924c623aa43a15
   - enabled: 1
     path: Assets/Scenes/ChallengeLevels/Challenge_Level-3.unity
-    guid: 7c8ff8e99a6f2854f95f609e7f80d312
+    guid: e69375d21308e184a810f3bd8a93f3d9
   - enabled: 1
     path: Assets/Scenes/ChallengeLevels/Challenge_Level-4.unity
     guid: 6e28a2f12a7257c4fbdf1d374ff2a8be
@@ -43,10 +40,10 @@ EditorBuildSettings:
     guid: 5af1c2bf9e1694e62b6757e6abf32f7a
   - enabled: 1
     path: Assets/Scenes/ChallengeLevels/Challenge_Level-7.unity
-    guid: 16633e519d4a1714daffee98900ca867
+    guid: cd05bc951478a554daca89bc56394492
   - enabled: 1
     path: Assets/Scenes/ChallengeLevels/Challenge_Level-8.unity
-    guid: 589addc8096e8d649bfdc0b2ebb788f3
+    guid: 8b45b669e3b99154c8e6be76be8b5cc7
   - enabled: 1
     path: Assets/Scenes/ChallengeLevels/Challenge_Level-9.unity
     guid: bf42c9b3e1d304102a48a04ea17b83fe

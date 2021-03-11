@@ -1910,9 +1910,45 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
         type: 3}
+      propertyPath: wordsBackgroundRed
+      value: 
+      objectReference: {fileID: 21300000, guid: e3d6d6102087a4e68a098e960cb86993,
+        type: 3}
+    - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
+        type: 3}
       propertyPath: unlockChallengeIcon
       value: 
       objectReference: {fileID: 2932242021916034533}
+    - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
+        type: 3}
+      propertyPath: wordsBackgroundBlue
+      value: 
+      objectReference: {fileID: 21300000, guid: be4a89e15ccd6401fa5768f66379c358,
+        type: 3}
+    - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
+        type: 3}
+      propertyPath: wordsBackgroundGreen
+      value: 
+      objectReference: {fileID: 21300000, guid: 83db6a644b4ce4f2788e9808d6d49627,
+        type: 3}
+    - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
+        type: 3}
+      propertyPath: wordsBackgroundOrange
+      value: 
+      objectReference: {fileID: 21300000, guid: cad9d52323c224c40a074f500e75e38b,
+        type: 3}
+    - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
+        type: 3}
+      propertyPath: wordsBackgroundPurple
+      value: 
+      objectReference: {fileID: 21300000, guid: ec526a86eb326413a8c38c89eac22806,
+        type: 3}
+    - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
+        type: 3}
+      propertyPath: wordsBackgroundDefault
+      value: 
+      objectReference: {fileID: 21300000, guid: 785033542048743e8b131b55e8cfcd08,
+        type: 3}
     - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
         type: 3}
       propertyPath: challengeScreenshots.Array.size

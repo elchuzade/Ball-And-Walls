@@ -56,11 +56,6 @@ public class LeaderboardStatus : MonoBehaviour
     // The object where the name typed into the field is held
     GameObject inputField;
 
-    private List<LeaderboardItem> before = new List<LeaderboardItem>();
-    private List<LeaderboardItem> after = new List<LeaderboardItem>();
-    private List<LeaderboardItem> top = new List<LeaderboardItem>();
-    private LeaderboardItem you = new LeaderboardItem();
-
     void Awake()
     {
         server = FindObjectOfType<Server>();
@@ -112,8 +107,6 @@ public class LeaderboardStatus : MonoBehaviour
         changeName.SetActive(false);
 
         SetButtonFunctions();
-
-        server.GetLeaderboard();
     }
 
     private void SwapSaveButton()
@@ -138,228 +131,11 @@ public class LeaderboardStatus : MonoBehaviour
     {
         // Set edit button function and close edit window button
         changeNameCanvasButton.GetComponent<Button>().onClick.AddListener(() => ClickEditButton());
-        changeNameCloseButton.GetComponent<Button>().onClick.AddListener(() => CloseChangeName());
-        changeNameSaveButton.GetComponent<Button>().onClick.AddListener(() => ClickSaveName());
-        changeNameGetDiamondsButton.GetComponent<Button>().onClick.AddListener(() => ClickSaveName());
+        changeNameCloseButton.GetComponent<Button>().onClick.AddListener(() => { });
+        changeNameSaveButton.GetComponent<Button>().onClick.AddListener(() => { });
+        changeNameGetDiamondsButton.GetComponent<Button>().onClick.AddListener(() => { });
 
         exitButton.GetComponent<Button>().onClick.AddListener(() => ClickExitButton());
-    }
-
-    private void ScrollListToPlayer()
-    {
-        // Combine all the values from all three lists top, before after
-        int total = top.Count + before.Count + after.Count;
-        // Increase by one for your rank if it is outside of top ten
-        if (you.rank != 0)
-        {
-            total++;
-        }
-        // based on total find where to place the scroll
-        if (total > 10)
-        {
-            // If total is greater than 10, it is safe to show the bottom 5 players to make sure you are also visible
-            leaderboardScrollbar.GetComponent<Scrollbar>().value = 0.001f;
-        }
-        else
-        {
-            // If you are in the top ten, then if you are in top 5, show first 5 players to make sure you are also visible
-            if (you.rank < 6)
-            {
-                leaderboardScrollbar.GetComponent<Scrollbar>().value = 0.999f;
-            } else
-            {
-                // Otherwise your rank is in the range of 5-10, so it is safe to show middle 5 players to make sure you are also visible
-                leaderboardScrollbar.GetComponent<Scrollbar>().value = 0.5f;
-            }
-        }
-    }
-
-    public void ChangeNameError()
-    {
-        // Repopulate leaderboard data
-        server.GetLeaderboard();
-    }
-
-    public void ChangeNameSuccess()
-    {
-        // Repopulate leaderboard data
-        server.GetLeaderboard();
-    }
-
-    public void SetLeaderboardData(List<LeaderboardItem> topData, List<LeaderboardItem> beforeData, LeaderboardItem youData, List<LeaderboardItem> afterData)
-    {
-        // Clear the lists incase they already had data in them
-        foreach (Transform child in leaderboardScrollContent.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        top.Clear();
-        before.Clear();
-        after.Clear();
-        if (topData != null)
-        {
-            // Loop though top ten list provided by the server and add them to local list
-            for (int i = 0; i < topData.Count; i++)
-            {
-                top.Add(topData[i]);
-            }
-        }
-        if (beforeData != null)
-        {
-            // Loop though up to 3 players before you list provided by the server
-            // and if they have not yet been added to the list add them
-            for (int i = 0; i < beforeData.Count; i++)
-            {
-                if (!CheckIfExists(beforeData[i].rank))
-                {
-                    before.Add(beforeData[i]);
-                }
-            }
-        }
-        if (youData != null)
-        {
-            // Check if your rank has already been added to the list if not add it
-            if (!CheckIfExists(youData.rank))
-            {
-                you = youData;
-                // Set the name in the change name field to prepopulate
-                nameInput.text = youData.playerName;
-            }
-        }
-        if (afterData != null)
-        {
-            // Loop though up to 3 players after you list provided by the server
-            // and if they have not yet been added to the list add them
-            for (int i = 0; i < afterData.Count; i++)
-            {
-                if (!CheckIfExists(afterData[i].rank))
-                {
-                    after.Add(afterData[i]);
-                }
-            }
-        }
-
-        BuildUpList();
-    }
-
-    // Loop through top ten, 3 before and 3 after lists to find if give data exists not to repeat
-    private bool CheckIfExists(int rank)
-    {
-        if (CheckIfExistInTop(rank) ||
-            CheckIfExistInBefore(rank) ||
-            CheckIfExistInAfter(rank))
-        {
-            return true;
-        }
-        return false;
-    }
-    // Loop through the list of players ranked in top ten and see if iven data exists
-    private bool CheckIfExistInTop(int rank)
-    {
-        for (int i = 0; i < top.Count; i++)
-        {
-            if (top[i].rank == rank)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-    // Loop through the list of players ranked before you and see if iven data exists
-    private bool CheckIfExistInBefore(int rank)
-    {
-        for (int i = 0; i < before.Count; i++)
-        {
-            if (before[i].rank == rank)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void BuildUpList()
-    {
-        // Loop through top ten players and instantiate an item object
-        top.ForEach(item =>
-        {
-            if (item.rank > 3)
-            {
-                GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
-                // Set its parent to be scroll content, for scroll functionality to work properly
-                leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
-
-                // Compare item from top ten with your rank incase you are in top ten
-                if (item.rank == you.rank)
-                {
-                    // Show frame around your entry
-                    ShowYourEntryFrame(leaderboardItem);
-                }
-
-                // Set its name component text mesh pro value to name from top list
-                leaderboardItem.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.playerName;
-                // Set its rank component text mesh pro value to rank from top list converted to string
-                leaderboardItem.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = item.rank.ToString();
-                // Set its ball icon based on data from server and indexes of balls
-                leaderboardItem.transform.Find("Ball").GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
-            } else
-            {
-                if (item.rank == 1)
-                {
-                    // Set golden podium
-                    goldName.GetComponent<TextMeshProUGUI>().text = item.playerName;
-                    goldBall.GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
-                }
-                else if (item.rank == 2)
-                {
-                    // Set silver podium
-                    silverName.GetComponent<TextMeshProUGUI>().text = item.playerName;
-                    silverBall.GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
-                } else if (item.rank == 3)
-                {
-                    // Set bronze podium
-                    bronzeName.GetComponent<TextMeshProUGUI>().text = item.playerName;
-                    bronzeBall.GetComponent<Image>().sprite = GetBallSprite(item.currentBall);
-                }
-            }
-        });
-
-        // Add tripple dots after top ten only if your rank is > 14,
-        // since at 14 the the top ten and 3 before you become continuous, so no need for dots in between
-        if (you.rank > 14)
-        {
-            CreateTrippleDotsEntry();
-        }
-
-        // Loop through before players and instantiate an item object
-        before.ForEach(item =>
-        {
-            GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
-            // Set its parent to be scroll content, for scroll functionality to work properly
-            leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
-            SetItemEntry(leaderboardItem, item);
-        });
-
-        // Create your entry item only if your rank is not in top ten
-        // 0 is assigned by default if there is no value
-        if (you.rank != 0)
-        {
-            CreateYourEntry();
-        }
-
-        // Loop through after players and instantiate an item object
-        after.ForEach(item =>
-        {
-            GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
-            // Set its parent to be scroll content, for scroll functionality to work properly
-            leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
-            SetItemEntry(leaderboardItem, item);
-        });
-
-        CreateTrippleDotsEntry();
-
-        // Add the scroll value after all the data is populated
-        ScrollListToPlayer();
     }
 
     private Sprite GetBallSprite(string ballName)
@@ -389,44 +165,10 @@ public class LeaderboardStatus : MonoBehaviour
         leaderboardItem.transform.Find("Ball").gameObject.SetActive(false);
     }
 
-    private void CreateYourEntry()
-    {
-        // Create tripple dots to separate different lists
-        GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
-        // Set its parent to be scroll content, for scroll functionality to work properly
-        leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
-        // Show frame around your entry
-        ShowYourEntryFrame(leaderboardItem);
-        SetItemEntry(leaderboardItem, you);
-    }
-
-    private void SetItemEntry(GameObject item, LeaderboardItem value)
-    {
-        // Set its name component text mesh pro value to your name
-        item.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = value.playerName;
-        // Set its rank component text mesh pro value to your rank
-        item.transform.Find("Rank").GetComponent<TextMeshProUGUI>().text = value.rank.ToString();
-        // Set its ball icon based on data from server and indexes of balls
-        item.transform.Find("Ball").GetComponent<Image>().sprite = GetBallSprite(value.currentBall);
-    }
-
     private void ShowYourEntryFrame(GameObject item)
     {
         // Show leaderboard frame for your entry
         item.transform.Find("Frame").gameObject.SetActive(true);
-    }
-
-    // Loop through the list of players ranked after you and see if iven data exists
-    private bool CheckIfExistInAfter(int rank)
-    {
-        for (int i = 0; i < after.Count; i++)
-        {
-            if (after[i].rank == rank)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     // Close Leadersboard Scene
@@ -439,34 +181,5 @@ public class LeaderboardStatus : MonoBehaviour
     public void ClickEditButton()
     {
         changeName.SetActive(true);
-    }
-
-    public void ClickSaveName()
-    {
-        SaveName();
-    }
-
-    // This is for invisible button that covers the rest of the screen when modal is open
-    public void CloseChangeName()
-    {
-        changeName.SetActive(false);
-        SwapSaveButton();
-    }
-
-    // Save name
-    public void SaveName()
-    {
-        server.ChangePlayerName(nameInput.text);
-        if (player.playerName.Length < 2)
-        {
-            player.playerName = nameInput.text;
-            player.diamonds += 3;
-            player.nameChanged = true;
-            player.SavePlayer();
-            player.LoadPlayer();
-            scoreboard.SetDiamonds(player.diamonds);
-        }
-
-        CloseChangeName();
     }
 }

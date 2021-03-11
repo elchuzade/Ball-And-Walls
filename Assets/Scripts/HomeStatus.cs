@@ -40,10 +40,12 @@ public class HomeStatus : MonoBehaviour
     int totalBallsAmount = 22;
 
     // Background Sprites
-    [SerializeField] Sprite table;
-    [SerializeField] Sprite space;
-    [SerializeField] Sprite stadium;
-    [SerializeField] Sprite words;
+    [SerializeField] Sprite wordsBackgroundRed;
+    [SerializeField] Sprite wordsBackgroundBlue;
+    [SerializeField] Sprite wordsBackgroundGreen;
+    [SerializeField] Sprite wordsBackgroundOrange;
+    [SerializeField] Sprite wordsBackgroundPurple;
+    [SerializeField] Sprite wordsBackgroundDefault;
 
     // Canvas objects
     GameObject gameBackground;
@@ -685,21 +687,29 @@ public class HomeStatus : MonoBehaviour
     private void SetBallBackground(string ballBackground)
     {
         gameBackground.SetActive(true);
-        if (ballBackground == "DEFAULT")
+        if (ballBackground == "GREEN")
         {
-            gameBackground.GetComponent<SpriteRenderer>().sprite = words;
+            gameBackground.GetComponent<SpriteRenderer>().sprite = wordsBackgroundGreen;
         }
-        else if (ballBackground == "STADIUM")
+        else if (ballBackground == "BLUE")
         {
-            gameBackground.GetComponent<SpriteRenderer>().sprite = stadium;
+            gameBackground.GetComponent<SpriteRenderer>().sprite = wordsBackgroundBlue;
         }
-        else if (ballBackground == "SPACE")
+        else if (ballBackground == "PURPLE")
         {
-            gameBackground.GetComponent<SpriteRenderer>().sprite = space;
+            gameBackground.GetComponent<SpriteRenderer>().sprite = wordsBackgroundPurple;
         }
-        else if (ballBackground == "TABLE")
+        else if (ballBackground == "ORANGE")
         {
-            gameBackground.GetComponent<SpriteRenderer>().sprite = table;
+            gameBackground.GetComponent<SpriteRenderer>().sprite = wordsBackgroundOrange;
+        }
+        else if (ballBackground == "RED")
+        {
+            gameBackground.GetComponent<SpriteRenderer>().sprite = wordsBackgroundRed;
+        }
+        else if (ballBackground == "DEAFULT")
+        {
+            gameBackground.GetComponent<SpriteRenderer>().sprite = wordsBackgroundDefault;
         }
     }
 
@@ -730,52 +740,54 @@ public class HomeStatus : MonoBehaviour
     {
         switch (player.currentBall)
         {
-            case "bowling":
-            case "beachball":
-            case "pool":
-            case "tennis":
-            case "volleyball":
+            case "default":
             case "football":
             case "basketball":
-            case "darts":
-                SetBallBackground("STADIUM");
+            case "pool":
+            case "bowling":
+            case "tennis":
+            case "volleyball":
+                SetBallBackground("GREEN");
                 break;
-            case "burger":
+            case "beachball":
+            case "yinyang":
             case "watermelon":
-            case "donut":
-            case "cookie":
+            case "gear":
+            case "pokemon":
+            case "darts":
+            case "button":
+            case "smile":
             case "pumpkin":
-            case "candy":
-                SetBallBackground("TABLE");
+                SetBallBackground("BLUE");
+                break;
+            case "snowball":
+            case "cookie":
+            case "burger":
+            case "flower":
+            case "donut":
+            case "saturn":
+            case "discoball":
+            case "virus":
+            case "bomb":
+            case "coin":
+                SetBallBackground("PURPLE");
                 break;
             case "sun":
-            case "meteor":
-            case "blackhole":
-            case "saturn":
-                SetBallBackground("SPACE");
-                break;
-            case "smile":
-            case "default":
-            case "pokemon":
-            case "flower":
-            case "virus":
             case "hypnose":
             case "wheel":
-            case "coin":
-            case "bomb":
-            case "atom":
-            case "yinyang":
-            case "gear":
-            case "eyeball":
-            case "disco":
-            case "button":
-            case "abbox":
-            case "snowball":
+            case "candy":
+            case "meteor":
+            case "blackhole":
             case "radiation":
-                SetBallBackground("DEFAULT");
+            case "eyeball":
+            case "atom":
+                SetBallBackground("ORANGE");
+                break;
+            case "abbox":
+                SetBallBackground("RED");
                 break;
             default: 
-                SetBallBackground("DEFAULT");
+                SetBallBackground("DEAFULT");
                 break;
         }
     }
