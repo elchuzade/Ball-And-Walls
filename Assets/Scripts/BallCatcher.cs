@@ -548,7 +548,7 @@ public class BallCatcher : MonoBehaviour
             case "candy":
                 powerUp = 70;
                 break;
-            case "disco":
+            case "discoball":
                 powerUp = 80;
                 break;
             case "coin":

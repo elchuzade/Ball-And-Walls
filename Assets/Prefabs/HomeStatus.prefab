@@ -45,6 +45,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shuffle: 1
   walls: {fileID: 0}
+  challengeScreenshots: []
+  unlockChallengeIcon: {fileID: 0}
   balls:
   - {fileID: 7937230841922582776, guid: d145bd449f5cea7459193c1c4b178ec0, type: 3}
   - {fileID: 371875883411802810, guid: 81bbfb2a2fd6c45d2aa95504350f0129, type: 3}
@@ -88,7 +90,15 @@ MonoBehaviour:
   VerticalPointer: {fileID: 0}
   AngularPointer: {fileID: 0}
   HorizontalPointer: {fileID: 0}
-  table: {fileID: 21300000, guid: 5601f0e6218cc4ec591a146365ef4972, type: 3}
-  space: {fileID: 21300000, guid: f3bcf17d611b14537a65334f286fbc55, type: 3}
-  stadium: {fileID: 21300000, guid: 9714a608f07364c5d9bef869ed7b4654, type: 3}
-  words: {fileID: 21300000, guid: 785033542048743e8b131b55e8cfcd08, type: 3}
+  challengeLevel: 0
+  tutorial: 0
+  hintIcon: {fileID: 0}
+  lifeIcon: {fileID: 0}
+  green: {fileID: 21300000, guid: f3da04c16cf020c4d8b317455ed64754, type: 3}
+  blue: {fileID: 21300000, guid: 2ee76f9ce0130ca499445409b858f2c2, type: 3}
+  purple: {fileID: 21300000, guid: cac58090b2869b148b0e6ea54a5e48e5, type: 3}
+  orange: {fileID: 21300000, guid: 2863eb2ee7b204a4c9596764fc00f509, type: 3}
+  red: {fileID: 21300000, guid: 9c985aa7433f36944a3de2c96345a0a0, type: 3}
+  defaultBg: {fileID: 21300000, guid: 4a0540fba700bff498b5fcda60e93ad6, type: 3}
+  challengeCoins: 0
+  challengeDiamonds: 0

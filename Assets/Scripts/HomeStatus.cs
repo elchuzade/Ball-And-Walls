@@ -40,10 +40,12 @@ public class HomeStatus : MonoBehaviour
     int totalBallsAmount = 22;
 
     // Background Sprites
-    [SerializeField] Sprite table;
-    [SerializeField] Sprite space;
-    [SerializeField] Sprite stadium;
-    [SerializeField] Sprite words;
+    [SerializeField] Sprite green;
+    [SerializeField] Sprite blue;
+    [SerializeField] Sprite purple;
+    [SerializeField] Sprite orange;
+    [SerializeField] Sprite red;
+    [SerializeField] Sprite defaultBg;
 
     // Canvas objects
     GameObject gameBackground;
@@ -687,19 +689,27 @@ public class HomeStatus : MonoBehaviour
         gameBackground.SetActive(true);
         if (ballBackground == "DEFAULT")
         {
-            gameBackground.GetComponent<SpriteRenderer>().sprite = words;
+            gameBackground.GetComponent<SpriteRenderer>().sprite = defaultBg;
         }
-        else if (ballBackground == "STADIUM")
+        else if (ballBackground == "GREEN")
         {
-            gameBackground.GetComponent<SpriteRenderer>().sprite = stadium;
+            gameBackground.GetComponent<SpriteRenderer>().sprite = green;
         }
-        else if (ballBackground == "SPACE")
+        else if (ballBackground == "BLUE")
         {
-            gameBackground.GetComponent<SpriteRenderer>().sprite = space;
+            gameBackground.GetComponent<SpriteRenderer>().sprite = blue;
         }
-        else if (ballBackground == "TABLE")
+        else if (ballBackground == "PURPLE")
         {
-            gameBackground.GetComponent<SpriteRenderer>().sprite = table;
+            gameBackground.GetComponent<SpriteRenderer>().sprite = purple;
+        }
+        else if (ballBackground == "ORANGE")
+        {
+            gameBackground.GetComponent<SpriteRenderer>().sprite = orange;
+        }
+        else if (ballBackground == "RED")
+        {
+            gameBackground.GetComponent<SpriteRenderer>().sprite = red;
         }
     }
 
@@ -731,48 +741,50 @@ public class HomeStatus : MonoBehaviour
         switch (player.currentBall)
         {
             case "bowling":
-            case "beachball":
+            case "default":
             case "pool":
             case "tennis":
             case "volleyball":
             case "football":
             case "basketball":
+                SetBallBackground("GREEN");
+                break;
             case "darts":
-                SetBallBackground("STADIUM");
-                break;
-            case "burger":
+            case "yinyang":
+            case "beachball":
             case "watermelon":
-            case "donut":
-            case "cookie":
             case "pumpkin":
-            case "candy":
-                SetBallBackground("TABLE");
+            case "button":
+            case "smile":
+            case "gear":
+            case "pokemon":
+                SetBallBackground("BLUE");
                 break;
-            case "sun":
+            case "snowball":
+            case "cookie":
+            case "flower":
+            case "burger":
+            case "donut":
+            case "saturn":
+            case "discoball":
+            case "virus":
+            case "bomb":
+            case "coin":
+                SetBallBackground("PURPLE");
+                break;
+            case "atom":
             case "meteor":
             case "blackhole":
-            case "saturn":
-                SetBallBackground("SPACE");
-                break;
-            case "smile":
-            case "default":
-            case "pokemon":
-            case "flower":
-            case "virus":
+            case "candy":
+            case "sun":
             case "hypnose":
             case "wheel":
-            case "coin":
-            case "bomb":
-            case "atom":
-            case "yinyang":
-            case "gear":
             case "eyeball":
-            case "disco":
-            case "button":
-            case "abbox":
-            case "snowball":
             case "radiation":
-                SetBallBackground("DEFAULT");
+                SetBallBackground("ORANGE");
+                break;
+            case "abbox":
+                SetBallBackground("RED");
                 break;
             default: 
                 SetBallBackground("DEFAULT");
