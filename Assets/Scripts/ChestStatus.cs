@@ -8,7 +8,7 @@ public class ChestStatus : MonoBehaviour
     //private List<string> allBalls = new List<string>()
     //    { "abbox", "atom", "basketball", "beachball", "blackhole", "bomb",
     //    "bowling", "burger", "button", "candy", "coin", "cookie",
-    //    "darts", "default", "disco", "donut", "eyeball", "flower",
+    //    "darts", "default", "discoball", "donut", "eyeball", "flower",
     //    "football", "gear", "hypnose", "yinyang", "meteor", "pokemon",
     //    "pool", "pumpkin", "radiation", "saturn", "smile", "snowball",
     //    "sun", "tennis", "virus", "volleyball", "watermelon", "wheel" };

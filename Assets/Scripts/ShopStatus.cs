@@ -39,7 +39,6 @@ public class ShopStatus : MonoBehaviour
         }
 
         player = FindObjectOfType<Player>();
-
         player.LoadPlayer();
 
         // Set currently selected ball with their frames and backgrounds
