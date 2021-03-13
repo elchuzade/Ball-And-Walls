@@ -97,7 +97,6 @@ public class LeaderboardStatus : MonoBehaviour
         }
 
         player = FindObjectOfType<Player>();
-        
         player.LoadPlayer();
 
         // Hide point arrow until server has replied

@@ -101,7 +101,6 @@ public class BallCatcher : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
-
         player.LoadPlayer();
 
         SetPowerUp();
