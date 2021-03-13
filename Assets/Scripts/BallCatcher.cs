@@ -561,13 +561,13 @@ public class BallCatcher : MonoBehaviour
             case "blackhole":
             case "radiation":
             case "eyeball":
-                powerUp = 250;
+                powerUp = 180;
                 break;
             case "atom":
-                powerUp = 270;
+                powerUp = 200;
                 break;
             case "abbox":
-                powerUp = 500;
+                powerUp = 300;
                 break;
             default:
                 powerUp = 0;
