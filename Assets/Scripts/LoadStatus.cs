@@ -16,7 +16,7 @@ public class LoadStatus : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
-        player.ResetPlayer();
+        //player.ResetPlayer();
         player.LoadPlayer();
 
         if (!player.playerCreated)

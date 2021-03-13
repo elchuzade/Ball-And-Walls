@@ -62,6 +62,7 @@ public class ChallengesStatus : MonoBehaviour
         player = FindObjectOfType<Player>();
         //player.ResetPlayer();
         player.LoadPlayer();
+
         GetCurrentBallSprite();
         scoreboard.SetDiamonds(player.diamonds);
         scoreboard.SetCoins(player.coins);
