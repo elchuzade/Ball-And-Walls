@@ -225,12 +225,9 @@ public class ShopStatus : MonoBehaviour
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
     }
-<<<<<<< HEAD
-=======
 
     public void SwipeShop(float value)
     {
         Debug.Log(value);
     }
->>>>>>> testBranch
 }
