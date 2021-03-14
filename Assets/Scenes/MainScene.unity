@@ -319,7 +319,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "By tapping accept you agree\P to our"
+  m_Text: By tapping accept you agree to our
 --- !u!222 &138373724
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2566,7 +2566,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "and \Packnowledge our"
+  m_Text: and acknowledge our
 --- !u!222 &2131155529
 CanvasRenderer:
   m_ObjectHideFlags: 0
