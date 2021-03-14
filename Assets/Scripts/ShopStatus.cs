@@ -21,6 +21,7 @@ public class ShopStatus : MonoBehaviour
     // All items are held here
     GameObject items;
 
+    [SerializeField] Scrollbar scrollbar;
     void Awake()
     {
         scoreboard = FindObjectOfType<Scoreboard>();
@@ -40,6 +41,9 @@ public class ShopStatus : MonoBehaviour
 
         player = FindObjectOfType<Player>();
         player.LoadPlayer();
+
+        scrollbar.GetComponent<Scrollbar>().value = 0;
+        scrollbar.GetComponent<Scrollbar>().onValueChanged.AddListener(value => SwipeShop(value));
 
         // Set currently selected ball with their frames and backgrounds
         currentBallName = player.currentBall;
@@ -221,4 +225,12 @@ public class ShopStatus : MonoBehaviour
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
     }
+<<<<<<< HEAD
+=======
+
+    public void SwipeShop(float value)
+    {
+        Debug.Log(value);
+    }
+>>>>>>> testBranch
 }

@@ -107,13 +107,12 @@ public class Server : MonoBehaviour
             {
                 Debug.Log(webRequest.downloadHandler.text);
                 // Set the error received from creating a player
-                loadStatus.CreatePlayerError();
             }
             else
             {
                 Debug.Log(webRequest.downloadHandler.text);
                 // Make the success actions received from creating a player
-                loadStatus.CreatePlayerSuccess();
+                mainStatus.CreatePlayerSuccess();
             }
         }
     }
@@ -163,19 +162,16 @@ public class Server : MonoBehaviour
         webRequest.SetRequestHeader("token", headerMessage);
 
         yield return webRequest.SendWebRequest();
-
-        if (webRequest.isNetworkError)
-        {
-            Debug.Log(webRequest.downloadHandler.text);
-            // Set the error received from creating a player
-            mainStatus.SavePlayerDataError();
-        }
-        else
-        {
-            Debug.Log(webRequest.downloadHandler.text);
-            // Make the success actions received from creating a player
-            mainStatus.SavePlayerDataSuccess();
-        }
+        //if (webRequest.isNetworkError)
+        //{
+        //    Debug.Log(webRequest.downloadHandler.text);
+        //    // Set the error received from creating a player
+        //}
+        //else
+        //{
+        //    Debug.Log(webRequest.downloadHandler.text);
+        //    // Make the success actions received from creating a player
+        //}
     }
 
     public void GetVideoLink()
@@ -210,7 +206,7 @@ public class Server : MonoBehaviour
                 VideoJson videoInfo = JsonUtility.FromJson<VideoJson>(webRequest.downloadHandler.text);
 
                 // Set the video link received from the server
-                mainStatus.SetVideoLinkSuccess(videoInfo.video);
+                mainStatus.SetVideoLinkSuccess(videoInfo);
             }
         }
     }
@@ -283,7 +279,6 @@ public class Server : MonoBehaviour
 
             if (webRequest.isNetworkError)
             {
-                Debug.Log("err");
                 // Set the error of leaderboard data received from the server
                 Debug.Log(webRequest.downloadHandler.text);
             }

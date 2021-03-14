@@ -217,6 +217,7 @@ public class LeaderboardStatus : MonoBehaviour
         }
         if (youData != null)
         {
+            you.rank = youData.rank;
             // Check if your rank has already been added to the list if not add it
             if (!CheckIfExists(youData.rank))
             {
@@ -341,7 +342,8 @@ public class LeaderboardStatus : MonoBehaviour
 
         // Create your entry item only if your rank is not in top ten
         // 0 is assigned by default if there is no value
-        if (you.rank != 0)
+
+        if (you.rank > 10)
         {
             CreateYourEntry();
         }

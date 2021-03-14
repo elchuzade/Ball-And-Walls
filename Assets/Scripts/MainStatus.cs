@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using static Server;
 
 public class MainStatus : MonoBehaviour
 {
+    [SerializeField] GameObject privacyWindow;
     GameObject hapticsButton;
     GameObject challengeButton;
     GameObject leaderboardButton;
@@ -34,6 +36,8 @@ public class MainStatus : MonoBehaviour
         tv = FindObjectOfType<TV>();
         tvLight = GameObject.Find("Light");
         tvSwitch = GameObject.Find("Switch");
+
+        privacyWindow.transform.localScale = new Vector3(1, 1, 1);
     }
 
     void Start()
@@ -47,7 +51,24 @@ public class MainStatus : MonoBehaviour
         player = FindObjectOfType<Player>();
         player.LoadPlayer();
 
-        server.SavePlayerData(player);
+        if (player.privacyPolicy)
+        {
+            privacyWindow.SetActive(false);
+            leaderboardButton.GetComponent<Button>().onClick.AddListener(() => ClickLeaderboardButton());
+            
+            if (!player.playerCreated)
+            {
+                server.CreatePlayer();
+            } else
+            {
+                server.SavePlayerData(player);
+            }
+        } else
+        {
+            leaderboardButton.GetComponent<Button>().onClick.AddListener(() => ShowPrivacyPolicy());
+            leaderboardButton.transform.Find("Components").Find("Frame").GetComponent<Image>().color = new Color32(255, 197, 158, 100);
+            leaderboardButton.transform.Find("Components").Find("Icon").GetComponent<Image>().color = new Color32(255, 255, 255, 100);
+        }
 
         //player.ResetPlayer();
 
@@ -92,24 +113,14 @@ public class MainStatus : MonoBehaviour
         tvLight.GetComponent<Image>().color = new Color32(255, 0, 0, 255);
     }
 
-    // Save data was successful
-    public void SavePlayerDataSuccess()
-    {
-        Debug.Log("save player success");
-    }
-
-    // Save data was successful
-    public void SavePlayerDataError()
-    {
-        Debug.Log("save player failed");
-    }
-
     // Set video link from server file
-    public void SetVideoLinkSuccess(string response)
+    public void SetVideoLinkSuccess(VideoJson response)
     {
         SwitchOnLightOn();
 
-        tv.SetAdLink(response);
+        tv.SetAdLink(response.video);
+        tv.SetAdButton(response.website);
+
         tv.transform.Find("ScreenAnimation").gameObject.SetActive(false);
     }
 
@@ -196,5 +207,48 @@ public class MainStatus : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         navigator.LoadLeaderboardScene();
+    }
+
+    public void ClickTermsOfUse()
+    {
+        Application.OpenURL("https://abboxgames.com/terms-of-use");
+    }
+
+    public void ClickPrivacyPolicy()
+    {
+        Application.OpenURL("https://abboxgames.com/privacy-policy");
+    }
+
+    public void AcceptPrivacy()
+    {
+        leaderboardButton.transform.Find("Components").Find("Frame").GetComponent<Image>().color = new Color32(255, 197, 158, 255);
+        leaderboardButton.transform.Find("Components").Find("Icon").GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        leaderboardButton.GetComponent<Button>().onClick.AddListener(() => ClickLeaderboardButton());
+
+        privacyWindow.transform.localScale = new Vector3(0, 1, 1);
+        privacyWindow.SetActive(false);
+        player.privacyPolicy = true;
+        player.SavePlayer();
+
+        server.CreatePlayer();
+    }
+
+    public void ShowPrivacyPolicy()
+    {
+        privacyWindow.SetActive(true);
+    }
+
+    public void DeclinePrivacy()
+    {
+        leaderboardButton.GetComponent<Button>().onClick.AddListener(() => privacyWindow.SetActive(true));
+        privacyWindow.SetActive(false);
+    }
+
+    // Create a new player
+    public void CreatePlayerSuccess()
+    {
+        player.playerCreated = true;
+        player.SavePlayer();
+        server.SavePlayerData(player);
     }
 }
