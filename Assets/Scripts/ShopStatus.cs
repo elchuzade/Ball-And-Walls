@@ -15,6 +15,12 @@ public class ShopStatus : MonoBehaviour
 
     AdCancel adCancel;
 
+    // Dots that indicate which 9 items are shown on the screen
+    [SerializeField] GameObject leftDot;
+    [SerializeField] GameObject midLeftDot;
+    [SerializeField] GameObject midRightDot;
+    [SerializeField] GameObject rightDot;
+
     // Track if ad cancel warning has already been shown, not to annoy each time showing the same window
     bool showedAdCancelWarning = false;
 
@@ -60,6 +66,56 @@ public class ShopStatus : MonoBehaviour
         adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
         SetBallItems();
         adCancel.gameObject.SetActive(false);
+    }
+
+    private void SwitchDots()
+    {
+        int currentSideIndex;
+        if (scrollbar.value <= 0.25)
+        {
+            currentSideIndex = 0;
+        }
+        else if (scrollbar.value <= 0.5)
+        {
+            currentSideIndex = 1;
+        }
+        else if (scrollbar.value <= 0.75)
+        {
+            currentSideIndex = 2;
+        } else
+        {
+            currentSideIndex = 3;
+        }
+
+        // Based on which side of the wide list the player is at, make the corresponding dot lighter
+        if (currentSideIndex == 0)
+        {
+            leftDot.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+            midLeftDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+            midRightDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+            rightDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+        }
+        else if (currentSideIndex == 1)
+        {
+            leftDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+            midLeftDot.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+            midRightDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+            rightDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+        }
+        else if (currentSideIndex == 2)
+        {
+            leftDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+            midLeftDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+            midRightDot.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+            rightDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+        }
+        else if (currentSideIndex == 3)
+        {
+            leftDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+            midLeftDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+            midRightDot.GetComponent<Image>().color = new Color32(150, 150, 150, 255);
+            rightDot.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        }
     }
 
     private void SetBallItems()
@@ -228,6 +284,11 @@ public class ShopStatus : MonoBehaviour
 
     public void SwipeShop(float value)
     {
-        Debug.Log(value);
+        SwitchDots();
+    }
+
+    public void ClickShopItem(GameObject item)
+    {
+        item.GetComponent<Item>().TouchItem();
     }
 }

@@ -176,6 +176,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 95266589039828390, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 95266589039828391, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
         type: 3}
       propertyPath: m_IsActive
@@ -290,6 +295,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Scoreboard
+      objectReference: {fileID: 0}
+    - target: {fileID: 2205711944978072949, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751703474437491730, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751703474437491730, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751703474437491730, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -120
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751703474437491730, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61aae6d81f9ff4c98bffa22f6bd1f504, type: 3}
