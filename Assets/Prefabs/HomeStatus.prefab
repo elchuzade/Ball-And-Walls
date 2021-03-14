@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8990701402492935916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7722687572608340002}
+  - component: {fileID: 3127915845552200941}
+  m_Layer: 0
+  m_Name: HomeStatus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7722687572608340002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8990701402492935916}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3127915845552200941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8990701402492935916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a8a5c8ca9fc94e6aac480b047836956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shuffle: 1
+  walls: {fileID: 0}
+  challengeScreenshots: []
+  unlockChallengeIcon: {fileID: 0}
+  balls:
+  - {fileID: 7937230841922582776, guid: d145bd449f5cea7459193c1c4b178ec0, type: 3}
+  - {fileID: 371875883411802810, guid: 81bbfb2a2fd6c45d2aa95504350f0129, type: 3}
+  - {fileID: 950026245479466161, guid: df021a20896f046e891af727370839ad, type: 3}
+  - {fileID: 7623619169316723725, guid: 137777b9cdc2f40448ef52f2f85700f3, type: 3}
+  - {fileID: 8001477958086733948, guid: 8fd5c725544b64e19ab0a654fcad45e5, type: 3}
+  - {fileID: 6618749906187196043, guid: 8cf263b72e7124e41bfdbe9f6fbea45f, type: 3}
+  - {fileID: 1886077054384269676, guid: c7dc26f62835c43f58072d75bd0dda7f, type: 3}
+  - {fileID: 4575397776943583143, guid: 604a019279f59524eb78bde7cb940b24, type: 3}
+  - {fileID: 4001691472304725179, guid: c4225c5ef3ec80b42867fa2ad451d2ec, type: 3}
+  - {fileID: 1185727332165308312, guid: 4e7656f59747c45e9a84484b2ae600aa, type: 3}
+  - {fileID: 4786653518949432344, guid: 1a72933bc469a49109ddaa7105e1d068, type: 3}
+  - {fileID: 1623380379698792717, guid: d7a37e845b67f4985827cc297ef42d7d, type: 3}
+  - {fileID: 7529512386764028048, guid: cf85aa92962c242cd83ced64fecd2849, type: 3}
+  - {fileID: 6756166690457090872, guid: c3073e290292f4f7793339899da9d145, type: 3}
+  - {fileID: 8264319393940241015, guid: f26d5d0a3ce555f4c90c9278754e608e, type: 3}
+  - {fileID: 5141709805638936867, guid: e071d54d45c544fb6afbe1b3a96520b6, type: 3}
+  - {fileID: 547676983129093919, guid: 9980ffdde13cc004a95f7c486af4b1c7, type: 3}
+  - {fileID: 2058828521196305875, guid: 61a60f3387fdd4403a84f95d1234a275, type: 3}
+  - {fileID: 163367117045448771, guid: ffc75377bddf343c48eb3e90ef9e94c3, type: 3}
+  - {fileID: 5366007906310075859, guid: 75f009ecfecda314b96999a874a86ba3, type: 3}
+  - {fileID: 4446477112130617112, guid: f313f7e80e9ad41c79b42251e809fe16, type: 3}
+  - {fileID: 8178692338687831286, guid: 79492013572684e72addf3cd43cd8c61, type: 3}
+  - {fileID: 1084469421761514659, guid: 4d7b95b03f2b144ffa2e9f272d1e7de1, type: 3}
+  - {fileID: 6064794521710763078, guid: 3b36da807e2e940e582bcf8a0be5f29a, type: 3}
+  - {fileID: 5473757201393064635, guid: 8f53063f69a1a4f97a6c2eca0b0e926f, type: 3}
+  - {fileID: 2258305010517694837, guid: 827b96bdb3b20294daf4a55d3880e68f, type: 3}
+  - {fileID: 304037777375784418, guid: b94f9469f5f2e497b856ac9cf8c07423, type: 3}
+  - {fileID: 5439229297669714683, guid: 728404a4db5bf47e3b39d366313a746b, type: 3}
+  - {fileID: 8308424452446302, guid: 9ea434d10b4ff7a48889546a77fa1a11, type: 3}
+  - {fileID: 6152709681244806217, guid: 20ff2033a8e9e4a0494f667abf1e4fd3, type: 3}
+  - {fileID: 1971362403695375777, guid: dd92af6b282eb447baaf37bdb25c3257, type: 3}
+  - {fileID: 1284667694754405967, guid: 38f0e4eb3793d40c8a64661b94ef9284, type: 3}
+  - {fileID: 202993945091840929, guid: 9180e9bf612b84c0f8f7bcd66ed911d8, type: 3}
+  - {fileID: 2939840133514566636, guid: 78caf8445badd4848b068e6c049e618f, type: 3}
+  - {fileID: 5560139955304499862, guid: a112e9d37c63c4e888379de7cfe15703, type: 3}
+  - {fileID: 4194439138409664049, guid: 4067345422616274fba2ed65b48dce71, type: 3}
+  FocusPointer: {fileID: 0}
+  FocusPointerAfterHintHorizontal: {fileID: 0}
+  FocusPointerAfterHintVertical: {fileID: 0}
+  VerticalPointer: {fileID: 0}
+  AngularPointer: {fileID: 0}
+  HorizontalPointer: {fileID: 0}
+  challengeLevel: 0
+  tutorial: 0
+  hintIcon: {fileID: 0}
+  lifeIcon: {fileID: 0}
+  green: {fileID: 21300000, guid: f3da04c16cf020c4d8b317455ed64754, type: 3}
+  blue: {fileID: 21300000, guid: 2ee76f9ce0130ca499445409b858f2c2, type: 3}
+  purple: {fileID: 21300000, guid: cac58090b2869b148b0e6ea54a5e48e5, type: 3}
+  orange: {fileID: 21300000, guid: 2863eb2ee7b204a4c9596764fc00f509, type: 3}
+  red: {fileID: 21300000, guid: 9c985aa7433f36944a3de2c96345a0a0, type: 3}
+  defaultBg: {fileID: 21300000, guid: 4a0540fba700bff498b5fcda60e93ad6, type: 3}
+  challengeCoins: 0
+  challengeDiamonds: 0
