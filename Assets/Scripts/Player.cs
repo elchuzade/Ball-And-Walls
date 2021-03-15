@@ -42,10 +42,10 @@ public class Player : MonoBehaviour
         unlockedBalls = new List<string>() { "default" };
         unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; // - 2 solved, -1 locked
         currentBall = "default";
-        coins = 100000;
+        coins = 0;
         keys = 0;
         playerName = "";
-        diamonds = 999;
+        diamonds = 0;
         nextLevelIndex = 1;
         lives = 0;
         playerName = "";
