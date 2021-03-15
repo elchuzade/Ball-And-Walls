@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     public string playerName = "";
     public bool nameChanged = false;
     public bool playerCreated = false;
-    public bool privacyPolicy = false;
+    public bool privacyPolicyAccepted = false;
+    public bool privacyPolicyDeclined = false;
 
     void Awake()
     {
@@ -50,7 +51,8 @@ public class Player : MonoBehaviour
         playerName = "";
         playerCreated = false;
         nameChanged = false;
-        privacyPolicy = false;
+        privacyPolicyAccepted = false;
+        privacyPolicyDeclined = false;
 
         SaveSystem.SavePlayer(this);
     }
@@ -75,6 +77,7 @@ public class Player : MonoBehaviour
         diamonds = data.diamonds;
         nameChanged = data.nameChanged;
         nextLevelIndex = data.nextLevelIndex;
-        privacyPolicy = data.privacyPolicy;
+        privacyPolicyAccepted = data.privacyPolicyAccepted;
+        privacyPolicyDeclined = data.privacyPolicyDeclined;
     }
 }

@@ -6,6 +6,7 @@ using static Server;
 public class MainStatus : MonoBehaviour
 {
     [SerializeField] GameObject privacyWindow;
+    [SerializeField] GameObject quitWindow;
     GameObject hapticsButton;
     GameObject challengeButton;
     GameObject leaderboardButton;
@@ -38,6 +39,8 @@ public class MainStatus : MonoBehaviour
         tvSwitch = GameObject.Find("Switch");
 
         privacyWindow.transform.localScale = new Vector3(1, 1, 1);
+        quitWindow.transform.localScale = new Vector3(1, 1, 1);
+        quitWindow.SetActive(false);
     }
 
     void Start()
@@ -49,9 +52,10 @@ public class MainStatus : MonoBehaviour
         }
 
         player = FindObjectOfType<Player>();
+        //player.ResetPlayer();
         player.LoadPlayer();
 
-        if (player.privacyPolicy)
+        if (player.privacyPolicyAccepted)
         {
             privacyWindow.SetActive(false);
             leaderboardButton.GetComponent<Button>().onClick.AddListener(() => ClickLeaderboardButton());
@@ -63,14 +67,19 @@ public class MainStatus : MonoBehaviour
             {
                 server.SavePlayerData(player);
             }
-        } else
+        }
+        else
         {
             leaderboardButton.GetComponent<Button>().onClick.AddListener(() => ShowPrivacyPolicy());
             leaderboardButton.transform.Find("Components").Find("Frame").GetComponent<Image>().color = new Color32(255, 197, 158, 100);
             leaderboardButton.transform.Find("Components").Find("Icon").GetComponent<Image>().color = new Color32(255, 255, 255, 100);
         }
 
-        //player.ResetPlayer();
+        if (player.privacyPolicyDeclined)
+        {
+            // First time entering the game
+            privacyWindow.SetActive(false);
+        }
 
         //AdManager.ShowBanner();
         server.GetVideoLink();
@@ -89,6 +98,11 @@ public class MainStatus : MonoBehaviour
         {
             // Turn switch clockwise
             tvSwitch.transform.Rotate(new Vector3(0, 0, -switchTurnSpeed));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            quitWindow.SetActive(true);
         }
     }
 
@@ -227,7 +241,8 @@ public class MainStatus : MonoBehaviour
 
         privacyWindow.transform.localScale = new Vector3(0, 1, 1);
         privacyWindow.SetActive(false);
-        player.privacyPolicy = true;
+        player.privacyPolicyDeclined = false;
+        player.privacyPolicyAccepted = true;
         player.SavePlayer();
 
         server.CreatePlayer();
@@ -242,6 +257,8 @@ public class MainStatus : MonoBehaviour
     {
         leaderboardButton.GetComponent<Button>().onClick.AddListener(() => privacyWindow.SetActive(true));
         privacyWindow.SetActive(false);
+        player.privacyPolicyDeclined = true;
+        player.SavePlayer();
     }
 
     // Create a new player
@@ -250,5 +267,16 @@ public class MainStatus : MonoBehaviour
         player.playerCreated = true;
         player.SavePlayer();
         server.SavePlayerData(player);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void ContinuePlaying()
+    {
+        // If you opened quit game window by accident
+        quitWindow.SetActive(false);
     }
 }
