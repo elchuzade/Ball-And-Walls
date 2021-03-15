@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     public string playerName = "";
     public bool nameChanged = false;
     public bool playerCreated = false;
-    public bool privacyPolicy = false;
+    public bool privacyPolicyAccepted = false;
+    public bool privacyPolicyDeclined = false;
 
     void Awake()
     {
@@ -41,16 +42,17 @@ public class Player : MonoBehaviour
         unlockedBalls = new List<string>() { "default" };
         unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; // - 2 solved, -1 locked
         currentBall = "default";
-        coins = 100000;
+        coins = 0;
         keys = 0;
         playerName = "";
-        diamonds = 999;
+        diamonds = 0;
         nextLevelIndex = 1;
         lives = 0;
         playerName = "";
         playerCreated = false;
         nameChanged = false;
-        privacyPolicy = false;
+        privacyPolicyAccepted = false;
+        privacyPolicyDeclined = false;
 
         SaveSystem.SavePlayer(this);
     }
@@ -75,6 +77,7 @@ public class Player : MonoBehaviour
         diamonds = data.diamonds;
         nameChanged = data.nameChanged;
         nextLevelIndex = data.nextLevelIndex;
-        privacyPolicy = data.privacyPolicy;
+        privacyPolicyAccepted = data.privacyPolicyAccepted;
+        privacyPolicyDeclined = data.privacyPolicyDeclined;
     }
 }

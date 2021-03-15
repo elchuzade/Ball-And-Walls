@@ -15,7 +15,8 @@ public class PlayerData
     public string playerName = "";
     public bool playerCreated = false;
     public bool nameChanged = false;
-    public bool privacyPolicy = false;
+    public bool privacyPolicyAccepted = false;
+    public bool privacyPolicyDeclined = false;
 
     public PlayerData (Player player)
     {
@@ -30,6 +31,7 @@ public class PlayerData
         playerName = player.playerName;
         playerCreated = player.playerCreated;
         nameChanged = player.nameChanged;
-        privacyPolicy = player.privacyPolicy;
+        privacyPolicyAccepted = player.privacyPolicyAccepted;
+        privacyPolicyDeclined = player.privacyPolicyDeclined;
     }
 }
