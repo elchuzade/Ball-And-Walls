@@ -54,7 +54,7 @@ public class ShopStatus : MonoBehaviour
         // Set currently selected ball with their frames and backgrounds
         currentBallName = player.currentBall;
 
-        AdManager.ShowBanner();
+        //AdManager.ShowBanner();
 
         // Set current player coins to the scoreboard
         scoreboard.SetCoins(player.coins);

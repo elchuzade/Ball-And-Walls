@@ -105,7 +105,7 @@ public class ChestStatus : MonoBehaviour
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
         DrawKeys();
-        AdManager.ShowBanner();
+        //AdManager.ShowBanner();
 
         // Choose which of locked balls will be the best prize
         SetBestPrize();
