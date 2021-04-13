@@ -130,7 +130,7 @@ public class HomeStatus : MonoBehaviour
         player = FindObjectOfType<Player>();
         player.ResetPlayer();
         player.LoadPlayer();
-        AdManager.ShowBanner();
+        //AdManager.ShowBanner();
 
         SetButtonFunctions();
 
