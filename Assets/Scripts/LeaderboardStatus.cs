@@ -288,6 +288,7 @@ public class LeaderboardStatus : MonoBehaviour
                 GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
                 // Set its parent to be scroll content, for scroll functionality to work properly
                 leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
+                leaderboardItem.transform.localScale = Vector3.one;
 
                 // Compare item from top ten with your rank incase you are in top ten
                 if (item.rank == you.rank)
@@ -337,6 +338,7 @@ public class LeaderboardStatus : MonoBehaviour
             GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
             // Set its parent to be scroll content, for scroll functionality to work properly
             leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
+            leaderboardItem.transform.localScale = Vector3.one;
             SetItemEntry(leaderboardItem, item);
         });
 
@@ -354,6 +356,7 @@ public class LeaderboardStatus : MonoBehaviour
             GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
             // Set its parent to be scroll content, for scroll functionality to work properly
             leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
+            leaderboardItem.transform.localScale = Vector3.one;
             SetItemEntry(leaderboardItem, item);
         });
 
@@ -396,6 +399,7 @@ public class LeaderboardStatus : MonoBehaviour
         GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
         // Set its parent to be scroll content, for scroll functionality to work properly
         leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
+        leaderboardItem.transform.localScale = Vector3.one;
         // Show frame around your entry
         ShowYourEntryFrame(leaderboardItem);
         SetItemEntry(leaderboardItem, you);

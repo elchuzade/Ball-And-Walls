@@ -52,7 +52,7 @@ public class MainStatus : MonoBehaviour
         }
 
         player = FindObjectOfType<Player>();
-        //player.ResetPlayer();
+        player.ResetPlayer();
         player.LoadPlayer();
 
         if (player.privacyPolicyAccepted)
@@ -81,7 +81,7 @@ public class MainStatus : MonoBehaviour
             privacyWindow.SetActive(false);
         }
 
-        //AdManager.ShowBanner();
+        AdManager.ShowBanner();
         server.GetVideoLink();
 
         // Set whether haptics and sound buttons are enabled or disabled initially

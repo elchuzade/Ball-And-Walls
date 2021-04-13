@@ -57,7 +57,7 @@ public class ChallengesStatus : MonoBehaviour
         videoLives.SetActive(false);
         playChallenge.SetActive(false);
 
-        AdManager.ShowBanner();
+        //AdManager.ShowBanner();
 
         player = FindObjectOfType<Player>();
         //player.ResetPlayer();

@@ -128,6 +128,7 @@ public class HomeStatus : MonoBehaviour
     {
         // This is in start so it can destroy the old item before accessing it
         player = FindObjectOfType<Player>();
+        player.ResetPlayer();
         player.LoadPlayer();
         AdManager.ShowBanner();
 
@@ -137,19 +138,7 @@ public class HomeStatus : MonoBehaviour
         resetButton.SetActive(false);
         forwardButton.SetActive(false);
 
-        // Change the camera zoom based on the screen ration, for very tall or very wide screens
-        if ((float)Screen.height / Screen.width > 2)
-        {
-            Camera.main.orthographicSize = 800;
-        } else {
-            Camera.main.orthographicSize = 667;
-        }
-
-        if ((float)Screen.width / Screen.height > 0.7)
-        {
-            GameObject canvas = GameObject.Find("Canvas");
-            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
-        }
+        ChangeCameraSettings();
 
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
@@ -201,6 +190,22 @@ public class HomeStatus : MonoBehaviour
             adCancel.InitializeAdCancel(" hint", hintIcon);
         }
         adCancel.gameObject.SetActive(false);
+    }
+
+    private void ChangeCameraSettings() {
+        // Change the camera zoom based on the screen ration, for very tall or very wide screens
+        if ((float)Screen.height / Screen.width > 2)
+        {
+            Camera.main.orthographicSize = 800;
+        } else {
+            Camera.main.orthographicSize = 667;
+        }
+
+        if ((float)Screen.width / Screen.height > 0.7)
+        {
+            GameObject canvas = GameObject.Find("Canvas");
+            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
+        }
     }
 
     // @access from ball catcher when deciding on showing unlock challenge view
