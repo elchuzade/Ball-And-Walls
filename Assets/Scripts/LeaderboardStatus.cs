@@ -385,6 +385,7 @@ public class LeaderboardStatus : MonoBehaviour
         GameObject leaderboardItem = Instantiate(leaderboardItemPrefab, transform.position, Quaternion.identity);
         // Set its parent to be scroll content, for scroll functionality to work properly
         leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
+        leaderboardItem.transform.localScale = Vector3.one;
         // Set its name component text mesh pro value to ...
         leaderboardItem.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = "...";
         // Set its rank component text mesh pro value to ...

@@ -128,7 +128,7 @@ public class HomeStatus : MonoBehaviour
     {
         // This is in start so it can destroy the old item before accessing it
         player = FindObjectOfType<Player>();
-        player.ResetPlayer();
+        //player.ResetPlayer();
         player.LoadPlayer();
         //AdManager.ShowBanner();
 

@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-// Bring classes from Server
-using static Server;
 
 public class ChallengesStatus : MonoBehaviour
 {

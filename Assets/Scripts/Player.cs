@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
         keys = 1;
         playerName = "";
         diamonds = 0;
-        nextLevelIndex = 0;
+        nextLevelIndex = 1;
         lives = 0;
         playerName = "";
         playerCreated = false;
