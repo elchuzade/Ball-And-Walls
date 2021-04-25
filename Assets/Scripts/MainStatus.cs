@@ -8,6 +8,7 @@ public class MainStatus : MonoBehaviour
     [SerializeField] GameObject privacyWindow;
     [SerializeField] GameObject quitWindow;
     GameObject hapticsButton;
+    GameObject soundsButton;
     GameObject challengeButton;
     GameObject leaderboardButton;
 
@@ -31,6 +32,7 @@ public class MainStatus : MonoBehaviour
         navigator = FindObjectOfType<Navigator>();
 
         hapticsButton = GameObject.Find("HapticsButton");
+        soundsButton = GameObject.Find("SoundsButton");
         challengeButton = GameObject.Find("ChallengeButton");
         leaderboardButton = GameObject.Find("LeaderboardButton");
 
