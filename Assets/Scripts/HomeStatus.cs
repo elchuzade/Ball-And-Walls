@@ -524,8 +524,8 @@ public class HomeStatus : MonoBehaviour
             if (player.nextLevelIndex > 4)
             {
                 hintButton.SetActive(true);
-                homeButton.SetActive(true);
             }
+            homeButton.SetActive(true);
         }
         // Seet ball to idle state
         ballLaunched = false;
