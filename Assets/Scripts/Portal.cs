@@ -5,6 +5,7 @@ public class Portal : MonoBehaviour
 {
     // If it is a portal in, conenct it to a portal out
     [SerializeField] GameObject PortalOut;
+    HomeStatus homeStatus;
 
     // Variable to determine that the ball has been caught by a portal in
     bool catchBall;
@@ -19,6 +20,7 @@ public class Portal : MonoBehaviour
     void Start()
     {
         ball = FindObjectOfType<Ball>();
+        homeStatus = FindObjectOfType<HomeStatus>();
     }
 
     // If there is a mechanical action, use FixedUpdate if canvas action use Update
@@ -47,6 +49,12 @@ public class Portal : MonoBehaviour
     {
         // Hide the ball for its teleport duration
         ball.gameObject.SetActive(false);
+        if (PlayerPrefs.GetInt("Sounds") == 1)
+        {
+            homeStatus.StopSound();
+            AudioSource audio = GetComponent<AudioSource>();
+            audio.Play();
+        }
         
         yield return new WaitForSeconds(time);
 
@@ -72,6 +80,12 @@ public class Portal : MonoBehaviour
     {
         // Launch the ball in the direction of the teleport with the teleport release speed
         ball.Launch(PortalOut.transform.up * releaseSpeed);
+        if (PlayerPrefs.GetInt("Sounds") == 1)
+        {
+            AudioSource audio = GetComponent<AudioSource>();
+            audio.Play();
+            homeStatus.StartSound();
+        }
     }
 
     // This is to set portal out from the script for Challenge levels

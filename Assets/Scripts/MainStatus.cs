@@ -8,6 +8,7 @@ public class MainStatus : MonoBehaviour
     [SerializeField] GameObject privacyWindow;
     [SerializeField] GameObject quitWindow;
     GameObject hapticsButton;
+    GameObject soundsButton;
     GameObject challengeButton;
     GameObject leaderboardButton;
 
@@ -31,6 +32,7 @@ public class MainStatus : MonoBehaviour
         navigator = FindObjectOfType<Navigator>();
 
         hapticsButton = GameObject.Find("HapticsButton");
+        soundsButton = GameObject.Find("SoundsButton");
         challengeButton = GameObject.Find("ChallengeButton");
         leaderboardButton = GameObject.Find("LeaderboardButton");
 
@@ -155,6 +157,14 @@ public class MainStatus : MonoBehaviour
         {
             hapticsButton.transform.Find("Disabled").gameObject.SetActive(true);
         }
+        if (PlayerPrefs.GetInt("Sounds") == 1)
+        {
+            soundsButton.transform.Find("Disabled").gameObject.SetActive(false);
+        }
+        else
+        {
+            soundsButton.transform.Find("Disabled").gameObject.SetActive(true);
+        }
     }
 
     public void ClickHapticsButton()
@@ -172,6 +182,24 @@ public class MainStatus : MonoBehaviour
             hapticsButton.transform.Find("Disabled").gameObject.SetActive(false);
             // If haptics are turned off => turn them on
             PlayerPrefs.SetInt("Haptics", 1);
+        }
+    }
+
+    public void ClickSoundsButton()
+    {
+        if (PlayerPrefs.GetInt("Sounds") == 1)
+        {
+            // Set button state to disabled
+            soundsButton.transform.Find("Disabled").gameObject.SetActive(true);
+            // If sounds are turned on => turn them off
+            PlayerPrefs.SetInt("Sounds", 0);
+        }
+        else
+        {
+            // Set button state to enabled
+            soundsButton.transform.Find("Disabled").gameObject.SetActive(false);
+            // If sounds are turned off => turn them on
+            PlayerPrefs.SetInt("Sounds", 1);
         }
     }
 

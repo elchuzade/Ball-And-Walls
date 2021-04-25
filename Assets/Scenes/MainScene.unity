@@ -2497,8 +2497,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 365073484}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: ClickHapticsButton
+        m_TargetAssemblyTypeName: MainStatus, Assembly-CSharp
+        m_MethodName: ClickSoundsButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2528,7 +2528,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3966412b4c61d47289eded09c2faa739, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d6e1311ecc666b14c8ea40387a0b43e2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3366,7 +3366,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a9a2a796fdd494f44838cafd14172711, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4e0139ec1e0d3044389dfc979672d5d8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

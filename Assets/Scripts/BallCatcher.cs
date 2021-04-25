@@ -353,12 +353,20 @@ public class BallCatcher : MonoBehaviour
         // If the ball catcher has hit the ball, level should be passed
         if (collision.gameObject.tag == "Ball")
         {
+            homeStatus.StopSound();
             // Disable all buttons from canvas so after the level is passed buttons do not get clicked during win animation
             homeStatus.DisableAllButtons();
 
             if (PlayerPrefs.GetInt("Haptics") == 1)
             {
                 MMVibrationManager.Haptic(HapticTypes.Success);
+            }
+
+            if (PlayerPrefs.GetInt("Sounds") == 1)
+            {
+                // Find an Audio Source on barrier that is hit and play it
+                AudioSource audio = GetComponent<AudioSource>();
+                audio.Play();
             }
 
             // Show an ad before every 5th level except the 150th one which is the last level
@@ -370,6 +378,7 @@ public class BallCatcher : MonoBehaviour
             // Hide ball catcher image to not clutter when coins are dropping
             GetComponent<SpriteRenderer>().enabled = false;
 
+        
             // Make particle effects for passing the level and destroy them after 1.5 seconds
             GameObject winEffect = Instantiate(
                 winParticlesPrefab,

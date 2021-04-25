@@ -290,6 +290,7 @@ public class Ball : MonoBehaviour
         // If sounds are enabled set it to make a sound
         if (PlayerPrefs.GetInt("Sounds") == 1)
         {
+            homeStatus.StopSound();
             // Find Lose effect Audio Source from ball's child component and play it
             // It is not placed on the ball itseld, coz it already has launch Audio Source
             AudioSource audio = transform.Find("Center").GetComponent<AudioSource>();
