@@ -125,6 +125,14 @@ public class Ball : MonoBehaviour
             MMVibrationManager.Haptic(HapticTypes.RigidImpact);
         }
 
+        // If sounds are enabled, make a sound on launch
+        if (PlayerPrefs.GetInt("Sounds") == 1)
+        {
+            // Find Audio Source component on Ball Game Object and run its sound source
+            AudioSource audio = GetComponent<AudioSource>();
+            audio.Play();
+        }
+
         // Launch the ball with determined vector and ball launch speed
         Launch(launchVector * initSpeed);
         // Inform main script that ball is launched, to change canvas buttons etc...
@@ -218,6 +226,20 @@ public class Ball : MonoBehaviour
         }
     }
 
+    // If the ball has entered collider without trigger effect on it
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Barrier")
+        {
+            if (PlayerPrefs.GetInt("Sounds") == 1)
+            {
+                // Find an Audio Source on barrier that is hit and play it
+                AudioSource audio = collision.gameObject.GetComponent<AudioSource>();
+                audio.Play();
+            }
+        }
+    }
+
     // Accelerate ball when forward button is clicked
     public void ForwardBall()
     {
@@ -264,6 +286,15 @@ public class Ball : MonoBehaviour
 
         // Reset ball velocity to zero to stop it from moving
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+        // If sounds are enabled set it to make a sound
+        if (PlayerPrefs.GetInt("Sounds") == 1)
+        {
+            // Find Lose effect Audio Source from ball's child component and play it
+            // It is not placed on the ball itseld, coz it already has launch Audio Source
+            AudioSource audio = transform.Find("Center").GetComponent<AudioSource>();
+            audio.Play();
+        }
 
         // If haptics are enabled set it to vibrate
         if (PlayerPrefs.GetInt("Haptics") == 1)
