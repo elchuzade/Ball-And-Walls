@@ -353,7 +353,6 @@ public class BallCatcher : MonoBehaviour
         // If the ball catcher has hit the ball, level should be passed
         if (collision.gameObject.tag == "Ball")
         {
-            homeStatus.StopSound();
             // Disable all buttons from canvas so after the level is passed buttons do not get clicked during win animation
             homeStatus.DisableAllButtons();
 

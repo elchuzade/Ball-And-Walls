@@ -49,9 +49,9 @@ public class Portal : MonoBehaviour
     {
         // Hide the ball for its teleport duration
         ball.gameObject.SetActive(false);
+
         if (PlayerPrefs.GetInt("Sounds") == 1)
         {
-            homeStatus.StopSound();
             AudioSource audio = GetComponent<AudioSource>();
             audio.Play();
         }
@@ -84,7 +84,6 @@ public class Portal : MonoBehaviour
         {
             AudioSource audio = GetComponent<AudioSource>();
             audio.Play();
-            homeStatus.StartSound();
         }
     }
 

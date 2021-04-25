@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class HomeStatus : MonoBehaviour
 {
     Player player;
-    AudioSource ballFlySound;
     BallCatcher ballCatcher;
     // This is to indicate that the wall on this level should be shuffled
     [SerializeField] bool shuffle = true;
@@ -133,7 +132,6 @@ public class HomeStatus : MonoBehaviour
         player.LoadPlayer();
         //AdManager.ShowBanner();
 
-        ballFlySound = GetComponent<AudioSource>();
         SetButtonFunctions();
 
         // Hide all the supposedely invisible buttons
@@ -372,10 +370,6 @@ public class HomeStatus : MonoBehaviour
         // Set the ball launched status to be access by other scripts
         ballLaunched = true;
 
-        if (PlayerPrefs.GetInt("Sounds") == 1)
-        {
-            StartSound();
-        }
         // If this is the tutorial on level hide the tutorial stuff
         if (player.nextLevelIndex == 1 && tutorial)
         {
@@ -398,17 +392,6 @@ public class HomeStatus : MonoBehaviour
         // Hide arrow that shows where the ball will move when launched
         ballDirectionArrow.SetActive(false);
     }
-
-    public void StopSound()
-    {
-        ballFlySound.Stop();
-    }
-
-    public void StartSound()
-    {
-        ballFlySound.Play();
-    }
-
 
     public void CatchBall()
     {
