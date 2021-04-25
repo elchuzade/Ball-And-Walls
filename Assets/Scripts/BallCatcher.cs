@@ -367,6 +367,12 @@ public class BallCatcher : MonoBehaviour
                 AdManager.ShowStandardAd(() => { }, () => { }, () => { });
             }
 
+            if (PlayerPrefs.GetInt("Sounds") == 1)
+            {
+                AudioSource audio = GetComponent<AudioSource>();
+                audio.Play();
+            }
+
             // Hide ball catcher image to not clutter when coins are dropping
             GetComponent<SpriteRenderer>().enabled = false;
 
