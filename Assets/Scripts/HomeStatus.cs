@@ -369,6 +369,7 @@ public class HomeStatus : MonoBehaviour
     {
         // Set the ball launched status to be access by other scripts
         ballLaunched = true;
+
         // If this is the tutorial on level hide the tutorial stuff
         if (player.nextLevelIndex == 1 && tutorial)
         {
@@ -523,8 +524,8 @@ public class HomeStatus : MonoBehaviour
             if (player.nextLevelIndex > 4)
             {
                 hintButton.SetActive(true);
-                homeButton.SetActive(true);
             }
+            homeButton.SetActive(true);
         }
         // Seet ball to idle state
         ballLaunched = false;

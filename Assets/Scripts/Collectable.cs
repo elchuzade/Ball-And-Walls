@@ -44,6 +44,12 @@ public class Collectable : MonoBehaviour
                 MMVibrationManager.Haptic(HapticTypes.SoftImpact);
             }
 
+            if (PlayerPrefs.GetInt("Sounds") == 1)
+            {
+                AudioSource audio = GetComponent<AudioSource>();
+                audio.Play();
+            }
+
             // If the item that holds this script was a key add 1 key to player
             if (type == Type.Key)
             {

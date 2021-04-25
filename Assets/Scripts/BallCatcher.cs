@@ -361,6 +361,13 @@ public class BallCatcher : MonoBehaviour
                 MMVibrationManager.Haptic(HapticTypes.Success);
             }
 
+            if (PlayerPrefs.GetInt("Sounds") == 1)
+            {
+                // Find an Audio Source on barrier that is hit and play it
+                AudioSource audio = GetComponent<AudioSource>();
+                audio.Play();
+            }
+
             // Show an ad before every 5th level except the 150th one which is the last level
             if (homeStatus.GetChallengeLevel() == 0 && player.nextLevelIndex % 5 == 0 && player.nextLevelIndex != 150)
             {
@@ -370,6 +377,7 @@ public class BallCatcher : MonoBehaviour
             // Hide ball catcher image to not clutter when coins are dropping
             GetComponent<SpriteRenderer>().enabled = false;
 
+        
             // Make particle effects for passing the level and destroy them after 1.5 seconds
             GameObject winEffect = Instantiate(
                 winParticlesPrefab,
