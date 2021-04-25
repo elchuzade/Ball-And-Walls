@@ -213,6 +213,12 @@ public class Ball : MonoBehaviour
     {
         if (collision.gameObject.tag == "Border")
         {
+            if (PlayerPrefs.GetInt("Sounds") == 1)
+            {
+                // Execute the destruction sound
+                AudioSource destroySound = transform.Find("Center").GetComponent<AudioSource>();
+                destroySound.Play();
+            }
             // Hit the border, reset the ball
             ResetBall();
             // Stop moving the ball from its velocity
@@ -293,7 +299,7 @@ public class Ball : MonoBehaviour
             homeStatus.StopSound();
             // Find Lose effect Audio Source from ball's child component and play it
             // It is not placed on the ball itseld, coz it already has launch Audio Source
-            AudioSource audio = transform.Find("Center").GetComponent<AudioSource>();
+            AudioSource audio = GetComponent<AudioSource>();
             audio.Play();
         }
 

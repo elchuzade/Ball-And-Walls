@@ -371,7 +371,11 @@ public class HomeStatus : MonoBehaviour
     {
         // Set the ball launched status to be access by other scripts
         ballLaunched = true;
-        StartSound();
+
+        if (PlayerPrefs.GetInt("Sounds") == 1)
+        {
+            StartSound();
+        }
         // If this is the tutorial on level hide the tutorial stuff
         if (player.nextLevelIndex == 1 && tutorial)
         {
