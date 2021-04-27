@@ -103,7 +103,7 @@ public class Server : MonoBehaviour
             // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
 
-            if (webRequest.isNetworkError)
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.Log(webRequest.downloadHandler.text);
                 // Set the error received from creating a player
@@ -193,7 +193,7 @@ public class Server : MonoBehaviour
             // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
 
-            if (webRequest.isNetworkError)
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.Log(webRequest.downloadHandler.text);
                 // Set the error of video link received from the server
@@ -243,7 +243,7 @@ public class Server : MonoBehaviour
 
         yield return webRequest.SendWebRequest();
 
-        if (webRequest.isNetworkError)
+        if (webRequest.result == UnityWebRequest.Result.ConnectionError)
         {
             Debug.Log(webRequest.downloadHandler.text);
             // Set the error received from creating a player
@@ -277,7 +277,7 @@ public class Server : MonoBehaviour
             // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
 
-            if (webRequest.isNetworkError)
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError)
             {
                 // Set the error of leaderboard data received from the server
                 Debug.Log(webRequest.downloadHandler.text);
