@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
         unlockedChallenges = new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; // - 2 solved, -1 locked
         currentBall = "default";
         coins = 0;
-        keys = 1;
+        keys = 0;
         playerName = "";
         diamonds = 0;
         nextLevelIndex = 1;
