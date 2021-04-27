@@ -293,15 +293,6 @@ public class Ball : MonoBehaviour
         // Reset ball velocity to zero to stop it from moving
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
-        // If sounds are enabled set it to make a sound
-        if (PlayerPrefs.GetInt("Sounds") == 1)
-        {
-            // Find Lose effect Audio Source from ball's child component and play it
-            // It is not placed on the ball itseld, coz it already has launch Audio Source
-            AudioSource audio = GetComponent<AudioSource>();
-            audio.Play();
-        }
-
         // If haptics are enabled set it to vibrate
         if (PlayerPrefs.GetInt("Haptics") == 1)
         {
