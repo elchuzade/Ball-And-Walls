@@ -68,8 +68,6 @@ public class Server : MonoBehaviour
 
     // To send response to corresponding files
     [SerializeField] MainStatus mainStatus;
-    // This is to call the functions in load scene
-    [SerializeField] LoadStatus loadStatus;
     // This is to call the functions in leaderboard scene
     [SerializeField] LeaderboardStatus leaderboardStatus;
 
