@@ -64,7 +64,7 @@ public class MainStatus : MonoBehaviour
             
             if (!player.playerCreated)
             {
-                server.CreatePlayer();
+                server.CreatePlayer(player);
             } else
             {
                 server.SavePlayerData(player);
@@ -273,7 +273,7 @@ public class MainStatus : MonoBehaviour
         player.privacyPolicyAccepted = true;
         player.SavePlayer();
 
-        server.CreatePlayer();
+        server.CreatePlayer(player);
     }
 
     public void ShowPrivacyPolicy()

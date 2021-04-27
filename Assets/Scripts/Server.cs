@@ -84,36 +84,62 @@ public class Server : MonoBehaviour
     /* ---------- LOAD SCENE ---------- */
 
     // CREATE NEW PLAYER
-    public void CreatePlayer()
+    public void CreatePlayer(Player player)
     {
         string playerUrl = ballAndWallsApi + "/player";
-        StartCoroutine(CreatePlayerCoroutine(playerUrl));
+
+        PlayerData playerData = new PlayerData();
+        playerData.coins = player.coins;
+        playerData.diamonds = player.diamonds;
+        playerData.nextLevelIndex = player.nextLevelIndex;
+        playerData.currentBall = player.currentBall;
+        playerData.unlockedBalls = new List<string>();
+        playerData.unlockedChallenges = new List<int>();
+
+        player.unlockedBalls.ForEach(b =>
+        {
+            playerData.unlockedBalls.Add(b);
+        });
+
+        player.unlockedChallenges.ForEach(c =>
+        {
+            playerData.unlockedChallenges.Add(c);
+        });
+
+        string playerDataJson = JsonUtility.ToJson(playerData);
+
+        StartCoroutine(CreatePlayerCoroutine(playerUrl, playerDataJson));
     }
 
     // This one is called when the game is just launched
     // Either create a new player or move on
-    private IEnumerator CreatePlayerCoroutine(string url)
+    private IEnumerator CreatePlayerCoroutine(string url, string playerData)
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        var jsonBinary = System.Text.Encoding.UTF8.GetBytes(playerData);
+        DownloadHandlerBuffer downloadHandlerBuffer = new DownloadHandlerBuffer();
+        UploadHandlerRaw uploadHandlerRaw = new UploadHandlerRaw(jsonBinary);
+        uploadHandlerRaw.contentType = "application/json";
+
+        UnityWebRequest webRequest =
+            new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
+
+        string message = JsonUtility.ToJson(header);
+        string headerMessage = BuildHeaders(message);
+        webRequest.SetRequestHeader("token", headerMessage);
+
+        // Send request and wait for the desired response.
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.result == UnityWebRequest.Result.ConnectionError)
         {
-            string message = JsonUtility.ToJson(header);
-            string headerMessage = BuildHeaders(message);
-            webRequest.SetRequestHeader("token", headerMessage);
-
-            // Send request and wait for the desired response.
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.result == UnityWebRequest.Result.ConnectionError)
-            {
-                Debug.Log(webRequest.downloadHandler.text);
-                // Set the error received from creating a player
-            }
-            else
-            {
-                Debug.Log(webRequest.downloadHandler.text);
-                // Make the success actions received from creating a player
-                mainStatus.CreatePlayerSuccess();
-            }
+            Debug.Log(webRequest.downloadHandler.text);
+            // Set the error received from creating a player
+        }
+        else
+        {
+            Debug.Log(webRequest.downloadHandler.text);
+            // Make the success actions received from creating a player
+            mainStatus.CreatePlayerSuccess();
         }
     }
 
