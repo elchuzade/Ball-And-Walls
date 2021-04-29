@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine.UI;
 // Bring classes from Server
 using static Server;
+using System.Collections;
 
 public class LeaderboardStatus : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class LeaderboardStatus : MonoBehaviour
     
     GameObject leaderboardScrollContent;
 
-    GameObject leaderboardScrollbar;
+    Scrollbar leaderboardScrollbar;
 
     InputField nameInput;
 
@@ -79,7 +80,7 @@ public class LeaderboardStatus : MonoBehaviour
         // Invisible button behind change name window
         changeNameCloseButton = GameObject.Find("CloseButton");
         leaderboardScrollContent = GameObject.Find("LeaderboardScrollContent");
-        leaderboardScrollbar = GameObject.Find("LeaderboardScrollbar");
+        leaderboardScrollbar = GameObject.Find("LeaderboardScrollbar").GetComponent<Scrollbar>();
         goldName = GameObject.Find("GoldName");
         silverName = GameObject.Find("SilverName");
         bronzeName = GameObject.Find("BronzeName");
@@ -98,6 +99,9 @@ public class LeaderboardStatus : MonoBehaviour
 
         player = FindObjectOfType<Player>();
         player.LoadPlayer();
+        player.coins = 0;
+        player.diamonds = 0;
+        player.SavePlayer();
 
         // Hide point arrow until server has replied
         arrow.SetActive(false);
@@ -144,23 +148,11 @@ public class LeaderboardStatus : MonoBehaviour
         exitButton.GetComponent<Button>().onClick.AddListener(() => ClickExitButton());
     }
 
-    private void ScrollListToPlayer()
+    private IEnumerator ScrollListToPlayer()
     {
-        // Combine all the values from all three lists top, before after
-        int total = top.Count + before.Count + after.Count;
-        // Increase by one for your rank if it is outside of top 50
-        if (you.rank <= 47)
-        {
-            total = 50;
-        } else if (you.rank > 47 && you.rank < 54)
-        {
-            total = you.rank + 3;
-        } else if (you.rank >= 54)
-        {
-            total = 56;
-        }
+        yield return new WaitForSeconds(0.2f);
 
-        leaderboardScrollbar.GetComponent<Scrollbar>().value = 1 - ((you.rank - 3) / total);
+        leaderboardScrollbar.value = 0;
     }
 
     public void ChangeNameError()
@@ -353,7 +345,7 @@ public class LeaderboardStatus : MonoBehaviour
         CreateTrippleDotsEntry();
 
         // Add the scroll value after all the data is populated
-        ScrollListToPlayer();
+        StartCoroutine(ScrollListToPlayer());
     }
 
     private Sprite GetBallSprite(string ballName)
