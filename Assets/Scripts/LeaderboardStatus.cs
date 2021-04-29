@@ -56,10 +56,10 @@ public class LeaderboardStatus : MonoBehaviour
     // The object where the name typed into the field is held
     GameObject inputField;
 
-    private List<LeaderboardItem> before = new List<LeaderboardItem>();
-    private List<LeaderboardItem> after = new List<LeaderboardItem>();
-    private List<LeaderboardItem> top = new List<LeaderboardItem>();
-    private LeaderboardItem you = new LeaderboardItem();
+    private List<LeaderboardItem> before = new List<LeaderboardItem>(); // 3
+    private List<LeaderboardItem> after = new List<LeaderboardItem>(); // 3
+    private List<LeaderboardItem> top = new List<LeaderboardItem>(); // 50
+    private LeaderboardItem you = new LeaderboardItem(); // 1
 
     void Awake()
     {
@@ -148,29 +148,19 @@ public class LeaderboardStatus : MonoBehaviour
     {
         // Combine all the values from all three lists top, before after
         int total = top.Count + before.Count + after.Count;
-        // Increase by one for your rank if it is outside of top ten
-        if (you.rank != 0)
+        // Increase by one for your rank if it is outside of top 50
+        if (you.rank <= 47)
         {
-            total++;
-        }
-        // based on total find where to place the scroll
-        if (total > 10)
+            total = 50;
+        } else if (you.rank > 47 && you.rank < 54)
         {
-            // If total is greater than 10, it is safe to show the bottom 5 players to make sure you are also visible
-            leaderboardScrollbar.GetComponent<Scrollbar>().value = 0.001f;
-        }
-        else
+            total = you.rank + 3;
+        } else if (you.rank >= 54)
         {
-            // If you are in the top ten, then if you are in top 5, show first 5 players to make sure you are also visible
-            if (you.rank < 6)
-            {
-                leaderboardScrollbar.GetComponent<Scrollbar>().value = 0.999f;
-            } else
-            {
-                // Otherwise your rank is in the range of 5-10, so it is safe to show middle 5 players to make sure you are also visible
-                leaderboardScrollbar.GetComponent<Scrollbar>().value = 0.5f;
-            }
+            total = 56;
         }
+
+        leaderboardScrollbar.GetComponent<Scrollbar>().value = 1 - ((you.rank - 3) / total);
     }
 
     public void ChangeNameError()
@@ -197,7 +187,7 @@ public class LeaderboardStatus : MonoBehaviour
         after.Clear();
         if (topData != null)
         {
-            // Loop though top ten list provided by the server and add them to local list
+            // Loop though top 50 list provided by the server and add them to local list
             for (int i = 0; i < topData.Count; i++)
             {
                 top.Add(topData[i]);
@@ -242,7 +232,7 @@ public class LeaderboardStatus : MonoBehaviour
         BuildUpList();
     }
 
-    // Loop through top ten, 3 before and 3 after lists to find if give data exists not to repeat
+    // Loop through top 50, 3 before and 3 after lists to find if give data exists not to repeat
     private bool CheckIfExists(int rank)
     {
         if (CheckIfExistInTop(rank) ||
@@ -253,7 +243,7 @@ public class LeaderboardStatus : MonoBehaviour
         }
         return false;
     }
-    // Loop through the list of players ranked in top ten and see if iven data exists
+    // Loop through the list of players ranked in top 50 and see if iven data exists
     private bool CheckIfExistInTop(int rank)
     {
         for (int i = 0; i < top.Count; i++)
@@ -280,7 +270,7 @@ public class LeaderboardStatus : MonoBehaviour
 
     private void BuildUpList()
     {
-        // Loop through top ten players and instantiate an item object
+        // Loop through top 50 players and instantiate an item object
         top.ForEach(item =>
         {
             if (item.rank > 3)
@@ -290,7 +280,7 @@ public class LeaderboardStatus : MonoBehaviour
                 leaderboardItem.transform.SetParent(leaderboardScrollContent.transform);
                 leaderboardItem.transform.localScale = Vector3.one;
 
-                // Compare item from top ten with your rank incase you are in top ten
+                // Compare item from top 50 with your rank incase you are in top 50
                 if (item.rank == you.rank)
                 {
                     // Show frame around your entry
@@ -325,9 +315,9 @@ public class LeaderboardStatus : MonoBehaviour
             }
         });
 
-        // Add tripple dots after top ten only if your rank is > 14,
-        // since at 14 the the top ten and 3 before you become continuous, so no need for dots in between
-        if (you.rank > 14)
+        // Add tripple dots after top 50 only if your rank is > 54,
+        // since at 54 then the top 50 and 3 before you become continuous, so no need for dots in between
+        if (you.rank > 54)
         {
             CreateTrippleDotsEntry();
         }
@@ -342,10 +332,10 @@ public class LeaderboardStatus : MonoBehaviour
             SetItemEntry(leaderboardItem, item);
         });
 
-        // Create your entry item only if your rank is not in top ten
+        // Create your entry item only if your rank is not in top 50
         // 0 is assigned by default if there is no value
 
-        if (you.rank > 10)
+        if (you.rank > 50)
         {
             CreateYourEntry();
         }
