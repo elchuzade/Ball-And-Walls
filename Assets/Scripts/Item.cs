@@ -78,6 +78,11 @@ public class Item : MonoBehaviour
         }
     }
 
+    public string GetBallName()
+    {
+        return ballName;
+    }
+
     public void UnlockItem()
     {
         if (diamondTag > 0)

@@ -12,6 +12,7 @@ public class ShopStatus : MonoBehaviour
     [SerializeField] int adCoinsAmount;
     // To pass to ad cancel
     [SerializeField] Sprite coinIcon;
+    [SerializeField] Text powerUp;
 
     AdCancel adCancel;
 
@@ -44,7 +45,7 @@ public class ShopStatus : MonoBehaviour
             GameObject canvas = GameObject.Find("Canvas");
             canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
         }
-
+        
         player = FindObjectOfType<Player>();
         player.LoadPlayer();
 
@@ -123,6 +124,12 @@ public class ShopStatus : MonoBehaviour
         for (int i = 0; i < items.transform.childCount; i++)
         {
             items.transform.GetChild(i).GetComponent<Item>().CheckBallData();
+            // Display powerup value according to the selected ball
+            if (items.transform.GetChild(i).GetComponent<Item>().GetBallName() == player.currentBall)
+            {
+                powerUp.text = items.transform.GetChild(i).transform.Find("PowerUp").GetComponent<Text>().text;
+                //Debug.Log(items.transform.GetChild(i).transform.Find("PowerUp").GetComponent<Text>().text);
+            }
         }
     }
 
@@ -171,6 +178,7 @@ public class ShopStatus : MonoBehaviour
             {
                 items.transform.GetChild(i).GetComponent<Item>().CheckSelectFrame();
             }
+            SetBallItems();
             return true;
         }
 
