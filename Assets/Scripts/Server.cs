@@ -198,21 +198,25 @@ public class Server : MonoBehaviour
         //}
     }
 
-    public void GetVideoLink()
+    public void GetVideoLink(bool privacy)
     {
         string videoUrl = abboxAdsApi + "/api/v1/videos";
-        StartCoroutine(GetAdLinkCoroutine(videoUrl));
+        StartCoroutine(GetAdLinkCoroutine(videoUrl, privacy));
     }
 
     // This one is for TV in main scene
     // Get the latest video link, for now in general, in future personal based on the DeviceId
-    private IEnumerator GetAdLinkCoroutine(string url)
+    private IEnumerator GetAdLinkCoroutine(string url, bool privacy)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
             string message = JsonUtility.ToJson(header);
             string headerMessage = BuildHeaders(message);
-            webRequest.SetRequestHeader("token", headerMessage);
+
+            if (privacy)
+            {
+                webRequest.SetRequestHeader("token", headerMessage);
+            }
 
             // Send request and wait for the desired response.
             yield return webRequest.SendWebRequest();
