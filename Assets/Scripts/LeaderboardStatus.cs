@@ -99,9 +99,6 @@ public class LeaderboardStatus : MonoBehaviour
 
         player = FindObjectOfType<Player>();
         player.LoadPlayer();
-        player.coins = 0;
-        player.diamonds = 0;
-        player.SavePlayer();
 
         // Hide point arrow until server has replied
         arrow.SetActive(false);
