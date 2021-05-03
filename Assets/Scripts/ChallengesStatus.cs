@@ -116,20 +116,23 @@ public class ChallengesStatus : MonoBehaviour
 
     public void ClickGetLivesForDiamondButton()
     {
-        adCancel.gameObject.SetActive(false);
-        int index = selectedChallenge.GetComponent<ChallengeItem>().GetChallengeIndex();
+        if (player.diamonds > 0)
+        {
+            adCancel.gameObject.SetActive(false);
+            int index = selectedChallenge.GetComponent<ChallengeItem>().GetChallengeIndex();
 
-        player.diamonds--;
-        player.unlockedChallenges[index - 1] = 5;
-        player.SavePlayer();
+            player.diamonds--;
+            player.unlockedChallenges[index - 1] = 5;
+            player.SavePlayer();
 
-        scoreboard.SetDiamonds(player.diamonds);
+            scoreboard.SetDiamonds(player.diamonds);
 
-        playChallenge.SetActive(true);
-        diamondLives.SetActive(false);
-        videoLives.SetActive(false);
+            playChallenge.SetActive(true);
+            diamondLives.SetActive(false);
+            videoLives.SetActive(false);
 
-        selectedChallenge.GetComponent<ChallengeItem>().SetLives(5, currentBallSprite);
+            selectedChallenge.GetComponent<ChallengeItem>().SetLives(5, currentBallSprite);
+        }
     }
 
     public void ReceiveButtonClick()
