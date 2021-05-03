@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,8 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 4890085278179872738, guid: dd2789af61f47a44b81cdcce4e5032aa,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +119,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -535,6 +538,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 930ec1dc7a4f4de40953824f712a1c1c, type: 3}
+--- !u!1 &311953508 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3646344840265391027, guid: 930ec1dc7a4f4de40953824f712a1c1c,
+    type: 3}
+  m_PrefabInstance: {fileID: 311953507}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &331390562 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3646344840265391029, guid: 930ec1dc7a4f4de40953824f712a1c1c,
@@ -1025,6 +1034,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PortalIn2 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6833731386522447083, guid: 0fd451f53be1677488e0e243ffa6799a,
+        type: 3}
+      propertyPath: PortalOut
+      value: 
+      objectReference: {fileID: 311953508}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fd451f53be1677488e0e243ffa6799a, type: 3}
 --- !u!224 &623286627 stripped
