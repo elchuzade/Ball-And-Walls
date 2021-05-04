@@ -17,6 +17,15 @@ public class PlayerData
     public bool nameChanged = false;
     public bool privacyPolicyAccepted = false;
     public bool privacyPolicyDeclined = false;
+    public bool maxLevelReached = false;
+    // Clicks
+    public List<long> leaderboardClicks = new List<long>();
+    public List<long> shopClicks = new List<long>();
+    public List<long> challengesClicks = new List<long>();
+    public List<long> getThreeMoreKeysClicks = new List<long>();
+    public List<long> getTenMoreCoinsClicks = new List<long>();
+    public List<int> hintClicks = new List<int>();
+    public List<int> levelsAfterMaxReached = new List<int>();
 
     public PlayerData (Player player)
     {
@@ -33,5 +42,14 @@ public class PlayerData
         nameChanged = player.nameChanged;
         privacyPolicyAccepted = player.privacyPolicyAccepted;
         privacyPolicyDeclined = player.privacyPolicyDeclined;
+        maxLevelReached = player.maxLevelReached;
+        // Clicks
+        leaderboardClicks = player.leaderboardClicks;
+        shopClicks = player.shopClicks;
+        challengesClicks = player.challengesClicks;
+        getThreeMoreKeysClicks = player.getThreeMoreKeysClicks;
+        getTenMoreCoinsClicks = player.getTenMoreCoinsClicks;
+        hintClicks = player.hintClicks;
+        levelsAfterMaxReached = player.levelsAfterMaxReached;
     }
 }

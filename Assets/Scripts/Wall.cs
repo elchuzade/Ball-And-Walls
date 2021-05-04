@@ -3,6 +3,7 @@ using MoreMountains.NiceVibrations;
 
 public class Wall : MonoBehaviour
 {
+    Player player;
     // Radius to rotate ball over, inner radius of the wall minus ball radius
     float radius = 52f;
     // Approximately ball radius to do the subtraction
@@ -58,6 +59,8 @@ public class Wall : MonoBehaviour
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
+        player.LoadPlayer();
         // Correct Coordinates are saved before player can touch and move or rotate the wall
         correctPositionCoordinates = correctPosition.transform.position;
         correctPositionRotation = correctPosition.transform.rotation;
@@ -100,7 +103,7 @@ public class Wall : MonoBehaviour
         homeStatus.CheckPointerMove();
 
         // If the level is not the last level make it move or rotate, since last level has static walls for animation
-        if (homeStatus.GetNextLevel() != 151)
+        if (homeStatus.GetNextLevel() != 151 || player.maxLevelReached)
         {
             // If the hint is used and correct positions are exposed
             if (showCorrectPosition)
@@ -141,7 +144,7 @@ public class Wall : MonoBehaviour
         homeStatus.CheckPointerMove();
 
         // If the level is not the last level
-        if (homeStatus.GetNextLevel() != 151)
+        if (homeStatus.GetNextLevel() != 151 || player.maxLevelReached)
         {
             // If the ball is not launched yet and the hint button is not used yet
             if (!homeStatus.GetBallLaunched() && !showCorrectPosition)

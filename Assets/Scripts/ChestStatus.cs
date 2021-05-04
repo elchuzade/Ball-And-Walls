@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
@@ -177,7 +178,7 @@ public class ChestStatus : MonoBehaviour
         }
         // Get a random number in the range of locked keys and choose the best prize
 
-        int bestPrizeIndex = Random.Range(0, bestPrizes.Count);
+        int bestPrizeIndex = UnityEngine.Random.Range(0, bestPrizes.Count);
         bestPrizeName = bestPrizes[bestPrizeIndex];
 
         for (int i = 0; i < allBestPrizeBalls.Count; i++)
@@ -191,8 +192,6 @@ public class ChestStatus : MonoBehaviour
                 bestPrizeObject.transform.SetParent(bestPrize.transform);
             }
         }
-
-    
     }
 
     public Sprite GetBestPrizeSprite()
@@ -221,7 +220,7 @@ public class ChestStatus : MonoBehaviour
         }
         
         player.SavePlayer();
-        navigator.LoadNextLevel(player.nextLevelIndex);
+        navigator.LoadNextLevel(player.nextLevelIndex, player.maxLevelReached);
     }
 
     public int OpenChest()
@@ -295,6 +294,12 @@ public class ChestStatus : MonoBehaviour
 
     public void GetMoreKeys()
     {
+        // Save click
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        long date = now.ToUnixTimeMilliseconds();
+        player.getThreeMoreKeysClicks.Add(date);
+        player.SavePlayer();
+
         AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, CloseChest);
     }
 

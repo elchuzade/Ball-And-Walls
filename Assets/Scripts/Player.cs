@@ -16,6 +16,15 @@ public class Player : MonoBehaviour
     public bool playerCreated = false;
     public bool privacyPolicyAccepted = false;
     public bool privacyPolicyDeclined = false;
+    public bool maxLevelReached = false;
+    // Clicks
+    public List<long> leaderboardClicks = new List<long>(); // When did you click
+    public List<long> shopClicks = new List<long>(); // When did you click
+    public List<long> challengesClicks = new List<long>(); // When did you click
+    public List<long> getThreeMoreKeysClicks = new List<long>(); // When did you click
+    public List<long> getTenMoreCoinsClicks = new List<long>(); // When did you click
+    public List<int> hintClicks = new List<int>(); // Which level were you at
+    public List<int> levelsAfterMaxReached = new List<int>(); // Which levels have you played
 
     void Awake()
     {
@@ -46,13 +55,22 @@ public class Player : MonoBehaviour
         keys = 0;
         playerName = "";
         diamonds = 0;
-        nextLevelIndex = 10;
+        nextLevelIndex = 1;
         lives = 0;
         playerName = "";
         playerCreated = false;
         nameChanged = false;
         privacyPolicyAccepted = false;
         privacyPolicyDeclined = false;
+        maxLevelReached = false;
+        // Clicks
+        leaderboardClicks = new List<long>();
+        shopClicks = new List<long>();
+        challengesClicks = new List<long>();
+        getThreeMoreKeysClicks = new List<long>();
+        getTenMoreCoinsClicks = new List<long>();
+        hintClicks = new List<int>();
+        levelsAfterMaxReached = new List<int>();
 
         SaveSystem.SavePlayer(this);
     }
@@ -79,5 +97,14 @@ public class Player : MonoBehaviour
         nextLevelIndex = data.nextLevelIndex;
         privacyPolicyAccepted = data.privacyPolicyAccepted;
         privacyPolicyDeclined = data.privacyPolicyDeclined;
+        maxLevelReached = data.maxLevelReached;
+        // Clicks
+        leaderboardClicks = data.leaderboardClicks;
+        shopClicks = data.shopClicks;
+        challengesClicks = data.challengesClicks;
+        getThreeMoreKeysClicks = data.getThreeMoreKeysClicks;
+        getTenMoreCoinsClicks = data.getTenMoreCoinsClicks;
+        hintClicks = data.hintClicks;
+        levelsAfterMaxReached = data.levelsAfterMaxReached;
     }
 }

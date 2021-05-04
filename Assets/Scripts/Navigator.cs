@@ -23,9 +23,17 @@ public class Navigator : MonoBehaviour
         SceneManager.LoadScene("ShopScene");
     }
 
-    public void LoadNextLevel(int nextLevelIndex)
+    public void LoadNextLevel(int nextLevelIndex, bool maxLevelReached)
     {
-        SceneManager.LoadScene("Level-" + nextLevelIndex);
+        if (maxLevelReached)
+        {
+            int level = Random.Range(5, 150);
+            SceneManager.LoadScene("Level-" + level);
+        }
+        else
+        {
+            SceneManager.LoadScene("Level-" + nextLevelIndex);
+        }
     }
 
     public void LoadChallengeLevel(int challengeLevelIndex)

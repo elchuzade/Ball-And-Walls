@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class HomeStatus : MonoBehaviour
@@ -15,6 +16,7 @@ public class HomeStatus : MonoBehaviour
     // All balls prefabs, to show the one that is selected by the player
     [SerializeField] GameObject[] balls;
 
+
     // Tutorial stuff
     [SerializeField] GameObject FocusPointer;
     [SerializeField] GameObject FocusPointerAfterHintHorizontal;
@@ -28,6 +30,7 @@ public class HomeStatus : MonoBehaviour
 
     // Index of a challenge level, if 0 it means it is a normal level
     [SerializeField] int challengeLevel;
+    [SerializeField] int normalLevel;
 
     [SerializeField] bool tutorial;
     // To pass to ad cancel for normal level
@@ -174,9 +177,18 @@ public class HomeStatus : MonoBehaviour
             passPhrase.GetComponent<Button>().onClick.AddListener(() => navigator.LoadMainScene());
         } else
         {
-            levelIndex.GetComponent<Text>().text = player.nextLevelIndex.ToString();
+            if (player.maxLevelReached)
+            {
+                levelIndex.GetComponent<Text>().text = "Max";
+                // Save click
+                player.levelsAfterMaxReached.Add(normalLevel);
+                player.SavePlayer();
+            } else
+            {
+                levelIndex.GetComponent<Text>().text = player.nextLevelIndex.ToString();
+            }
             // Hide shop and hint in tutorial levels
-            if (player.nextLevelIndex <= 3 || player.nextLevelIndex == 151)
+            if (player.nextLevelIndex <= 3 || (player.nextLevelIndex == 151 && !player.maxLevelReached))
             {
                 hintButton.SetActive(false);
             }
@@ -190,6 +202,13 @@ public class HomeStatus : MonoBehaviour
             adCancel.InitializeAdCancel(" hint", hintIcon);
         }
         adCancel.gameObject.SetActive(false);
+    }
+
+    public void ClickPlayRandomLevels()
+    {
+        player.maxLevelReached = true;
+        player.SavePlayer();
+        navigator.LoadNextLevel(player.nextLevelIndex, player.maxLevelReached);
     }
 
     private void ChangeCameraSettings() {
@@ -303,6 +322,10 @@ public class HomeStatus : MonoBehaviour
         }
         else
         {
+            // Save click
+            player.hintClicks.Add(normalLevel);
+            player.SavePlayer();
+
             // Run the ad for hint
             AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
         }

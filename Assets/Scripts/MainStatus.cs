@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using static Server;
 
@@ -57,6 +58,8 @@ public class MainStatus : MonoBehaviour
         //player.ResetPlayer();
         player.LoadPlayer();
 
+        SetNewFields();
+
         if (player.privacyPolicyAccepted)
         {
             privacyWindow.SetActive(false);
@@ -108,6 +111,52 @@ public class MainStatus : MonoBehaviour
         }
     }
 
+    void SetNewFields()
+    {
+        bool newFieldsExist = true;
+
+        // For those who have old version of playerData add these fields
+        if (player.leaderboardClicks == null)
+        {
+            newFieldsExist = false;
+            player.leaderboardClicks = new List<long>();
+        }
+        if (player.shopClicks == null)
+        {
+            newFieldsExist = false;
+            player.shopClicks = new List<long>();
+        }
+        if (player.challengesClicks == null)
+        {
+            newFieldsExist = false;
+            player.challengesClicks = new List<long>();
+        }
+        if (player.getThreeMoreKeysClicks == null)
+        {
+            newFieldsExist = false;
+            player.getThreeMoreKeysClicks = new List<long>();
+        }
+        if (player.getTenMoreCoinsClicks == null)
+        {
+            newFieldsExist = false;
+            player.getTenMoreCoinsClicks = new List<long>();
+        }
+        if (player.hintClicks == null)
+        {
+            newFieldsExist = false;
+            player.hintClicks = new List<int>();
+        }
+        if (player.levelsAfterMaxReached == null)
+        {
+            newFieldsExist = false;
+            player.levelsAfterMaxReached = new List<int>();
+        }
+        if (!newFieldsExist)
+        {
+            player.SavePlayer();
+        }
+    }
+
     // Turn on the light and rotate the switch
     private void SwitchOnLightOn()
     {
@@ -134,8 +183,18 @@ public class MainStatus : MonoBehaviour
     {
         SwitchOnLightOn();
 
+        tv.SetAdId(response.id);
         tv.SetAdLink(response.video);
-        tv.SetAdButton(response.website);
+        string website = "";
+
+#if UNITY_ANDROID
+        website = response.playMarket;
+#elif UNITY_IOS
+        website = response.appStore;
+#else
+        website = response.website
+#endif
+        tv.SetAdButton(website);
 
         tv.transform.Find("ScreenAnimation").gameObject.SetActive(false);
     }
@@ -205,7 +264,7 @@ public class MainStatus : MonoBehaviour
 
     public void ClickPlayButton()
     {
-        navigator.LoadNextLevel(player.nextLevelIndex);
+        navigator.LoadNextLevel(player.nextLevelIndex, player.maxLevelReached);
     }
 
     public void ClickShopButton()

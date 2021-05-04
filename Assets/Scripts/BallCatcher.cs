@@ -456,7 +456,9 @@ public class BallCatcher : MonoBehaviour
         } else
         {
             // If player has passed every 10'th level, unlock him a challenge
-            if (homeStatus.GetChallengeLevel() == 0 && player.nextLevelIndex % 10 == 0)
+            if (homeStatus.GetChallengeLevel() == 0 &&
+                player.nextLevelIndex % 10 == 0 &&
+                !player.maxLevelReached)
             {
                 int challengeIndex = player.nextLevelIndex / 10;
                 // Since array starts with index 0 for screenshots
@@ -475,9 +477,12 @@ public class BallCatcher : MonoBehaviour
             } else
             {
                 // Update the next level for the player
-                player.nextLevelIndex++;
-                player.SavePlayer();
+                if (!player.maxLevelReached)
+                {
+                    player.nextLevelIndex++;
+                }
 
+                player.SavePlayer();
                 LoadNextLevel();
             }
         }
@@ -498,7 +503,7 @@ public class BallCatcher : MonoBehaviour
             navigator.LoadChestRoom();
         } else
         {
-            navigator.LoadNextLevel(player.nextLevelIndex);
+            navigator.LoadNextLevel(player.nextLevelIndex, player.maxLevelReached);
         }
     }
 

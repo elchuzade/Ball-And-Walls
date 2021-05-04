@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
@@ -114,6 +115,12 @@ public class LeaderboardStatus : MonoBehaviour
         SetButtonFunctions();
 
         server.GetLeaderboard();
+
+        // Save click
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        long date = now.ToUnixTimeMilliseconds();
+        player.leaderboardClicks.Add(date);
+        player.SavePlayer();
     }
 
     private void SwapSaveButton()

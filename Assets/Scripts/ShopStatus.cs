@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ShopStatus : MonoBehaviour
@@ -67,6 +68,12 @@ public class ShopStatus : MonoBehaviour
         adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
         SetBallItems();
         adCancel.gameObject.SetActive(false);
+
+        // Save click
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        long date = now.ToUnixTimeMilliseconds();
+        player.shopClicks.Add(date);
+        player.SavePlayer();
     }
 
     private void SwitchDots()
@@ -231,11 +238,17 @@ public class ShopStatus : MonoBehaviour
 
     public void ClickPlayButton()
     {
-        navigator.LoadNextLevel(player.nextLevelIndex);
+        navigator.LoadNextLevel(player.nextLevelIndex, player.maxLevelReached);
     }
 
     public void ClickGetCoins()
     {
+        // Save click
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        long date = now.ToUnixTimeMilliseconds();
+        player.getTenMoreCoinsClicks.Add(date);
+        player.SavePlayer();
+
         AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 

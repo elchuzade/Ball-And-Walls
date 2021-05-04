@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ChallengesStatus : MonoBehaviour
@@ -74,6 +75,12 @@ public class ChallengesStatus : MonoBehaviour
         allChallengesScrollbar.GetComponent<Scrollbar>().value = 0.001f;
 
         PopulateChallenges();
+
+        // Save click
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        long date = now.ToUnixTimeMilliseconds();
+        player.challengesClicks.Add(date);
+        player.SavePlayer();
     }
 
     public void SelectChallenge(GameObject challenge)

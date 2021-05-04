@@ -34,9 +34,12 @@ public class Server : MonoBehaviour
     // Video Link
     public class VideoJson
     {
+        public string id; // link id to measure clicks
         public string video; // link to video
         public string name; // product title
         public string website; // link to follow on click
+        public string playMarket; // link to follow on click
+        public string appStore; // link to follow on click
     }
 
     public class PlayerData
@@ -47,11 +50,20 @@ public class Server : MonoBehaviour
         public string currentBall;
         public List<string> unlockedBalls;
         public List<int> unlockedChallenges;
+        public bool maxLevelReached;
+        // Clicks
+        public List<long> leaderboardClicks;
+        public List<long> shopClicks;
+        public List<long> challengesClicks;
+        public List<long> getThreeMoreKeysClicks;
+        public List<long> getTenMoreCoinsClicks;
+        public List<int> hintClicks;
+        public List<int> levelsAfterMaxReached;
     }
 
     // LOCAL TESTING
     //string abboxAdsApi = "http://localhost:5002";
-    //string ballAndWallsApi = "http://localhost:5001/ballAndWalls";
+    string ballAndWallsApi = "http://localhost:5001/ballAndWalls";
 
     // STAGING
     //string abboxAdsApi = "https://staging.ads.abbox.com";
@@ -59,7 +71,7 @@ public class Server : MonoBehaviour
 
     // PRODUCTION
     string abboxAdsApi = "https://ads.abbox.com";
-    string ballAndWallsApi = "https://api.abboxgames.com/ballAndWalls";
+    //string ballAndWallsApi = "https://api.abboxgames.com/ballAndWalls";
 
     List<LeaderboardItem> top = new List<LeaderboardItem>();
     List<LeaderboardItem> before = new List<LeaderboardItem>();
@@ -93,6 +105,7 @@ public class Server : MonoBehaviour
         playerData.currentBall = player.currentBall;
         playerData.unlockedBalls = new List<string>();
         playerData.unlockedChallenges = new List<int>();
+        playerData.maxLevelReached = player.maxLevelReached;
 
         player.unlockedBalls.ForEach(b =>
         {
@@ -155,16 +168,27 @@ public class Server : MonoBehaviour
         playerData.currentBall = player.currentBall;
         playerData.unlockedBalls = new List<string>();
         playerData.unlockedChallenges = new List<int>();
+        playerData.maxLevelReached = player.maxLevelReached;
 
-        player.unlockedBalls.ForEach(b =>
-        {
-            playerData.unlockedBalls.Add(b);
-        });
+        player.unlockedBalls.ForEach(b => { playerData.unlockedBalls.Add(b); });
+        player.unlockedChallenges.ForEach(c => { playerData.unlockedChallenges.Add(c); });
 
-        player.unlockedChallenges.ForEach(c =>
-        {
-            playerData.unlockedChallenges.Add(c);
-        });
+        // Clicks
+        playerData.leaderboardClicks = new List<long>();
+        playerData.shopClicks = new List<long>();
+        playerData.challengesClicks = new List<long>();
+        playerData.getThreeMoreKeysClicks = new List<long>();
+        playerData.getTenMoreCoinsClicks = new List<long>();
+        playerData.hintClicks = new List<int>();
+        playerData.levelsAfterMaxReached = new List<int>();
+
+        player.leaderboardClicks.ForEach(c => { playerData.leaderboardClicks.Add(c); });
+        player.shopClicks.ForEach(c => { playerData.shopClicks.Add(c); });
+        player.challengesClicks.ForEach(c => { playerData.challengesClicks.Add(c); });
+        player.getThreeMoreKeysClicks.ForEach(c => { playerData.getThreeMoreKeysClicks.Add(c); });
+        player.getTenMoreCoinsClicks.ForEach(c => { playerData.getTenMoreCoinsClicks.Add(c); });
+        player.hintClicks.ForEach(c => { playerData.hintClicks.Add(c); });
+        player.levelsAfterMaxReached.ForEach(c => { playerData.levelsAfterMaxReached.Add(c); });
 
         string playerDataJson = JsonUtility.ToJson(playerData);
 
@@ -198,6 +222,30 @@ public class Server : MonoBehaviour
         //}
     }
 
+    public void SendVideoClick(bool privacy, string videoId, string link)
+    {
+        string videoUrl = abboxAdsApi + "/api/v1/clicks/" + videoId;
+        StartCoroutine(SendClickCoroutine(videoUrl, privacy, link));
+    }
+
+    private IEnumerator SendClickCoroutine(string url, bool privacy, string link)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            string message = JsonUtility.ToJson(header);
+            string headerMessage = BuildHeaders(message);
+
+            if (privacy)
+            {
+                webRequest.SetRequestHeader("token", headerMessage);
+            }
+            webRequest.SetRequestHeader("link", link);
+
+            // Send request and wait for the desired response.
+            yield return webRequest.SendWebRequest();
+        }
+    }
+
     public void GetVideoLink(bool privacy)
     {
         string videoUrl = abboxAdsApi + "/api/v1/videos";
@@ -223,16 +271,15 @@ public class Server : MonoBehaviour
 
             if (webRequest.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.Log(webRequest.downloadHandler.text);
+                //Debug.Log(webRequest.downloadHandler.text);
                 // Set the error of video link received from the server
                 mainStatus.SetVideoLinkError(webRequest.error);
             }
             else
             {
-                Debug.Log(webRequest.downloadHandler.text);
+                //Debug.Log(webRequest.downloadHandler.text);
                 // Parse the response from server to retrieve all data fields
                 VideoJson videoInfo = JsonUtility.FromJson<VideoJson>(webRequest.downloadHandler.text);
-
                 // Set the video link received from the server
                 mainStatus.SetVideoLinkSuccess(videoInfo);
             }
@@ -284,7 +331,6 @@ public class Server : MonoBehaviour
             leaderboardStatus.ChangeNameSuccess();
         }
     }
-
 
     // GET LEADERBOARD LIST
     public void GetLeaderboard()
