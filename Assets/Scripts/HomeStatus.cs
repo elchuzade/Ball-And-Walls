@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class HomeStatus : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class HomeStatus : MonoBehaviour
 
     // Index of a challenge level, if 0 it means it is a normal level
     [SerializeField] int challengeLevel;
-    [SerializeField] int normalLevel;
+    int normalLevel;
 
     [SerializeField] bool tutorial;
     // To pass to ad cancel for normal level
@@ -180,6 +181,7 @@ public class HomeStatus : MonoBehaviour
             if (player.maxLevelReached)
             {
                 levelIndex.GetComponent<Text>().text = "Max";
+                normalLevel = Int32.Parse(SceneManager.GetActiveScene().name.Remove(0, 6));
                 // Save click
                 player.levelsAfterMaxReached.Add(normalLevel);
                 player.SavePlayer();
