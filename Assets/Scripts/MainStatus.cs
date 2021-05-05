@@ -63,6 +63,10 @@ public class MainStatus : MonoBehaviour
 
         SetNewFields();
 
+        // Admob
+        adMobManager.ShowAdmobBanner();
+        //AdManager.ShowBanner();
+
         if (player.privacyPolicyAccepted)
         {
             privacyWindow.SetActive(false);
@@ -88,9 +92,6 @@ public class MainStatus : MonoBehaviour
             // First time entering the game
             privacyWindow.SetActive(false);
         }
-
-        //AdManager.ShowBanner();
-        adMobManager.ShowAdmobBanner();
 
         server.GetVideoLink(player.privacyPolicyAccepted);
 

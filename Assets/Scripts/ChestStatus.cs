@@ -108,6 +108,8 @@ public class ChestStatus : MonoBehaviour
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
         DrawKeys();
+
+        adMobManager.ShowAdmobBanner();
         //AdManager.ShowBanner();
 
         // Choose which of locked balls will be the best prize
@@ -302,7 +304,7 @@ public class ChestStatus : MonoBehaviour
         player.getThreeMoreKeysClicks.Add(date);
         player.SavePlayer();
 
-        adMobManager.ShowAdmobRewardedAd();
+        adMobManager.ShowAdmobRewardedAd(GetMoreKeysSuccess, GetKeysCancel, CloseChest);
         //AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, CloseChest);
     }
 
@@ -335,7 +337,7 @@ public class ChestStatus : MonoBehaviour
     // Button that shows watch the ad till the end and receive the gift in the warning of ad cancel
     public void ReceiveButtonClick()
     {
-        adMobManager.ShowAdmobRewardedAd();
+        adMobManager.ShowAdmobRewardedAd(GetMoreKeysSuccess, GetKeysCancel, GetKeysFail);
         //AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, GetKeysFail);
     }
 

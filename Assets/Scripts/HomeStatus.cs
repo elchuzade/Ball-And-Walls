@@ -18,7 +18,6 @@ public class HomeStatus : MonoBehaviour
     // All balls prefabs, to show the one that is selected by the player
     [SerializeField] GameObject[] balls;
 
-
     // Tutorial stuff
     [SerializeField] GameObject FocusPointer;
     [SerializeField] GameObject FocusPointerAfterHintHorizontal;
@@ -145,6 +144,7 @@ public class HomeStatus : MonoBehaviour
         forwardButton.SetActive(false);
 
         ChangeCameraSettings();
+        adMobManager.ShowAdmobBanner();
 
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
@@ -270,7 +270,7 @@ public class HomeStatus : MonoBehaviour
 
     public void ExtraLifeReceiveButtonClick()
     {
-        adMobManager.ShowAdmobRewardedAd();
+        adMobManager.ShowAdmobRewardedAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
         //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
 
@@ -283,7 +283,7 @@ public class HomeStatus : MonoBehaviour
     {
         extraLife.SetActive(false);
         ballStuff.SetActive(true);
-        adMobManager.ShowAdmobRewardedAd();
+        adMobManager.ShowAdmobRewardedAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
         //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
 
@@ -305,7 +305,7 @@ public class HomeStatus : MonoBehaviour
 
     public void UseHintReceiveButtonClick()
     {
-        adMobManager.ShowAdmobRewardedAd();
+        adMobManager.ShowAdmobRewardedAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
         //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
     }
 
@@ -333,7 +333,7 @@ public class HomeStatus : MonoBehaviour
             player.hintClicks.Add(normalLevel);
             player.SavePlayer();
 
-            adMobManager.ShowAdmobRewardedAd();
+            adMobManager.ShowAdmobRewardedAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
             // Run the ad for hint
             //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
         }
@@ -422,6 +422,11 @@ public class HomeStatus : MonoBehaviour
         homeButton.SetActive(false);
         // Hide arrow that shows where the ball will move when launched
         ballDirectionArrow.SetActive(false);
+
+        forwardButton.transform.position = ball.gameObject.transform.position;
+        forwardButton.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
+        forwardButton.transform.Find("ForwardButton").localScale = new Vector3(0.6f, 0.6f, 0.6f);
+        forwardButton.transform.Find("ForwardButton").GetComponent<Image>().color = new Color32(255, 255, 255, 100);
     }
 
     public void CatchBall()
@@ -507,7 +512,7 @@ public class HomeStatus : MonoBehaviour
         ball.ForwardBall();
         // Switch disable button
         forwardButton.GetComponent<Button>().interactable = false;
-        forwardButton.transform.Find("Disabled").gameObject.SetActive(true);
+        forwardButton.transform.Find("ForwardButton").Find("Disabled").gameObject.SetActive(true);
     }
 
     private void SetLives()
@@ -568,9 +573,7 @@ public class HomeStatus : MonoBehaviour
         forwardButton.SetActive(false);
 
         forwardButton.GetComponent<Button>().interactable = true;
-        forwardButton.transform.Find("Disabled").gameObject.SetActive(false);
-
-        forwardButton.GetComponent<Button>().interactable = true;
+        forwardButton.transform.Find("ForwardButton").Find("Disabled").gameObject.SetActive(false);
     }
 
     public void ClickHomeButton()

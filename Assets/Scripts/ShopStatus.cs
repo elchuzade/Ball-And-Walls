@@ -59,6 +59,7 @@ public class ShopStatus : MonoBehaviour
         // Set currently selected ball with their frames and backgrounds
         currentBallName = player.currentBall;
 
+        adMobManager.ShowAdmobBanner();
         //AdManager.ShowBanner();
 
         // Set current player coins to the scoreboard
@@ -252,7 +253,7 @@ public class ShopStatus : MonoBehaviour
         player.getTenMoreCoinsClicks.Add(date);
         player.SavePlayer();
 
-        adMobManager.ShowAdmobRewardedAd();
+        adMobManager.ShowAdmobRewardedAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
         //AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 

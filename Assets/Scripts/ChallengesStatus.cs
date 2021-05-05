@@ -58,7 +58,8 @@ public class ChallengesStatus : MonoBehaviour
         videoLives.SetActive(false);
         playChallenge.SetActive(false);
 
-        //AdManager.ShowBanner();
+        adMobManager.ShowAdmobBanner();
+        // AdManager.ShowBanner();
 
         player = FindObjectOfType<Player>();
         //player.ResetPlayer();
@@ -120,7 +121,7 @@ public class ChallengesStatus : MonoBehaviour
 
     public void ClickGetLifeForVideoButton()
     {
-        adMobManager.ShowAdmobRewardedAd();
+        adMobManager.ShowAdmobRewardedAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
         //AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
     }
 
@@ -147,7 +148,8 @@ public class ChallengesStatus : MonoBehaviour
 
     public void ReceiveButtonClick()
     {
-        AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
+        adMobManager.ShowAdmobRewardedAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
+        //AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
     }
 
     public void CancelButtonClick()
