@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class ShopStatus : MonoBehaviour
 {
+    AdMobManager adMobManager;
     Player player;
     Scoreboard scoreboard;
     // Current ball to be selected based on player data
@@ -32,6 +33,8 @@ public class ShopStatus : MonoBehaviour
     [SerializeField] Scrollbar scrollbar;
     void Awake()
     {
+        adMobManager = FindObjectOfType<AdMobManager>();
+
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
         adCancel = FindObjectOfType<AdCancel>();
@@ -249,7 +252,8 @@ public class ShopStatus : MonoBehaviour
         player.getTenMoreCoinsClicks.Add(date);
         player.SavePlayer();
 
-        AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
+        adMobManager.ShowAdmobRewardedAd();
+        //AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
 
     public void ClickExitButton()

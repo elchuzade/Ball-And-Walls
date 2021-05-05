@@ -21,6 +21,7 @@ public class ChestStatus : MonoBehaviour
         "gear", "yinyang", "pokemon", "pool", "pumpkin", "saturn",
         "smile", "snowball", "tennis", "volleyball", "watermelon" };
 
+    AdMobManager adMobManager;
     Player player;
     [SerializeField] GameObject key1;
     [SerializeField] GameObject key2;
@@ -70,6 +71,7 @@ public class ChestStatus : MonoBehaviour
 
     void Awake()
     {
+        adMobManager = FindObjectOfType<AdMobManager>();
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
         adCancel = FindObjectOfType<AdCancel>();
@@ -300,7 +302,8 @@ public class ChestStatus : MonoBehaviour
         player.getThreeMoreKeysClicks.Add(date);
         player.SavePlayer();
 
-        AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, CloseChest);
+        adMobManager.ShowAdmobRewardedAd();
+        //AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, CloseChest);
     }
 
     private void GetMoreKeysSuccess()
@@ -332,7 +335,8 @@ public class ChestStatus : MonoBehaviour
     // Button that shows watch the ad till the end and receive the gift in the warning of ad cancel
     public void ReceiveButtonClick()
     {
-        AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, GetKeysFail);
+        adMobManager.ShowAdmobRewardedAd();
+        //AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, GetKeysFail);
     }
 
     public void CancelButtonClick()
