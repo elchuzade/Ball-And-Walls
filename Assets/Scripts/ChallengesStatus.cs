@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class ChallengesStatus : MonoBehaviour
 {
     AdMobManager adMobManager;
+
     Navigator navigator;
     Player player;
     Scoreboard scoreboard;
@@ -29,6 +30,7 @@ public class ChallengesStatus : MonoBehaviour
     void Awake()
     {
         adMobManager = FindObjectOfType<AdMobManager>();
+
         navigator = FindObjectOfType<Navigator>();
         scoreboard = FindObjectOfType<Scoreboard>();
         adCancel = FindObjectOfType<AdCancel>();
@@ -58,7 +60,7 @@ public class ChallengesStatus : MonoBehaviour
         videoLives.SetActive(false);
         playChallenge.SetActive(false);
 
-        adMobManager.ShowAdmobBanner();
+        AdMobManager.ShowAdmobBanner();
         // AdManager.ShowBanner();
 
         player = FindObjectOfType<Player>();

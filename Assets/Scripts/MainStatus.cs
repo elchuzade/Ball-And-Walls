@@ -7,6 +7,7 @@ using static Server;
 public class MainStatus : MonoBehaviour
 {
     AdMobManager adMobManager;
+
     [SerializeField] GameObject privacyWindow;
     [SerializeField] GameObject quitWindow;
     GameObject hapticsButton;
@@ -64,7 +65,7 @@ public class MainStatus : MonoBehaviour
         SetNewFields();
 
         // Admob
-        adMobManager.ShowAdmobBanner();
+        AdMobManager.ShowAdmobBanner();
         //AdManager.ShowBanner();
 
         if (player.privacyPolicyAccepted)

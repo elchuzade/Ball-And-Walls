@@ -1,6 +1,7 @@
 using UnityEngine;
 using GoogleMobileAds.Api;
 using System;
+using System.Collections;
 
 public class AdMobManager : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class AdMobManager : MonoBehaviour
     // ca-app-pub-5721177105818446/4852971237
     string rewardedId = "ca-app-pub-3940256099942544/5224354917";
     // ca-app-pub-5721177105818446/4696240329
-    //string gameId = "ca-app-pub-5721177105818446~9247511819";
+    string gameId = "ca-app-pub-5721177105818446~9247511819";
 
 #elif UNITY_IPHONE
     string bannerId = "ca-app-pub-3940256099942544/2934735716";
@@ -28,7 +29,7 @@ public class AdMobManager : MonoBehaviour
     // ca-app-pub-5721177105818446/6529849132
     string rewardedId = "ca-app-pub-3940256099942544/1712485313";
     // ca-app-pub-5721177105818446/8772869092
-    //string gameId = "ca-app-pub-5721177105818446~8001060516";
+    string gameId = "ca-app-pub-5721177105818446~8001060516";
 #else
     string adUnitId = "unexpected_platform";
     string interstitialId = "unexpected_platform";
@@ -39,27 +40,23 @@ public class AdMobManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance != null && instance != this)
+        // Singleton
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+            // Initialize the Google Mobile Ads SDK.
+        }
+        else
         {
             Destroy(gameObject);
-            return;
         }
-        instance = this;
-        DontDestroyOnLoad(this);
-        // Initialize the Google Mobile Ads SDK.
-        MobileAds.Initialize(initStatus => { });
-    }
-
-    void Start()
-    {
-        this.RequestRewarded();
-        this.RequestInterstitial();
     }
 
     #region Banner
-    public void ShowAdmobBanner()
+    public static void ShowAdmobBanner()
     {
-        this.RequestBanner();
+        instance.RequestBanner();
     }
 
     public void HideAdmobBanner()
@@ -72,7 +69,6 @@ public class AdMobManager : MonoBehaviour
         // Create a 320x50 banner at the top of the screen.
         this.bannerAd = new BannerView(bannerId, AdSize.Banner, AdPosition.Bottom);
 
-        this.bannerAd.OnAdLoaded += this.HandleOnAdLoaded;
         this.bannerAd.OnAdFailedToLoad += this.HandleOnBannerAdFailedToLoad;
 
         AdRequest request = new AdRequest.Builder().Build();
@@ -92,31 +88,23 @@ public class AdMobManager : MonoBehaviour
     #endregion
 
     #region Interstitial
-    public void ShowAdmobStandardAd(Action success, Action skipped, Action failed)
+    public static void ShowAdmobStandardAd(Action success, Action skipped, Action failed)
     {
-        adFailed = failed;
-        adSkipped = skipped;
-        adSuccess = success;
+        instance.adFailed = failed;
+        instance.adSkipped = skipped;
+        instance.adSuccess = success;
 
-        this.RequestInterstitial();
+        instance.RequestInterstitial();
 
-        if (this.interstitialAd.IsLoaded())
+        if (instance.interstitialAd.IsLoaded())
         {
-            this.interstitialAd.Show();
+            instance.interstitialAd.Show();
         }
     }
 
     private void RequestInterstitial()
     {
         this.interstitialAd = new InterstitialAd(interstitialId);
-
-        this.interstitialAd.OnAdLoaded += this.HandleOnAdLoaded;
-
-        this.interstitialAd.OnAdFailedToLoad += this.HandleOnAdFailedToLoad;
-
-        this.interstitialAd.OnAdClosed += this.HandleOnAdClosed;
-
-        this.interstitialAd.OnAdLeavingApplication += this.HandleOnAdLeavingApplication;
 
         AdRequest request = new AdRequest.Builder().Build();
 
@@ -125,100 +113,82 @@ public class AdMobManager : MonoBehaviour
     #endregion
 
     #region Rewarded
+    #endregion
+
     public void ShowAdmobRewardedAd(Action success, Action skipped, Action failed)
     {
-        adFailed = failed;
-        adSkipped = skipped;
-        adSuccess = success;
+        this.rewardedAd = new RewardedAd(rewardedId);
+        //// Called when an ad request has successfully loaded.
+        //this.rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
+        //// Called when an ad request failed to load.
+        //this.rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
+        //// Called when an ad is shown.
+        //this.rewardedAd.OnAdOpening += HandleRewardedAdOpening;
+        //// Called when an ad request failed to show.
+        //this.rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
+        //// Called when the user should be rewarded for interacting with the ad.
+        //this.rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
+        //// Called when the ad is closed.
+        //this.rewardedAd.OnAdClosed += HandleRewardedAdClosed;
 
-        
+        // Create an empty ad request.
+        AdRequest request = new AdRequest.Builder().Build();
+        // Load the rewarded ad with the request.
+        this.rewardedAd.LoadAd(request);
 
-        if (this.rewardedAd.IsLoaded())
-        {
-            this.rewardedAd.Show();
-        }
+        StartCoroutine(TryShowingRewardedAd());
     }
 
-    private void RequestRewarded()
+    IEnumerator TryShowingRewardedAd()
     {
-        rewardedAd = new RewardedAd(rewardedId);
+        while(!this.rewardedAd.IsLoaded())
+        {
+            yield return new WaitForSeconds(0.25f);
+        }
+        
+        this.rewardedAd.Show();
+    }
 
-        AdRequest request = new AdRequest.Builder().Build();
-
-        rewardedAd.LoadAd(request);
-
-        rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
-        rewardedAd.OnAdClosed += HandleRewardedAdClosed;
-        rewardedAd.OnAdOpening += HandleRewardedAdOpening;
-        rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToShow;
-        rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
+    void Start()
+    {
+        MobileAds.Initialize(initStatus => { });
     }
 
     public void HandleRewardedAdLoaded(object sender, EventArgs args)
     {
-        Debug.Log("HandleRewardedAdLoaded event received");
+        MonoBehaviour.print("HandleRewardedAdLoaded event received");
     }
 
     public void HandleRewardedAdFailedToLoad(object sender, AdErrorEventArgs args)
     {
-        Debug.Log(
+        MonoBehaviour.print(
             "HandleRewardedAdFailedToLoad event received with message: "
                              + args.Message);
     }
 
     public void HandleRewardedAdOpening(object sender, EventArgs args)
     {
-        Debug.Log("HandleRewardedAdOpening event received");
+        MonoBehaviour.print("HandleRewardedAdOpening event received");
     }
 
     public void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs args)
     {
-        Debug.Log(
+        MonoBehaviour.print(
             "HandleRewardedAdFailedToShow event received with message: "
                              + args.Message);
-        adFailed();
     }
 
     public void HandleRewardedAdClosed(object sender, EventArgs args)
     {
-        Debug.Log("HandleRewardedAdClosed event received");
+        MonoBehaviour.print("HandleRewardedAdClosed event received");
     }
 
     public void HandleUserEarnedReward(object sender, Reward args)
     {
         string type = args.Type;
         double amount = args.Amount;
-        Debug.Log(
+        MonoBehaviour.print(
             "HandleRewardedAdRewarded event received for "
                         + amount.ToString() + " " + type);
     }
-    #endregion
-
-    #region Ad Delegates
-    public void HandleOnAdLoaded(object sender, EventArgs args)
-    {
-        Debug.Log("Ad Loaded");
-    }
-
-    public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
-    {
-        Debug.Log("couldnt load ad" + args.Message);
-        adFailed();
-    }
-
-    public void HandleOnAdOpened(object sender, EventArgs args)
-    {
-        Debug.Log("Handle ad opened event received");
-    }
-
-    public void HandleOnAdClosed(object sender, EventArgs args)
-    {
-        Debug.Log("Handle ad closed event received");
-    }
-
-    public void HandleOnAdLeavingApplication(object sender, EventArgs args)
-    {
-        Debug.Log("Leaving application event received");
-    }
-    #endregion
 }
