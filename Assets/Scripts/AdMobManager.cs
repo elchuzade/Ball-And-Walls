@@ -118,18 +118,18 @@ public class AdMobManager : MonoBehaviour
     public void ShowAdmobRewardedAd(Action success, Action skipped, Action failed)
     {
         this.rewardedAd = new RewardedAd(rewardedId);
-        //// Called when an ad request has successfully loaded.
-        //this.rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
-        //// Called when an ad request failed to load.
-        //this.rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
-        //// Called when an ad is shown.
-        //this.rewardedAd.OnAdOpening += HandleRewardedAdOpening;
-        //// Called when an ad request failed to show.
-        //this.rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
-        //// Called when the user should be rewarded for interacting with the ad.
-        //this.rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
-        //// Called when the ad is closed.
-        //this.rewardedAd.OnAdClosed += HandleRewardedAdClosed;
+        // Called when an ad request has successfully loaded.
+        this.rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
+        // Called when an ad request failed to load.
+        this.rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
+        // Called when an ad is shown.
+        this.rewardedAd.OnAdOpening += HandleRewardedAdOpening;
+        // Called when an ad request failed to show.
+        this.rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
+        // Called when the user should be rewarded for interacting with the ad.
+        this.rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
+        // Called when the ad is closed.
+        this.rewardedAd.OnAdClosed += HandleRewardedAdClosed;
 
         // Create an empty ad request.
         AdRequest request = new AdRequest.Builder().Build();
