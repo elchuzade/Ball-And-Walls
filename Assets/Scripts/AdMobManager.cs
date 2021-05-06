@@ -28,6 +28,7 @@ public class AdMobManager : MonoBehaviour
     string interstitialId = "ca-app-pub-3940256099942544/4411468910";
     // ca-app-pub-5721177105818446/6529849132
     string rewardedId = "ca-app-pub-3940256099942544/1712485313";
+    //string rewardedId = "940256099942544/1712485313";
     // ca-app-pub-5721177105818446/8772869092
     string gameId = "ca-app-pub-5721177105818446~8001060516";
 #else
@@ -112,11 +113,14 @@ public class AdMobManager : MonoBehaviour
     }
     #endregion
 
-    #region Rewarded
-    #endregion
 
+    #region Rewarded
     public void ShowAdmobRewardedAd(Action success, Action skipped, Action failed)
     {
+        this.adSuccess = success;
+        this.adFailed = failed;
+        this.adSkipped = skipped;
+
         this.rewardedAd = new RewardedAd(rewardedId);
         // Called when an ad request has successfully loaded.
         this.rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
@@ -136,7 +140,7 @@ public class AdMobManager : MonoBehaviour
         // Load the rewarded ad with the request.
         this.rewardedAd.LoadAd(request);
 
-        StartCoroutine(TryShowingRewardedAd());
+        //StartCoroutine(TryShowingRewardedAd());
     }
 
     IEnumerator TryShowingRewardedAd()
@@ -157,6 +161,7 @@ public class AdMobManager : MonoBehaviour
     public void HandleRewardedAdLoaded(object sender, EventArgs args)
     {
         MonoBehaviour.print("HandleRewardedAdLoaded event received");
+        this.rewardedAd.Show();
     }
 
     public void HandleRewardedAdFailedToLoad(object sender, AdErrorEventArgs args)
@@ -164,6 +169,8 @@ public class AdMobManager : MonoBehaviour
         MonoBehaviour.print(
             "HandleRewardedAdFailedToLoad event received with message: "
                              + args.Message);
+        // If Admob failed to load an ad, try loading unity ads
+        AdManager.ShowStandardAd(this.adSuccess, this.adSkipped, this.adFailed);
     }
 
     public void HandleRewardedAdOpening(object sender, EventArgs args)
@@ -176,11 +183,14 @@ public class AdMobManager : MonoBehaviour
         MonoBehaviour.print(
             "HandleRewardedAdFailedToShow event received with message: "
                              + args.Message);
+        // If Admob failed to load an ad, try loading unity ads
+        AdManager.ShowStandardAd(this.adSuccess, this.adSkipped, this.adFailed);
     }
 
     public void HandleRewardedAdClosed(object sender, EventArgs args)
     {
         MonoBehaviour.print("HandleRewardedAdClosed event received");
+        this.adSkipped();
     }
 
     public void HandleUserEarnedReward(object sender, Reward args)
@@ -190,5 +200,7 @@ public class AdMobManager : MonoBehaviour
         MonoBehaviour.print(
             "HandleRewardedAdRewarded event received for "
                         + amount.ToString() + " " + type);
+        this.adSuccess();
     }
+    #endregion
 }

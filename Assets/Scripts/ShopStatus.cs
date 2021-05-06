@@ -19,6 +19,15 @@ public class ShopStatus : MonoBehaviour
 
     AdCancel adCancel;
 
+    // For hint button laoder
+    [SerializeField] GameObject getCoinsButton;
+    [SerializeField] GameObject getCoinsButtonEmpty;
+    [SerializeField] GameObject getCoinsButtonLoader;
+    // For hint button ad cancel window
+    [SerializeField] GameObject getCoinsButtonReceive;
+    [SerializeField] GameObject getCoinsButtonReceiveEmpty;
+    [SerializeField] GameObject getCoinsButtonReceiveLoader;
+
     // Dots that indicate which 9 items are shown on the screen
     [SerializeField] GameObject leftDot;
     [SerializeField] GameObject midLeftDot;
@@ -254,6 +263,7 @@ public class ShopStatus : MonoBehaviour
         player.getTenMoreCoinsClicks.Add(date);
         player.SavePlayer();
 
+        DisableCoinsButtonLoadingAd();
         adMobManager.ShowAdmobRewardedAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
         //AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
     }
@@ -268,8 +278,9 @@ public class ShopStatus : MonoBehaviour
         adCancel.gameObject.SetActive(false);
     }
 
-    private void GetCoinsCancel()
+    public void GetCoinsCancel()
     {
+        EnableGetCoinsButtonLoadingAd();
         // Playe has canceled get extra ccoins video
         if (!showedAdCancelWarning)
         {
@@ -286,8 +297,9 @@ public class ShopStatus : MonoBehaviour
         showedAdCancelWarning = true;
     }
 
-    private void GetCoinsFail()
+    public void GetCoinsFail()
     {
+        EnableGetCoinsButtonLoadingAd();
         // If a video for receiving coins fails, hide the warning page about cancelling, not to annoy the player
         // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
         scoreboard.gameObject.SetActive(false);
@@ -295,8 +307,31 @@ public class ShopStatus : MonoBehaviour
         adCancel.gameObject.SetActive(false);
     }
 
+    public void DisableCoinsButtonLoadingAd()
+    {
+        getCoinsButton.GetComponent<Button>().interactable = false;
+        getCoinsButtonLoader.SetActive(true);
+        getCoinsButtonEmpty.SetActive(true);
+
+        getCoinsButtonReceive.GetComponent<Button>().interactable = false;
+        getCoinsButtonReceiveEmpty.SetActive(true);
+        getCoinsButtonReceiveLoader.SetActive(true);
+    }
+
+    public void EnableGetCoinsButtonLoadingAd()
+    {
+        getCoinsButton.GetComponent<Button>().interactable = true;
+        getCoinsButtonLoader.SetActive(false);
+        getCoinsButtonEmpty.SetActive(false);
+
+        getCoinsButtonReceive.GetComponent<Button>().interactable = true;
+        getCoinsButtonReceiveEmpty.SetActive(false);
+        getCoinsButtonReceiveLoader.SetActive(false);
+    }
+
     public void GetCoinsSuccess()
     {
+        EnableGetCoinsButtonLoadingAd();
         // If video has been played suvvessfully till the end give the reward
         // Increase player coins by ad reward amount
         player.coins += adCoinsAmount;
