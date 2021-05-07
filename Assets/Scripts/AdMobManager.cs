@@ -82,11 +82,6 @@ public class AdMobManager : MonoBehaviour
         this.bannerAd.LoadAd(request);
     }
 
-    public void HandleOnBannerAdLoaded(object sender, EventArgs args)
-    {
-
-    }
-
     public void HandleOnBannerAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
         AdManager.ShowBanner();

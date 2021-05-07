@@ -70,7 +70,7 @@ public class ChallengesStatus : MonoBehaviour
         playChallenge.SetActive(false);
 
         AdMobManager.ShowAdmobBanner();
-        // AdManager.ShowBanner();
+        //AdManager.ShowBanner();
 
         player = FindObjectOfType<Player>();
         //player.ResetPlayer();

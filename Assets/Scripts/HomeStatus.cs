@@ -159,6 +159,7 @@ public class HomeStatus : MonoBehaviour
         ChangeCameraSettings();
 
         AdMobManager.ShowAdmobBanner();
+        //AdManager.ShowBanner();
 
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
