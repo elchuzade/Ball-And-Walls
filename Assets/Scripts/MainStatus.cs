@@ -55,10 +55,7 @@ public class MainStatus : MonoBehaviour
         }
 
         player = FindObjectOfType<Player>();
-        //player.ResetPlayer();
-
-        //player.nextLevelIndex = 20;
-        //player.SavePlayer();
+        player.ResetPlayer();
         player.LoadPlayer();
 
         SetNewFields();

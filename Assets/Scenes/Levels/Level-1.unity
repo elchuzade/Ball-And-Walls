@@ -168,6 +168,11 @@ PrefabInstance:
       propertyPath: HorizontalPointer
       value: 
       objectReference: {fileID: 6203135687427033892}
+    - target: {fileID: 6414495972381686432, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6590224219401749073, guid: 5a7428c82c0714ebbaae4c1e0e8dcdd0,
         type: 3}
       propertyPath: m_Name
