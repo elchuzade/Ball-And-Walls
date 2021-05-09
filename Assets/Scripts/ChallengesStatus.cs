@@ -23,15 +23,6 @@ public class ChallengesStatus : MonoBehaviour
 
     GameObject selectedChallenge;
 
-    // For hint button laoder
-    [SerializeField] GameObject getLifeButton;
-    [SerializeField] GameObject getLifeButtonFull;
-    [SerializeField] GameObject getLifeButtonLoader;
-    // For hint button ad cancel window
-    [SerializeField] GameObject getLifeButtonReceive;
-    [SerializeField] GameObject getLifeButtonReceiveEmpty;
-    [SerializeField] GameObject getLifeButtonReceiveLoader;
-
     AdCancel adCancel;
 
     bool showedAdCancelWarning = false;
@@ -97,28 +88,6 @@ public class ChallengesStatus : MonoBehaviour
         player.SavePlayer();
     }
 
-    public void DisableLifeButtonLoadingAd()
-    {
-        getLifeButton.GetComponent<Button>().interactable = false;
-        getLifeButtonFull.SetActive(false);
-        getLifeButtonLoader.SetActive(true);
-
-        getLifeButtonReceive.GetComponent<Button>().interactable = false;
-        getLifeButtonReceiveEmpty.SetActive(true);
-        getLifeButtonReceiveLoader.SetActive(true);
-    }
-
-    public void EnableGetLifeButtonLoadingAd()
-    {
-        getLifeButton.GetComponent<Button>().interactable = true;
-        getLifeButtonFull.SetActive(true);
-        getLifeButtonLoader.SetActive(false);
-
-        getLifeButtonReceive.GetComponent<Button>().interactable = true;
-        getLifeButtonReceiveEmpty.SetActive(false);
-        getLifeButtonReceiveLoader.SetActive(false);
-    }
-
     public void SelectChallenge(GameObject challenge)
     {
         for (int i = 0; i < allChallengesScrollContent.transform.childCount; i++)
@@ -154,7 +123,6 @@ public class ChallengesStatus : MonoBehaviour
 
     public void ClickGetLifeForVideoButton()
     {
-        DisableLifeButtonLoadingAd();
         adMobManager.ShowAdmobRewardedAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
         //AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
     }
@@ -182,7 +150,6 @@ public class ChallengesStatus : MonoBehaviour
 
     public void ReceiveButtonClick()
     {
-        DisableLifeButtonLoadingAd();
         adMobManager.ShowAdmobRewardedAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
         //AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
     }
@@ -194,7 +161,6 @@ public class ChallengesStatus : MonoBehaviour
 
     private void GetLifeCancel()
     {
-        EnableGetLifeButtonLoadingAd();
         // Show the warning stuff if it is the first time of cancelling
         if (!showedAdCancelWarning)
         {
@@ -210,7 +176,6 @@ public class ChallengesStatus : MonoBehaviour
 
     private void GetLifeFail()
     {
-        EnableGetLifeButtonLoadingAd();
         // Close the warning stuff if for some reason video failed
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
@@ -218,7 +183,6 @@ public class ChallengesStatus : MonoBehaviour
 
     private void GetLifeSuccess()
     {
-        EnableGetLifeButtonLoadingAd();
         // Incase this is coming from after warning stuff being showed, hide it
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);

@@ -40,17 +40,6 @@ public class HomeStatus : MonoBehaviour
     // To pass to ad cancel for challenge level
     [SerializeField] Sprite lifeIcon;
 
-    // For hint button laoder
-    [SerializeField] GameObject hintButtonEmpty;
-    [SerializeField] GameObject hintButtonLoader;
-    // For hint button ad cancel window
-    [SerializeField] GameObject hintButtonReceive;
-    [SerializeField] GameObject hintButtonReceiveEmpty;
-    [SerializeField] GameObject hintButtonReceiveLoader;
-    // For extra life button laoder
-    [SerializeField] GameObject extraLifeButtonEmpty;
-    [SerializeField] GameObject extraLifeButtonLoader;
-
     // This should be changed as new balls are being added
     // This is not all balls but all unlockable balls
     int totalBallsAmount = 22;
@@ -222,52 +211,6 @@ public class HomeStatus : MonoBehaviour
         adCancel.gameObject.SetActive(false);
     }
 
-    public void DisableHintButtonLoadingAd()
-    {
-        hintButton.GetComponent<Button>().interactable = false;
-        hintButtonLoader.SetActive(true);
-        hintButtonEmpty.SetActive(true);
-
-        hintButtonReceive.GetComponent<Button>().interactable = false;
-        hintButtonReceiveEmpty.SetActive(true);
-        hintButtonReceiveLoader.SetActive(true);
-    }
-
-    public void EnableHintButtonLoadingAd()
-    {
-        hintButton.GetComponent<Button>().interactable = true;
-        hintButtonLoader.SetActive(false);
-        hintButtonEmpty.SetActive(false);
-
-        hintButtonReceive.GetComponent<Button>().interactable = true;
-        hintButtonReceiveEmpty.SetActive(false);
-        hintButtonReceiveLoader.SetActive(false);
-    }
-
-    public void DisableExtraLifeButtonLoadingAd()
-    {
-        extraLifeButton.GetComponent<Button>().interactable = false;
-        extraLifeButtonEmpty.SetActive(true);
-        extraLifeButtonLoader.SetActive(true);
-
-        hintButtonReceive.GetComponent<Button>().interactable = false;
-        hintButtonReceiveEmpty.SetActive(true);
-        hintButtonReceiveLoader.SetActive(true);
-    }
-
-    public void EnableExtraLifeButtonLoadingAd()
-    {
-        extraLife.SetActive(false);
-
-        extraLifeButton.GetComponent<Button>().interactable = true;
-        extraLifeButtonEmpty.SetActive(false);
-        extraLifeButtonLoader.SetActive(false);
-
-        hintButtonReceive.GetComponent<Button>().interactable = true;
-        hintButtonReceiveEmpty.SetActive(false);
-        hintButtonReceiveLoader.SetActive(false);
-    }
-
     public void ClickPlayRandomLevels()
     {
         player.maxLevelReached = true;
@@ -330,7 +273,6 @@ public class HomeStatus : MonoBehaviour
 
     public void ExtraLifeReceiveButtonClick()
     {
-        DisableExtraLifeButtonLoadingAd();
         adMobManager.ShowAdmobRewardedAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
         //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
@@ -342,7 +284,7 @@ public class HomeStatus : MonoBehaviour
 
     public void ExtraLifeButtonClick()
     {
-        DisableExtraLifeButtonLoadingAd();
+        extraLife.SetActive(false);
         ballStuff.SetActive(true);
         adMobManager.ShowAdmobRewardedAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
         //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
@@ -350,8 +292,6 @@ public class HomeStatus : MonoBehaviour
 
     private void ExtraLifeSuccess()
     {
-        EnableExtraLifeButtonLoadingAd();
-
         lives++;
 
         if (!solved)
@@ -368,7 +308,6 @@ public class HomeStatus : MonoBehaviour
 
     public void UseHintReceiveButtonClick()
     {
-        DisableHintButtonLoadingAd();
         adMobManager.ShowAdmobRewardedAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
         //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
     }
@@ -397,7 +336,6 @@ public class HomeStatus : MonoBehaviour
             player.hintClicks.Add(normalLevel);
             player.SavePlayer();
 
-            DisableHintButtonLoadingAd();
             adMobManager.ShowAdmobRewardedAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
             // Run the ad for hint
             //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
@@ -406,13 +344,6 @@ public class HomeStatus : MonoBehaviour
 
     private void RewardAdCancel()
     {
-        if (hintButton != null)
-        {
-            EnableHintButtonLoadingAd();
-        } else
-        {
-            EnableExtraLifeButtonLoadingAd();
-        }
         // Show the warning stuff if it is the first time of cancelling
         if (!showedAdCancelWarning)
         {
@@ -433,14 +364,6 @@ public class HomeStatus : MonoBehaviour
 
     private void RewardAdFail()
     {
-        if (hintButton != null)
-        {
-            EnableHintButtonLoadingAd();
-        }
-        else
-        {
-            EnableExtraLifeButtonLoadingAd();
-        }
         // Close the warning stuff if for some reason video failed
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
@@ -448,7 +371,6 @@ public class HomeStatus : MonoBehaviour
 
     public void UseHintSuccess()
     {
-        EnableHintButtonLoadingAd();
         // Hide hint button and show every wall's correct position
         hintButton.SetActive(false);
         foreach (Transform child in walls)

@@ -753,12 +753,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2021526316}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &133319482 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4041896976884323477, guid: b67ba0b2f0a634dd5ad14c427b900126,
-    type: 3}
-  m_PrefabInstance: {fileID: 4041896976182988532}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &163177925
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -977,12 +971,6 @@ MonoBehaviour:
   adCoinsAmount: 10
   coinIcon: {fileID: 21300000, guid: d2b7826751c344b8093f8a70e9fa1ae6, type: 3}
   powerUp: {fileID: 873895728}
-  getCoinsButton: {fileID: 133319482}
-  getCoinsButtonEmpty: {fileID: 1942977410}
-  getCoinsButtonLoader: {fileID: 1111097577}
-  getCoinsButtonReceive: {fileID: 1975684455}
-  getCoinsButtonReceiveEmpty: {fileID: 2021526318}
-  getCoinsButtonReceiveLoader: {fileID: 2021526317}
   leftDot: {fileID: 882867235}
   midLeftDot: {fileID: 675173562}
   midRightDot: {fileID: 2083247593}
@@ -4221,12 +4209,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1716979486}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1111097577 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 475132670327792218, guid: b67ba0b2f0a634dd5ad14c427b900126,
-    type: 3}
-  m_PrefabInstance: {fileID: 4041896976182988532}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1118273562 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7317348461864360868, guid: 9a8372ec927364d289c94e65bcc59c27,
@@ -7125,12 +7107,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -340}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1942977410 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7295153227538621579, guid: b67ba0b2f0a634dd5ad14c427b900126,
-    type: 3}
-  m_PrefabInstance: {fileID: 4041896976182988532}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1944976190 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7317348461864360868, guid: 9a8372ec927364d289c94e65bcc59c27,
@@ -7447,12 +7423,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7317348461864360868, guid: 9a8372ec927364d289c94e65bcc59c27,
     type: 3}
   m_PrefabInstance: {fileID: 700432760}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1975684455 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4021107298633997055, guid: 4b29d7faba3f042ab9b6ee762cf5d107,
-    type: 3}
-  m_PrefabInstance: {fileID: 2021526316}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1980813498
 PrefabInstance:
@@ -8069,18 +8039,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b29d7faba3f042ab9b6ee762cf5d107, type: 3}
---- !u!1 &2021526317 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6800144055845974270, guid: 4b29d7faba3f042ab9b6ee762cf5d107,
-    type: 3}
-  m_PrefabInstance: {fileID: 2021526316}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2021526318 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6088616749451368057, guid: 4b29d7faba3f042ab9b6ee762cf5d107,
-    type: 3}
-  m_PrefabInstance: {fileID: 2021526316}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2030033767
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9206,26 +9164,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 447982858}
     m_Modifications:
-    - target: {fileID: 475132670327792218, guid: b67ba0b2f0a634dd5ad14c427b900126,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2582715112887343836, guid: b67ba0b2f0a634dd5ad14c427b900126,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 2582715112887343836, guid: b67ba0b2f0a634dd5ad14c427b900126,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 2582715112887343836, guid: b67ba0b2f0a634dd5ad14c427b900126,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 4041896976849190155, guid: b67ba0b2f0a634dd5ad14c427b900126,
         type: 3}
       propertyPath: m_FontData.m_MinSize
@@ -9344,11 +9282,6 @@ PrefabInstance:
     - target: {fileID: 4041896976884323478, guid: b67ba0b2f0a634dd5ad14c427b900126,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7295153227538621579, guid: b67ba0b2f0a634dd5ad14c427b900126,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7561185286561334436, guid: b67ba0b2f0a634dd5ad14c427b900126,
