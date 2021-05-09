@@ -83,18 +83,15 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
             yield return new WaitForSeconds(0.5f);
         }
 
-        if (Advertisement.IsReady(bannerID))
-        {
-            Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
-            Advertisement.Banner.Show(bannerID);
-        }
+        Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
+        Advertisement.Banner.Show(bannerID);
     }
 
     public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
     {
         if (placementId == rewardedID || placementId == videoID)
         {
-            switch (showResult)
+            switch(showResult)
             {
                 case ShowResult.Finished:
                     adSuccess();
@@ -111,14 +108,17 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
 
     public void OnUnityAdsDidError(string message)
     {
+
     }
 
 
     public void OnUnityAdsDidStart(string placementId)
     {
+
     }
 
     public void OnUnityAdsReady(string placementId)
     {
+
     }
 }

@@ -4,10 +4,6 @@ using System;
 
 public class AdMobManager : MonoBehaviour
 {
-    private Action adSuccess;
-    private Action adSkipped;
-    private Action adFailed;
-
     private BannerView bannerAd;
     private InterstitialAd interstitialAd;
     private RewardedAd rewardedAd;
@@ -37,7 +33,7 @@ public class AdMobManager : MonoBehaviour
 
     public static AdMobManager instance;
 
-    void Awake()
+    private void Awake()
     {
         if (instance != null && instance != this)
         {
@@ -46,14 +42,12 @@ public class AdMobManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(this);
-        // Initialize the Google Mobile Ads SDK.
-        MobileAds.Initialize(initStatus => { });
     }
 
     void Start()
     {
-        this.RequestRewarded();
-        this.RequestInterstitial();
+        // Initialize the Google Mobile Ads SDK.
+        MobileAds.Initialize(initStatus => { });
     }
 
     #region Banner
@@ -73,31 +67,17 @@ public class AdMobManager : MonoBehaviour
         this.bannerAd = new BannerView(bannerId, AdSize.Banner, AdPosition.Bottom);
 
         this.bannerAd.OnAdLoaded += this.HandleOnAdLoaded;
-        this.bannerAd.OnAdFailedToLoad += this.HandleOnBannerAdFailedToLoad;
+        this.bannerAd.OnAdFailedToLoad += this.HandleOnAdFailedToLoad;
 
         AdRequest request = new AdRequest.Builder().Build();
 
         this.bannerAd.LoadAd(request);
     }
-
-    public void HandleOnBannerAdLoaded(object sender, EventArgs args)
-    {
-
-    }
-
-    public void HandleOnBannerAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
-    {
-        AdManager.ShowBanner();
-    }
     #endregion
 
     #region Interstitial
-    public void ShowAdmobStandardAd(Action success, Action skipped, Action failed)
+    public void ShowAdmobStandardAd()
     {
-        adFailed = failed;
-        adSkipped = skipped;
-        adSuccess = success;
-
         this.RequestInterstitial();
 
         if (this.interstitialAd.IsLoaded())
@@ -125,14 +105,10 @@ public class AdMobManager : MonoBehaviour
     #endregion
 
     #region Rewarded
-    public void ShowAdmobRewardedAd(Action success, Action skipped, Action failed)
+    public void ShowAdmobRewardedAd()
     {
-        adFailed = failed;
-        adSkipped = skipped;
-        adSuccess = success;
-
-        
-
+        this.RequestRewarded();
+        Debug.Log("rewarded");
         if (this.rewardedAd.IsLoaded())
         {
             this.rewardedAd.Show();
@@ -176,7 +152,6 @@ public class AdMobManager : MonoBehaviour
         Debug.Log(
             "HandleRewardedAdFailedToShow event received with message: "
                              + args.Message);
-        adFailed();
     }
 
     public void HandleRewardedAdClosed(object sender, EventArgs args)
@@ -196,29 +171,28 @@ public class AdMobManager : MonoBehaviour
 
     #region Ad Delegates
     public void HandleOnAdLoaded(object sender, EventArgs args)
-    {
-        Debug.Log("Ad Loaded");
-    }
+{
+    Debug.Log("Ad Loaded");
+}
 
-    public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
-    {
-        Debug.Log("couldnt load ad" + args.Message);
-        adFailed();
-    }
+public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+{
+    Debug.Log("couldnt load ad" + args.Message);
+}
 
-    public void HandleOnAdOpened(object sender, EventArgs args)
-    {
-        Debug.Log("Handle ad opened event received");
-    }
+public void HandleOnAdOpened(object sender, EventArgs args)
+{
+    Debug.Log("Handle ad opened event received");
+}
 
-    public void HandleOnAdClosed(object sender, EventArgs args)
-    {
-        Debug.Log("Handle ad closed event received");
-    }
+public void HandleOnAdClosed(object sender, EventArgs args)
+{
+    Debug.Log("Handle ad closed event received");
+}
 
-    public void HandleOnAdLeavingApplication(object sender, EventArgs args)
-    {
-        Debug.Log("Leaving application event received");
-    }
-    #endregion
+public void HandleOnAdLeavingApplication(object sender, EventArgs args)
+{
+    Debug.Log("Leaving application event received");
+}
+#endregion
 }
