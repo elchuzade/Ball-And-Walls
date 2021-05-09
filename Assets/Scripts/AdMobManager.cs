@@ -54,11 +54,6 @@ public class AdMobManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        MobileAds.Initialize(initStatus => { });
-    }
-
     #region Banner
     public static void ShowAdmobBanner()
     {
@@ -94,26 +89,30 @@ public class AdMobManager : MonoBehaviour
     #endregion
 
     #region Interstitial
-    public void ShowAdmobStandardAd(Action success, Action skipped, Action failed)
+    public static void ShowAdmobStandardAd(Action success, Action skipped, Action failed)
     {
-        this.adFailed = failed;
-        this.adSkipped = skipped;
-        this.adSuccess = success;
+        instance.adFailed = failed;
+        instance.adSkipped = skipped;
+        instance.adSuccess = success;
 
-        this.interstitialAd = new InterstitialAd(interstitialId);
-
-        //this.interstitialAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
-
-        AdRequest request = new AdRequest.Builder().Build();
-
-        this.interstitialAd.LoadAd(request);
+        instance.RequestInterstitial();
 
         if (instance.interstitialAd.IsLoaded())
         {
             instance.interstitialAd.Show();
         }
     }
+
+    private void RequestInterstitial()
+    {
+        this.interstitialAd = new InterstitialAd(interstitialId);
+
+        AdRequest request = new AdRequest.Builder().Build();
+
+        this.interstitialAd.LoadAd(request);
+    }
     #endregion
+
 
     #region Rewarded
     public void ShowAdmobRewardedAd(Action success, Action skipped, Action failed)
@@ -144,7 +143,20 @@ public class AdMobManager : MonoBehaviour
         //StartCoroutine(TryShowingRewardedAd());
     }
 
+    IEnumerator TryShowingRewardedAd()
+    {
+        while(!this.rewardedAd.IsLoaded())
+        {
+            yield return new WaitForSeconds(0.25f);
+        }
+        
+        this.rewardedAd.Show();
+    }
 
+    void Start()
+    {
+        MobileAds.Initialize(initStatus => { });
+    }
 
     public void HandleRewardedAdLoaded(object sender, EventArgs args)
     {
