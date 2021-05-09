@@ -269,10 +269,16 @@ public class HomeStatus : MonoBehaviour
         if ((float)Screen.height / Screen.width > 2)
         {
             Camera.main.orthographicSize = 800;
-            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 0;
+            if (canvas != null)
+            {
+                canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 0;
+            }
         } else {
             Camera.main.orthographicSize = 667;
-            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
+            if (canvas != null)
+            {
+                canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
+            }
         }
 
         //if ((float)Screen.width / Screen.height > 0.7)
@@ -308,7 +314,7 @@ public class HomeStatus : MonoBehaviour
 
     private void SetButtonFunctions()
     {
-        if (challengeLevel == 0)
+        if (challengeLevel == 0 && hintButton != null)
         {
             hintButton.GetComponent<Button>().onClick.AddListener(() => ClickHintButton());
         }

@@ -2483,7 +2483,7 @@ PrefabInstance:
     - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
         type: 3}
       propertyPath: challengeLevel
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
         type: 3}
