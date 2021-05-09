@@ -4,11 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using MoreMountains.NiceVibrations;
+using MoreMountains.NiceVibrations;
 
 public class BallCatcher : MonoBehaviour
 {
     // List of words to show when level is passed
     string[] winWords = { "Congrats!", "Excellent!", "Good Job!", "Perfect!", "Amazing!", "Superb!", "Great!", "Wonderful!", "Brilliant!" };
+
+    AdMobManager adMobManager;
 
     Navigator navigator;
     HomeStatus homeStatus;
@@ -84,6 +87,7 @@ public class BallCatcher : MonoBehaviour
 
     void Awake()
     {
+        adMobManager = FindObjectOfType<AdMobManager>();
         homeStatus = FindObjectOfType<HomeStatus>();
         navigator = FindObjectOfType<Navigator>();
 
@@ -371,7 +375,8 @@ public class BallCatcher : MonoBehaviour
             // Show an ad before every 5th level except the 150th one which is the last level
             if (homeStatus.GetChallengeLevel() == 0 && player.nextLevelIndex % 5 == 0 && player.nextLevelIndex != 150)
             {
-                AdManager.ShowStandardAd(() => { }, () => { }, () => { });
+                adMobManager.ShowAdmobStandardAd(() => { }, () => { }, () => { });
+                //AdManager.ShowStandardAd(() => { }, () => { }, () => { });
             }
 
             // Hide ball catcher image to not clutter when coins are dropping
