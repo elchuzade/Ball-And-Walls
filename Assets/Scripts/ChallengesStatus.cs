@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class ChallengesStatus : MonoBehaviour
 {
+    AdMobManager adMobManager;
+
     Navigator navigator;
     Player player;
     Scoreboard scoreboard;
@@ -21,12 +23,23 @@ public class ChallengesStatus : MonoBehaviour
 
     GameObject selectedChallenge;
 
+    // For hint button laoder
+    [SerializeField] GameObject getLifeButton;
+    [SerializeField] GameObject getLifeButtonFull;
+    [SerializeField] GameObject getLifeButtonLoader;
+    // For hint button ad cancel window
+    [SerializeField] GameObject getLifeButtonReceive;
+    [SerializeField] GameObject getLifeButtonReceiveEmpty;
+    [SerializeField] GameObject getLifeButtonReceiveLoader;
+
     AdCancel adCancel;
 
     bool showedAdCancelWarning = false;
 
     void Awake()
     {
+        adMobManager = FindObjectOfType<AdMobManager>();
+
         navigator = FindObjectOfType<Navigator>();
         scoreboard = FindObjectOfType<Scoreboard>();
         adCancel = FindObjectOfType<AdCancel>();
@@ -56,6 +69,7 @@ public class ChallengesStatus : MonoBehaviour
         videoLives.SetActive(false);
         playChallenge.SetActive(false);
 
+        AdMobManager.ShowAdmobBanner();
         //AdManager.ShowBanner();
 
         player = FindObjectOfType<Player>();
@@ -81,6 +95,28 @@ public class ChallengesStatus : MonoBehaviour
         long date = now.ToUnixTimeMilliseconds();
         player.challengesClicks.Add(date);
         player.SavePlayer();
+    }
+
+    public void DisableLifeButtonLoadingAd()
+    {
+        getLifeButton.GetComponent<Button>().interactable = false;
+        getLifeButtonFull.SetActive(false);
+        getLifeButtonLoader.SetActive(true);
+
+        getLifeButtonReceive.GetComponent<Button>().interactable = false;
+        getLifeButtonReceiveEmpty.SetActive(true);
+        getLifeButtonReceiveLoader.SetActive(true);
+    }
+
+    public void EnableGetLifeButtonLoadingAd()
+    {
+        getLifeButton.GetComponent<Button>().interactable = true;
+        getLifeButtonFull.SetActive(true);
+        getLifeButtonLoader.SetActive(false);
+
+        getLifeButtonReceive.GetComponent<Button>().interactable = true;
+        getLifeButtonReceiveEmpty.SetActive(false);
+        getLifeButtonReceiveLoader.SetActive(false);
     }
 
     public void SelectChallenge(GameObject challenge)
@@ -118,7 +154,9 @@ public class ChallengesStatus : MonoBehaviour
 
     public void ClickGetLifeForVideoButton()
     {
-        AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
+        DisableLifeButtonLoadingAd();
+        adMobManager.ShowAdmobRewardedAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
+        //AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
     }
 
     public void ClickGetLivesForDiamondButton()
@@ -144,7 +182,9 @@ public class ChallengesStatus : MonoBehaviour
 
     public void ReceiveButtonClick()
     {
-        AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
+        DisableLifeButtonLoadingAd();
+        adMobManager.ShowAdmobRewardedAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
+        //AdManager.ShowStandardAd(GetLifeSuccess, GetLifeCancel, GetLifeFail);
     }
 
     public void CancelButtonClick()
@@ -154,6 +194,7 @@ public class ChallengesStatus : MonoBehaviour
 
     private void GetLifeCancel()
     {
+        EnableGetLifeButtonLoadingAd();
         // Show the warning stuff if it is the first time of cancelling
         if (!showedAdCancelWarning)
         {
@@ -169,6 +210,7 @@ public class ChallengesStatus : MonoBehaviour
 
     private void GetLifeFail()
     {
+        EnableGetLifeButtonLoadingAd();
         // Close the warning stuff if for some reason video failed
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
@@ -176,6 +218,7 @@ public class ChallengesStatus : MonoBehaviour
 
     private void GetLifeSuccess()
     {
+        EnableGetLifeButtonLoadingAd();
         // Incase this is coming from after warning stuff being showed, hide it
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);

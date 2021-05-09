@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class HomeStatus : MonoBehaviour
 {
+    AdMobManager adMobManager;
+
     Player player;
     BallCatcher ballCatcher;
     // This is to indicate that the wall on this level should be shuffled
@@ -16,7 +18,6 @@ public class HomeStatus : MonoBehaviour
     [SerializeField] GameObject unlockChallengeIcon;
     // All balls prefabs, to show the one that is selected by the player
     [SerializeField] GameObject[] balls;
-
 
     // Tutorial stuff
     [SerializeField] GameObject FocusPointer;
@@ -38,6 +39,17 @@ public class HomeStatus : MonoBehaviour
     [SerializeField] Sprite hintIcon;
     // To pass to ad cancel for challenge level
     [SerializeField] Sprite lifeIcon;
+
+    // For hint button laoder
+    [SerializeField] GameObject hintButtonEmpty;
+    [SerializeField] GameObject hintButtonLoader;
+    // For hint button ad cancel window
+    [SerializeField] GameObject hintButtonReceive;
+    [SerializeField] GameObject hintButtonReceiveEmpty;
+    [SerializeField] GameObject hintButtonReceiveLoader;
+    // For extra life button laoder
+    [SerializeField] GameObject extraLifeButtonEmpty;
+    [SerializeField] GameObject extraLifeButtonLoader;
 
     // This should be changed as new balls are being added
     // This is not all balls but all unlockable balls
@@ -93,6 +105,8 @@ public class HomeStatus : MonoBehaviour
 
     void Awake()
     {
+        adMobManager = FindObjectOfType<AdMobManager>();
+
         ballCatcher = FindObjectOfType<BallCatcher>();
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
@@ -143,6 +157,9 @@ public class HomeStatus : MonoBehaviour
         forwardButton.SetActive(false);
 
         ChangeCameraSettings();
+
+        AdMobManager.ShowAdmobBanner();
+        //AdManager.ShowBanner();
 
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
@@ -204,6 +221,52 @@ public class HomeStatus : MonoBehaviour
             adCancel.InitializeAdCancel(" hint", hintIcon);
         }
         adCancel.gameObject.SetActive(false);
+    }
+
+    public void DisableHintButtonLoadingAd()
+    {
+        hintButton.GetComponent<Button>().interactable = false;
+        hintButtonLoader.SetActive(true);
+        hintButtonEmpty.SetActive(true);
+
+        hintButtonReceive.GetComponent<Button>().interactable = false;
+        hintButtonReceiveEmpty.SetActive(true);
+        hintButtonReceiveLoader.SetActive(true);
+    }
+
+    public void EnableHintButtonLoadingAd()
+    {
+        hintButton.GetComponent<Button>().interactable = true;
+        hintButtonLoader.SetActive(false);
+        hintButtonEmpty.SetActive(false);
+
+        hintButtonReceive.GetComponent<Button>().interactable = true;
+        hintButtonReceiveEmpty.SetActive(false);
+        hintButtonReceiveLoader.SetActive(false);
+    }
+
+    public void DisableExtraLifeButtonLoadingAd()
+    {
+        extraLifeButton.GetComponent<Button>().interactable = false;
+        extraLifeButtonEmpty.SetActive(true);
+        extraLifeButtonLoader.SetActive(true);
+
+        hintButtonReceive.GetComponent<Button>().interactable = false;
+        hintButtonReceiveEmpty.SetActive(true);
+        hintButtonReceiveLoader.SetActive(true);
+    }
+
+    public void EnableExtraLifeButtonLoadingAd()
+    {
+        extraLife.SetActive(false);
+
+        extraLifeButton.GetComponent<Button>().interactable = true;
+        extraLifeButtonEmpty.SetActive(false);
+        extraLifeButtonLoader.SetActive(false);
+
+        hintButtonReceive.GetComponent<Button>().interactable = true;
+        hintButtonReceiveEmpty.SetActive(false);
+        hintButtonReceiveLoader.SetActive(false);
     }
 
     public void ClickPlayRandomLevels()
@@ -268,7 +331,9 @@ public class HomeStatus : MonoBehaviour
 
     public void ExtraLifeReceiveButtonClick()
     {
-        AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+        DisableExtraLifeButtonLoadingAd();
+        adMobManager.ShowAdmobRewardedAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+        //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
 
     public void ExtraLifeCancelButtonClick()
@@ -278,13 +343,16 @@ public class HomeStatus : MonoBehaviour
 
     public void ExtraLifeButtonClick()
     {
-        extraLife.SetActive(false);
+        DisableExtraLifeButtonLoadingAd();
         ballStuff.SetActive(true);
-        AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+        adMobManager.ShowAdmobRewardedAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+        //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
 
     private void ExtraLifeSuccess()
     {
+        EnableExtraLifeButtonLoadingAd();
+
         lives++;
 
         if (!solved)
@@ -301,7 +369,9 @@ public class HomeStatus : MonoBehaviour
 
     public void UseHintReceiveButtonClick()
     {
-        AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
+        DisableHintButtonLoadingAd();
+        adMobManager.ShowAdmobRewardedAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
+        //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
     }
 
     public void UseHintCancelButtonClick()
@@ -328,13 +398,22 @@ public class HomeStatus : MonoBehaviour
             player.hintClicks.Add(normalLevel);
             player.SavePlayer();
 
+            DisableHintButtonLoadingAd();
+            adMobManager.ShowAdmobRewardedAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
             // Run the ad for hint
-            AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
+            //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
         }
     }
 
     private void RewardAdCancel()
     {
+        if (hintButton != null)
+        {
+            EnableHintButtonLoadingAd();
+        } else
+        {
+            EnableExtraLifeButtonLoadingAd();
+        }
         // Show the warning stuff if it is the first time of cancelling
         if (!showedAdCancelWarning)
         {
@@ -355,6 +434,14 @@ public class HomeStatus : MonoBehaviour
 
     private void RewardAdFail()
     {
+        if (hintButton != null)
+        {
+            EnableHintButtonLoadingAd();
+        }
+        else
+        {
+            EnableExtraLifeButtonLoadingAd();
+        }
         // Close the warning stuff if for some reason video failed
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
@@ -362,6 +449,7 @@ public class HomeStatus : MonoBehaviour
 
     public void UseHintSuccess()
     {
+        EnableHintButtonLoadingAd();
         // Hide hint button and show every wall's correct position
         hintButton.SetActive(false);
         foreach (Transform child in walls)
@@ -416,6 +504,11 @@ public class HomeStatus : MonoBehaviour
         homeButton.SetActive(false);
         // Hide arrow that shows where the ball will move when launched
         ballDirectionArrow.SetActive(false);
+
+        forwardButton.transform.position = ball.gameObject.transform.position;
+        forwardButton.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
+        forwardButton.transform.Find("ForwardButton").localScale = new Vector3(0.6f, 0.6f, 0.6f);
+        forwardButton.transform.Find("ForwardButton").GetComponent<Image>().color = new Color32(255, 255, 255, 100);
     }
 
     public void CatchBall()
@@ -501,7 +594,7 @@ public class HomeStatus : MonoBehaviour
         ball.ForwardBall();
         // Switch disable button
         forwardButton.GetComponent<Button>().interactable = false;
-        forwardButton.transform.Find("Disabled").gameObject.SetActive(true);
+        forwardButton.transform.Find("ForwardButton").Find("Disabled").gameObject.SetActive(true);
     }
 
     private void SetLives()
@@ -562,9 +655,7 @@ public class HomeStatus : MonoBehaviour
         forwardButton.SetActive(false);
 
         forwardButton.GetComponent<Button>().interactable = true;
-        forwardButton.transform.Find("Disabled").gameObject.SetActive(false);
-
-        forwardButton.GetComponent<Button>().interactable = true;
+        forwardButton.transform.Find("ForwardButton").Find("Disabled").gameObject.SetActive(false);
     }
 
     public void ClickHomeButton()
