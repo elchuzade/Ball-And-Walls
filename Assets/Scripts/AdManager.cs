@@ -27,7 +27,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
 
     public static AdManager instance;
 
-    void Awake()
+    private void Awake()
     {
         // Singleton
         if (instance == null)

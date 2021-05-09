@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class HomeStatus : MonoBehaviour
 {
     AdMobManager adMobManager;
-
     Player player;
     BallCatcher ballCatcher;
     // This is to indicate that the wall on this level should be shuffled
@@ -95,7 +94,6 @@ public class HomeStatus : MonoBehaviour
     void Awake()
     {
         adMobManager = FindObjectOfType<AdMobManager>();
-
         ballCatcher = FindObjectOfType<BallCatcher>();
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
@@ -146,8 +144,7 @@ public class HomeStatus : MonoBehaviour
         forwardButton.SetActive(false);
 
         ChangeCameraSettings();
-
-        AdMobManager.ShowAdmobBanner();
+        adMobManager.ShowAdmobBanner();
 
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);

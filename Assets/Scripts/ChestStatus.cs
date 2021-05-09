@@ -22,7 +22,6 @@ public class ChestStatus : MonoBehaviour
         "smile", "snowball", "tennis", "volleyball", "watermelon" };
 
     AdMobManager adMobManager;
-
     Player player;
     [SerializeField] GameObject key1;
     [SerializeField] GameObject key2;
@@ -73,7 +72,6 @@ public class ChestStatus : MonoBehaviour
     void Awake()
     {
         adMobManager = FindObjectOfType<AdMobManager>();
-
         scoreboard = FindObjectOfType<Scoreboard>();
         navigator = FindObjectOfType<Navigator>();
         adCancel = FindObjectOfType<AdCancel>();
@@ -111,7 +109,7 @@ public class ChestStatus : MonoBehaviour
         scoreboard.SetDiamonds(player.diamonds);
         DrawKeys();
 
-        AdMobManager.ShowAdmobBanner();
+        adMobManager.ShowAdmobBanner();
         //AdManager.ShowBanner();
 
         // Choose which of locked balls will be the best prize

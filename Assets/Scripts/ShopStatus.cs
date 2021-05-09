@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class ShopStatus : MonoBehaviour
 {
     AdMobManager adMobManager;
-
     Player player;
     Scoreboard scoreboard;
     // Current ball to be selected based on player data
@@ -60,7 +59,7 @@ public class ShopStatus : MonoBehaviour
         // Set currently selected ball with their frames and backgrounds
         currentBallName = player.currentBall;
 
-        AdMobManager.ShowAdmobBanner();
+        adMobManager.ShowAdmobBanner();
         //AdManager.ShowBanner();
 
         // Set current player coins to the scoreboard
@@ -290,7 +289,6 @@ public class ShopStatus : MonoBehaviour
     {
         // If a video for receiving coins fails, hide the warning page about cancelling, not to annoy the player
         // Set a parameter to remmeber that once ad stuff was already cancelled not to ask a player again when he skips another ad
-        scoreboard.gameObject.SetActive(false);
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
     }

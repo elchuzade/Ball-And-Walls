@@ -17,7 +17,6 @@ public class LeaderboardStatus : MonoBehaviour
     }
 
     AdMobManager adMobManager;
-
     Player player;
     Navigator navigator;
     Server server;
@@ -68,7 +67,6 @@ public class LeaderboardStatus : MonoBehaviour
     void Awake()
     {
         adMobManager = FindObjectOfType<AdMobManager>();
-
         server = FindObjectOfType<Server>();
         navigator = FindObjectOfType<Navigator>();
         scoreboard = FindObjectOfType<Scoreboard>();
@@ -112,7 +110,7 @@ public class LeaderboardStatus : MonoBehaviour
 
         SwapSaveButton();
 
-        AdMobManager.ShowAdmobBanner();
+        adMobManager.ShowAdmobBanner();
 
         // Widen name input field and hide it
         changeName.transform.localScale = new Vector3(1, 1, 1);
