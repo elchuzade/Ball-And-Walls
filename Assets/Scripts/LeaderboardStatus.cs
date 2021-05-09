@@ -113,7 +113,6 @@ public class LeaderboardStatus : MonoBehaviour
         SwapSaveButton();
 
         AdMobManager.ShowAdmobBanner();
-        //AdManager.ShowBanner();
 
         // Widen name input field and hide it
         changeName.transform.localScale = new Vector3(1, 1, 1);
