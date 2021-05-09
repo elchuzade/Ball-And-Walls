@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class HomeStatus : MonoBehaviour
 {
-    AdMobManager adMobManager;
     Player player;
     BallCatcher ballCatcher;
     // This is to indicate that the wall on this level should be shuffled
@@ -94,7 +93,6 @@ public class HomeStatus : MonoBehaviour
 
     void Awake()
     {
-        adMobManager = FindObjectOfType<AdMobManager>();
         ballCatcher = FindObjectOfType<BallCatcher>();
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
@@ -270,8 +268,7 @@ public class HomeStatus : MonoBehaviour
 
     public void ExtraLifeReceiveButtonClick()
     {
-        adMobManager.ShowAdmobRewardedAd();
-        //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+        AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
 
     public void ExtraLifeCancelButtonClick()
@@ -283,8 +280,7 @@ public class HomeStatus : MonoBehaviour
     {
         extraLife.SetActive(false);
         ballStuff.SetActive(true);
-        adMobManager.ShowAdmobRewardedAd();
-        //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+        AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
 
     private void ExtraLifeSuccess()
@@ -305,8 +301,7 @@ public class HomeStatus : MonoBehaviour
 
     public void UseHintReceiveButtonClick()
     {
-        adMobManager.ShowAdmobRewardedAd();
-        //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
+        AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
     }
 
     public void UseHintCancelButtonClick()
@@ -333,9 +328,8 @@ public class HomeStatus : MonoBehaviour
             player.hintClicks.Add(normalLevel);
             player.SavePlayer();
 
-            adMobManager.ShowAdmobRewardedAd();
             // Run the ad for hint
-            //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
+            AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
         }
     }
 

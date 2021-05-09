@@ -6,7 +6,6 @@ using static Server;
 
 public class MainStatus : MonoBehaviour
 {
-    AdMobManager adMobManager;
     [SerializeField] GameObject privacyWindow;
     [SerializeField] GameObject quitWindow;
     GameObject hapticsButton;
@@ -29,8 +28,6 @@ public class MainStatus : MonoBehaviour
 
     void Awake()
     {
-        adMobManager = FindObjectOfType<AdMobManager>();
-
         scoreboard = FindObjectOfType<Scoreboard>();
         server = FindObjectOfType<Server>();
         navigator = FindObjectOfType<Navigator>();
@@ -89,9 +86,7 @@ public class MainStatus : MonoBehaviour
             privacyWindow.SetActive(false);
         }
 
-        //AdManager.ShowBanner();
-        adMobManager.ShowAdmobBanner();
-
+        AdManager.ShowBanner();
         server.GetVideoLink(player.privacyPolicyAccepted);
 
         // Set whether haptics and sound buttons are enabled or disabled initially
@@ -99,10 +94,6 @@ public class MainStatus : MonoBehaviour
 
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
-
-        player.nextLevelIndex = 10;
-        player.maxLevelReached = false;
-        player.SavePlayer();
     }
 
     void Update()
