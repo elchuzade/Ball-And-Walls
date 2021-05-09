@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class HomeStatus : MonoBehaviour
 {
-    AdMobManager adMobManager;
-
     Player player;
     BallCatcher ballCatcher;
     // This is to indicate that the wall on this level should be shuffled
@@ -105,8 +103,6 @@ public class HomeStatus : MonoBehaviour
 
     void Awake()
     {
-        adMobManager = FindObjectOfType<AdMobManager>();
-
         ballCatcher = FindObjectOfType<BallCatcher>();
         scoreboard = FindObjectOfType<Scoreboard>();
         gameBackground = GameObject.Find("GameBackground");
@@ -158,8 +154,7 @@ public class HomeStatus : MonoBehaviour
 
         ChangeCameraSettings();
 
-        AdMobManager.ShowAdmobBanner();
-        //AdManager.ShowBanner();
+        AdManager.ShowBanner();
 
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
@@ -250,10 +245,6 @@ public class HomeStatus : MonoBehaviour
         extraLifeButton.GetComponent<Button>().interactable = false;
         extraLifeButtonEmpty.SetActive(true);
         extraLifeButtonLoader.SetActive(true);
-
-        hintButtonReceive.GetComponent<Button>().interactable = false;
-        hintButtonReceiveEmpty.SetActive(true);
-        hintButtonReceiveLoader.SetActive(true);
     }
 
     public void EnableExtraLifeButtonLoadingAd()
@@ -263,10 +254,6 @@ public class HomeStatus : MonoBehaviour
         extraLifeButton.GetComponent<Button>().interactable = true;
         extraLifeButtonEmpty.SetActive(false);
         extraLifeButtonLoader.SetActive(false);
-
-        hintButtonReceive.GetComponent<Button>().interactable = true;
-        hintButtonReceiveEmpty.SetActive(false);
-        hintButtonReceiveLoader.SetActive(false);
     }
 
     public void ClickPlayRandomLevels()
@@ -277,19 +264,25 @@ public class HomeStatus : MonoBehaviour
     }
 
     private void ChangeCameraSettings() {
+        Canvas canvas = FindObjectOfType<Canvas>();
         // Change the camera zoom based on the screen ration, for very tall or very wide screens
         if ((float)Screen.height / Screen.width > 2)
         {
             Camera.main.orthographicSize = 800;
+            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 0;
         } else {
             Camera.main.orthographicSize = 667;
-        }
-
-        if ((float)Screen.width / Screen.height > 0.7)
-        {
-            GameObject canvas = GameObject.Find("Canvas");
             canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
         }
+
+        //if ((float)Screen.width / Screen.height > 0.7)
+        //{
+        //    canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 0;
+        //}
+        //else
+        //{
+        //    canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
+        //}
     }
 
     // @access from ball catcher when deciding on showing unlock challenge view
@@ -332,8 +325,7 @@ public class HomeStatus : MonoBehaviour
     public void ExtraLifeReceiveButtonClick()
     {
         DisableExtraLifeButtonLoadingAd();
-        adMobManager.ShowAdmobRewardedAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
-        //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+        AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
 
     public void ExtraLifeCancelButtonClick()
@@ -345,8 +337,7 @@ public class HomeStatus : MonoBehaviour
     {
         DisableExtraLifeButtonLoadingAd();
         ballStuff.SetActive(true);
-        adMobManager.ShowAdmobRewardedAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
-        //AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
+        AdManager.ShowStandardAd(ExtraLifeSuccess, RewardAdCancel, RewardAdFail);
     }
 
     private void ExtraLifeSuccess()
@@ -370,8 +361,7 @@ public class HomeStatus : MonoBehaviour
     public void UseHintReceiveButtonClick()
     {
         DisableHintButtonLoadingAd();
-        adMobManager.ShowAdmobRewardedAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
-        //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
+        AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
     }
 
     public void UseHintCancelButtonClick()
@@ -399,9 +389,7 @@ public class HomeStatus : MonoBehaviour
             player.SavePlayer();
 
             DisableHintButtonLoadingAd();
-            adMobManager.ShowAdmobRewardedAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
-            // Run the ad for hint
-            //AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
+            AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
         }
     }
 
@@ -505,7 +493,9 @@ public class HomeStatus : MonoBehaviour
         // Hide arrow that shows where the ball will move when launched
         ballDirectionArrow.SetActive(false);
 
-        forwardButton.transform.position = ball.gameObject.transform.position;
+        
+
+        forwardButton.transform.position = Camera.main.WorldToScreenPoint(ball.gameObject.transform.position); ;
         forwardButton.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
         forwardButton.transform.Find("ForwardButton").localScale = new Vector3(0.6f, 0.6f, 0.6f);
         forwardButton.transform.Find("ForwardButton").GetComponent<Image>().color = new Color32(255, 255, 255, 100);

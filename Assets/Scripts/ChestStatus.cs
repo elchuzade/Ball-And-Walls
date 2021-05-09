@@ -27,8 +27,8 @@ public class ChestStatus : MonoBehaviour
     [SerializeField] GameObject key3;
     [SerializeField] GameObject adsButton;
     [SerializeField] GameObject passPhrase;
-    Scoreboard scoreboard;    
-    
+    Scoreboard scoreboard;
+
     [SerializeField] GameObject[] bestPrizesPrefabs;
     [SerializeField] Transform bestPrize;
     // To pass to ad cancel
@@ -46,6 +46,15 @@ public class ChestStatus : MonoBehaviour
 
     GameObject moreKeysButton;
     GameObject passPhraseButton;
+
+    // For hint button laoder
+    [SerializeField] GameObject getChestsButton;
+    [SerializeField] GameObject getChestsButtonEmpty;
+    [SerializeField] GameObject getChestsButtonLoader;
+    // For hint button ad cancel window
+    [SerializeField] GameObject getChestsButtonReceive;
+    [SerializeField] GameObject getChestsButtonReceiveEmpty;
+    [SerializeField] GameObject getChestsButtonReceiveLoader;
 
     AdCancel adCancel;
 
@@ -106,7 +115,8 @@ public class ChestStatus : MonoBehaviour
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
         DrawKeys();
-        //AdManager.ShowBanner();
+
+        AdManager.ShowBanner();
 
         // Choose which of locked balls will be the best prize
         SetBestPrize();
@@ -115,6 +125,28 @@ public class ChestStatus : MonoBehaviour
         adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ReceiveButtonClick());
         adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
         adCancel.gameObject.SetActive(false);
+    }
+
+    public void DisableChestsButtonLoadingAd()
+    {
+        getChestsButton.GetComponent<Button>().interactable = false;
+        getChestsButtonLoader.SetActive(true);
+        getChestsButtonEmpty.SetActive(true);
+
+        getChestsButtonReceive.GetComponent<Button>().interactable = false;
+        getChestsButtonReceiveEmpty.SetActive(true);
+        getChestsButtonReceiveLoader.SetActive(true);
+    }
+
+    public void EnableGetChestsButtonLoadingAd()
+    {
+        getChestsButton.GetComponent<Button>().interactable = true;
+        getChestsButtonLoader.SetActive(false);
+        getChestsButtonEmpty.SetActive(false);
+
+        getChestsButtonReceive.GetComponent<Button>().interactable = true;
+        getChestsButtonReceiveEmpty.SetActive(false);
+        getChestsButtonReceiveLoader.SetActive(false);
     }
 
     // Show no thanks button after all the keys are used
@@ -146,12 +178,14 @@ public class ChestStatus : MonoBehaviour
             key1animator.enabled = true;
             key2animator.enabled = false;
             key3animator.enabled = false;
-        } else if (keys == 2)
+        }
+        else if (keys == 2)
         {
             key1animator.enabled = false;
             key2animator.enabled = true;
             key3animator.enabled = false;
-        } else if (keys == 3)
+        }
+        else if (keys == 3)
         {
             key1animator.enabled = false;
             key2animator.enabled = false;
@@ -218,7 +252,7 @@ public class ChestStatus : MonoBehaviour
             player.unlockedBalls.Add(bestPrizeName);
             player.currentBall = bestPrizeName;
         }
-        
+
         player.SavePlayer();
         navigator.LoadNextLevel(player.nextLevelIndex, player.maxLevelReached);
     }
@@ -300,11 +334,13 @@ public class ChestStatus : MonoBehaviour
         player.getThreeMoreKeysClicks.Add(date);
         player.SavePlayer();
 
+        DisableChestsButtonLoadingAd();
         AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, CloseChest);
     }
 
     private void GetMoreKeysSuccess()
     {
+        EnableGetChestsButtonLoadingAd();
         // If the ad has been watched till the end, Hide no thanks phrase and get 3 more keys button
         adsButton.SetActive(false);
         passPhrase.SetActive(false);
@@ -332,6 +368,7 @@ public class ChestStatus : MonoBehaviour
     // Button that shows watch the ad till the end and receive the gift in the warning of ad cancel
     public void ReceiveButtonClick()
     {
+        DisableChestsButtonLoadingAd();
         AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, GetKeysFail);
     }
 
@@ -343,6 +380,7 @@ public class ChestStatus : MonoBehaviour
     // Incase ad has been cancelled, show the warning screen
     private void GetKeysCancel()
     {
+        EnableGetChestsButtonLoadingAd();
         if (!showedAdCancelWarning)
         {
             adCancel.gameObject.SetActive(true);
@@ -361,6 +399,7 @@ public class ChestStatus : MonoBehaviour
     // Incase ad failed for some network issues or whatever
     private void GetKeysFail()
     {
+        EnableGetChestsButtonLoadingAd();
         showedAdCancelWarning = true;
         adCancel.gameObject.SetActive(false);
         bestPrize.gameObject.SetActive(true);

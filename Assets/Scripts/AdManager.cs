@@ -9,6 +9,8 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     private static readonly string storeID = "3879885";
 #elif UNITY_IOS
     private static readonly string storeID = "3879884";
+#else
+    private static readonly string storeID = "";
 #endif
 
     private static readonly string videoID = "video";
@@ -91,7 +93,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     {
         if (placementId == rewardedID || placementId == videoID)
         {
-            switch(showResult)
+            switch (showResult)
             {
                 case ShowResult.Finished:
                     adSuccess();

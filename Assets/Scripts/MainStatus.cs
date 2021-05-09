@@ -56,6 +56,9 @@ public class MainStatus : MonoBehaviour
 
         player = FindObjectOfType<Player>();
         //player.ResetPlayer();
+
+        //player.nextLevelIndex = 20;
+        //player.SavePlayer();
         player.LoadPlayer();
 
         SetNewFields();
@@ -192,7 +195,7 @@ public class MainStatus : MonoBehaviour
 #elif UNITY_IOS
         website = response.appStore;
 #else
-        website = response.website
+        website = response.website;
 #endif
         tv.SetAdButton(website);
 
