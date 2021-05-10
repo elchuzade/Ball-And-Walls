@@ -60,6 +60,7 @@ public class MainStatus : MonoBehaviour
         //player.unlockedChallenges = new List<int>() { -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2 };
         //player.SavePlayer();
 
+
         SetNewFields();
 
         if (player.privacyPolicyAccepted)
