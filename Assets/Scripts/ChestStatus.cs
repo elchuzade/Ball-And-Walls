@@ -328,18 +328,18 @@ public class ChestStatus : MonoBehaviour
 
     public void GetMoreKeys()
     {
-        // Save click
-        DateTimeOffset now = DateTimeOffset.UtcNow;
-        long date = now.ToUnixTimeMilliseconds();
-        player.getThreeMoreKeysClicks.Add(date);
-        player.SavePlayer();
-
         DisableChestsButtonLoadingAd();
         AdManager.ShowStandardAd(GetMoreKeysSuccess, GetKeysCancel, CloseChest);
     }
 
     private void GetMoreKeysSuccess()
     {
+        // Save click
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        long date = now.ToUnixTimeMilliseconds();
+        player.getThreeMoreKeysClicks.Add(date);
+        player.SavePlayer();
+
         EnableGetChestsButtonLoadingAd();
         // If the ad has been watched till the end, Hide no thanks phrase and get 3 more keys button
         adsButton.SetActive(false);

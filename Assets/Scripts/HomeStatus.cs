@@ -158,7 +158,9 @@ public class HomeStatus : MonoBehaviour
 
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
-    
+
+        normalLevel = Int32.Parse(SceneManager.GetActiveScene().name.Remove(0, 6));
+
         // Set the ball based on which ball index is selected in player data
         SetBallPrefab();
         // Set the background based on the ball
@@ -193,10 +195,6 @@ public class HomeStatus : MonoBehaviour
             if (player.maxLevelReached)
             {
                 levelIndex.GetComponent<Text>().text = "Max";
-                normalLevel = Int32.Parse(SceneManager.GetActiveScene().name.Remove(0, 6));
-                // Save click
-                player.levelsAfterMaxReached.Add(normalLevel);
-                player.SavePlayer();
             } else
             {
                 levelIndex.GetComponent<Text>().text = player.nextLevelIndex.ToString();
@@ -390,10 +388,6 @@ public class HomeStatus : MonoBehaviour
         }
         else
         {
-            // Save click
-            player.hintClicks.Add(normalLevel);
-            player.SavePlayer();
-
             DisableHintButtonLoadingAd();
             AdManager.ShowStandardAd(UseHintSuccess, RewardAdCancel, RewardAdFail);
         }
@@ -443,6 +437,10 @@ public class HomeStatus : MonoBehaviour
 
     public void UseHintSuccess()
     {
+        // Save click
+        player.hintClicks.Add(normalLevel);
+        player.SavePlayer();
+
         EnableHintButtonLoadingAd();
         // Hide hint button and show every wall's correct position
         hintButton.SetActive(false);
@@ -503,8 +501,8 @@ public class HomeStatus : MonoBehaviour
 
         forwardButton.transform.position = Camera.main.WorldToScreenPoint(ball.gameObject.transform.position); ;
         forwardButton.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
-        forwardButton.transform.Find("ForwardButton").localScale = new Vector3(0.6f, 0.6f, 0.6f);
-        forwardButton.transform.Find("ForwardButton").GetComponent<Image>().color = new Color32(255, 255, 255, 100);
+        forwardButton.transform.Find("Forward").localScale = new Vector3(0.6f, 0.6f, 0.6f);
+        forwardButton.transform.Find("Forward").GetComponent<Image>().color = new Color32(255, 255, 255, 100);
     }
 
     public void CatchBall()
@@ -590,7 +588,7 @@ public class HomeStatus : MonoBehaviour
         ball.ForwardBall();
         // Switch disable button
         forwardButton.GetComponent<Button>().interactable = false;
-        forwardButton.transform.Find("ForwardButton").Find("Disabled").gameObject.SetActive(true);
+        forwardButton.transform.Find("Forward").Find("Disabled").gameObject.SetActive(true);
     }
 
     private void SetLives()
@@ -651,7 +649,7 @@ public class HomeStatus : MonoBehaviour
         forwardButton.SetActive(false);
 
         forwardButton.GetComponent<Button>().interactable = true;
-        forwardButton.transform.Find("ForwardButton").Find("Disabled").gameObject.SetActive(false);
+        forwardButton.transform.Find("Forward").Find("Disabled").gameObject.SetActive(false);
     }
 
     public void ClickHomeButton()

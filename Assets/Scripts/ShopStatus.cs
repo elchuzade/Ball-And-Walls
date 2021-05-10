@@ -73,7 +73,7 @@ public class ShopStatus : MonoBehaviour
         scoreboard.SetDiamonds(player.diamonds);
 
         adCancel.InitializeAdCancel(" coins", coinIcon);
-        adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ClickGetCoins());
+        adCancel.GetReceiveButton().GetComponent<Button>().onClick.AddListener(() => ClickReceiveGetCoins());
         adCancel.GetCancelButton().GetComponent<Button>().onClick.AddListener(() => CancelButtonClick());
         SetBallItems();
         adCancel.gameObject.SetActive(false);
@@ -253,11 +253,15 @@ public class ShopStatus : MonoBehaviour
 
     public void ClickGetCoins()
     {
+        DisableCoinsButtonLoadingAd();
+        AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
+    }
+
+    public void ClickReceiveGetCoins()
+    {
         // Save click
         DateTimeOffset now = DateTimeOffset.UtcNow;
         long date = now.ToUnixTimeMilliseconds();
-        player.getTenMoreCoinsClicks.Add(date);
-        player.SavePlayer();
 
         DisableCoinsButtonLoadingAd();
         AdManager.ShowStandardAd(GetCoinsSuccess, GetCoinsCancel, GetCoinsFail);
@@ -326,6 +330,12 @@ public class ShopStatus : MonoBehaviour
 
     public void GetCoinsSuccess()
     {
+        // Save click
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        long date = now.ToUnixTimeMilliseconds();
+        player.getTenMoreCoinsClicks.Add(date);
+        player.SavePlayer();
+
         EnableGetCoinsButtonLoadingAd();
         // If video has been played suvvessfully till the end give the reward
         // Increase player coins by ad reward amount

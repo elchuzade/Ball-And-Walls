@@ -63,7 +63,7 @@ public class Server : MonoBehaviour
 
     // LOCAL TESTING
     //string abboxAdsApi = "http://localhost:5002";
-    //string ballAndWallsApi = "http://localhost:5001/ballAndWalls";
+    string ballAndWallsApi = "http://localhost:5001/v2/ballAndWalls";
 
     // STAGING
     //string abboxAdsApi = "https://staging.ads.abbox.com";
@@ -71,7 +71,7 @@ public class Server : MonoBehaviour
 
     // PRODUCTION
     string abboxAdsApi = "https://ads.abbox.com";
-    string ballAndWallsApi = "https://api.abboxgames.com/ballAndWalls";
+    //string ballAndWallsApi = "https://api.abboxgames.com/v2/ballAndWalls";
 
     List<LeaderboardItem> top = new List<LeaderboardItem>();
     List<LeaderboardItem> before = new List<LeaderboardItem>();
@@ -116,6 +116,23 @@ public class Server : MonoBehaviour
         {
             playerData.unlockedChallenges.Add(c);
         });
+
+        // Clicks
+        playerData.leaderboardClicks = new List<long>();
+        playerData.shopClicks = new List<long>();
+        playerData.challengesClicks = new List<long>();
+        playerData.getThreeMoreKeysClicks = new List<long>();
+        playerData.getTenMoreCoinsClicks = new List<long>();
+        playerData.hintClicks = new List<int>();
+        playerData.levelsAfterMaxReached = new List<int>();
+
+        player.leaderboardClicks.ForEach(c => { playerData.leaderboardClicks.Add(c); });
+        player.shopClicks.ForEach(c => { playerData.shopClicks.Add(c); });
+        player.challengesClicks.ForEach(c => { playerData.challengesClicks.Add(c); });
+        player.getThreeMoreKeysClicks.ForEach(c => { playerData.getThreeMoreKeysClicks.Add(c); });
+        player.getTenMoreCoinsClicks.ForEach(c => { playerData.getTenMoreCoinsClicks.Add(c); });
+        player.hintClicks.ForEach(c => { playerData.hintClicks.Add(c); });
+        player.levelsAfterMaxReached.ForEach(c => { playerData.levelsAfterMaxReached.Add(c); });
 
         string playerDataJson = JsonUtility.ToJson(playerData);
 

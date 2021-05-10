@@ -1783,6 +1783,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6590224219401749085}
     m_Modifications:
+    - target: {fileID: 1253590798461901781, guid: 1085ef4efb4b24c66836fc1cd4e56081,
+        type: 3}
+      propertyPath: m_Name
+      value: Forward
+      objectReference: {fileID: 0}
     - target: {fileID: 1753112540743242668, guid: 1085ef4efb4b24c66836fc1cd4e56081,
         type: 3}
       propertyPath: m_Name
@@ -2480,11 +2485,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 979d1f32d27654a7491272235d568e00,
         type: 3}
-    - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
-        type: 3}
-      propertyPath: challengeLevel
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 3127915845552200941, guid: f3fdb1fb3777b40a3b48c47aea708bae,
         type: 3}
       propertyPath: hintButtonEmpty

@@ -4,11 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using MoreMountains.NiceVibrations;
+using UnityEngine.SceneManagement;
 
 public class BallCatcher : MonoBehaviour
 {
     // List of words to show when level is passed
     string[] winWords = { "Congrats!", "Excellent!", "Good Job!", "Perfect!", "Amazing!", "Superb!", "Great!", "Wonderful!", "Brilliant!" };
+
+    int normalLevel;
 
     Navigator navigator;
     HomeStatus homeStatus;
@@ -119,6 +122,8 @@ public class BallCatcher : MonoBehaviour
         dropCoinsAmount = (int)System.Math.Ceiling(coinsPowerUpAdded) + randomCoinsNumber;
         // Assing random number to amount of diamonds to drop from 5 to 8
         dropDiamondsAmount = Random.Range(5, 9);
+
+        normalLevel = System.Int32.Parse(SceneManager.GetActiveScene().name.Remove(0, 6));
     }
 
     void FixedUpdate()
@@ -495,6 +500,12 @@ public class BallCatcher : MonoBehaviour
 
     private void LoadNextLevel()
     {
+        if (player.maxLevelReached)
+        {
+            player.levelsAfterMaxReached.Add(normalLevel);
+            player.SavePlayer();
+        }
+
         // Wait for some time then update player data and load either next level or chest room
         if (player.keys == 3)
         {
