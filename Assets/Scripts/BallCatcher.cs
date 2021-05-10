@@ -123,7 +123,10 @@ public class BallCatcher : MonoBehaviour
         // Assing random number to amount of diamonds to drop from 5 to 8
         dropDiamondsAmount = Random.Range(5, 9);
 
-        normalLevel = System.Int32.Parse(SceneManager.GetActiveScene().name.Remove(0, 6));
+        if (homeStatus.GetChallengeLevel() == 0)
+        {
+            normalLevel = System.Int32.Parse(SceneManager.GetActiveScene().name.Remove(0, 6));
+        }
     }
 
     void FixedUpdate()
@@ -500,7 +503,7 @@ public class BallCatcher : MonoBehaviour
 
     private void LoadNextLevel()
     {
-        if (player.maxLevelReached)
+        if (player.maxLevelReached && homeStatus.GetChallengeLevel() == 0)
         {
             player.levelsAfterMaxReached.Add(normalLevel);
             player.SavePlayer();

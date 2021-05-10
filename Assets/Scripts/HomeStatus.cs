@@ -159,7 +159,10 @@ public class HomeStatus : MonoBehaviour
         scoreboard.SetCoins(player.coins);
         scoreboard.SetDiamonds(player.diamonds);
 
-        normalLevel = Int32.Parse(SceneManager.GetActiveScene().name.Remove(0, 6));
+        if (challengeLevel == 0)
+        {
+            normalLevel = Int32.Parse(SceneManager.GetActiveScene().name.Remove(0, 6));
+        }
 
         // Set the ball based on which ball index is selected in player data
         SetBallPrefab();
@@ -437,9 +440,12 @@ public class HomeStatus : MonoBehaviour
 
     public void UseHintSuccess()
     {
-        // Save click
-        player.hintClicks.Add(normalLevel);
-        player.SavePlayer();
+        if (challengeLevel == 0)
+        {
+            // Save click
+            player.hintClicks.Add(normalLevel);
+            player.SavePlayer();
+        }
 
         EnableHintButtonLoadingAd();
         // Hide hint button and show every wall's correct position

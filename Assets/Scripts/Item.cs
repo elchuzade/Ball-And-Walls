@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using MoreMountains.NiceVibrations;
-using System.Collections;
 
 // Item in the shop
 public class Item : MonoBehaviour
