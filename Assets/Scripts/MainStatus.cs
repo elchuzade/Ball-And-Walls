@@ -57,6 +57,8 @@ public class MainStatus : MonoBehaviour
         player = FindObjectOfType<Player>();
         //player.ResetPlayer();
         player.LoadPlayer();
+        //player.unlockedChallenges = new List<int>() { -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2 };
+        //player.SavePlayer();
 
         SetNewFields();
 

@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,8 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 4af0d4a174e181b48a76a6e693d9b6bb,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +119,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -991,12 +994,12 @@ PrefabInstance:
     - target: {fileID: 559766020613700659, guid: 0fd451f53be1677488e0e243ffa6799a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 141
+      value: 127.3
       objectReference: {fileID: 0}
     - target: {fileID: 559766020613700659, guid: 0fd451f53be1677488e0e243ffa6799a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 154
+      value: 180.7
       objectReference: {fileID: 0}
     - target: {fileID: 559766020613700659, guid: 0fd451f53be1677488e0e243ffa6799a,
         type: 3}
@@ -2470,12 +2473,12 @@ PrefabInstance:
     - target: {fileID: 5924786991036520212, guid: 3a227463a346f4269ac1f1fceabfcbe4,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 483
+      value: 482
       objectReference: {fileID: 0}
     - target: {fileID: 5924786991036520212, guid: 3a227463a346f4269ac1f1fceabfcbe4,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 668
+      value: 663
       objectReference: {fileID: 0}
     - target: {fileID: 5924786991036520212, guid: 3a227463a346f4269ac1f1fceabfcbe4,
         type: 3}
