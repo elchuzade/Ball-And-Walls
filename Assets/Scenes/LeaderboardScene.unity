@@ -2436,6 +2436,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 200
       objectReference: {fileID: 0}
+    - target: {fileID: 7673238729591252316, guid: 775fceb5318094ffaada771c36cd690d,
+        type: 3}
+      propertyPath: m_text
+      value: Player-1246
+      objectReference: {fileID: 0}
     - target: {fileID: 7673238729711891302, guid: 775fceb5318094ffaada771c36cd690d,
         type: 3}
       propertyPath: m_SizeDelta.x
