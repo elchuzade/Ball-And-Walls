@@ -906,6 +906,9 @@ public class HomeStatus : MonoBehaviour
                 SetBallBackground("ORANGE");
                 break;
             case "abbox":
+            case "abboxsilver":
+            case "abboxgold":
+            case "abboxplatinum":
                 SetBallBackground("RED");
                 break;
             default: 

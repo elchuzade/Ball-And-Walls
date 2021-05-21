@@ -593,7 +593,14 @@ public class BallCatcher : MonoBehaviour
                 powerUp = 200;
                 break;
             case "abbox":
+            case "abboxsilver":
                 powerUp = 300;
+                break;
+            case "abboxgold":
+                powerUp = 350;
+                break;
+            case "abboxplatinum":
+                powerUp = 400;
                 break;
             default:
                 powerUp = 0;
