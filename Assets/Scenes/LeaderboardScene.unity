@@ -749,6 +749,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5a0a9fc48f4314533a29bab95571e042, type: 3}
   - {fileID: 21300000, guid: 2fb32747dbadb4a49a3a031c88662b59, type: 3}
   - {fileID: 21300000, guid: 8eaf349cc28df42a3b386933cbceff15, type: 3}
+  - {fileID: 21300000, guid: 31597155478e9f44e818d369c089bc56, type: 3}
+  - {fileID: 21300000, guid: f0bc346bcf496ed488d4f39303744495, type: 3}
+  - {fileID: 21300000, guid: 10201345d1a243b4e9b210702c26a125, type: 3}
   leaderboardItemPrefab: {fileID: 4627962492992100914, guid: 5593b5882829d4404820910c9ecec7eb,
     type: 3}
 --- !u!1 &604293379
@@ -1170,7 +1173,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1261225031}
   m_HandleRect: {fileID: 1261225030}
   m_Direction: 3
-  m_Value: 0.49999997
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

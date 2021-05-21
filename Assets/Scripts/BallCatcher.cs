@@ -118,8 +118,15 @@ public class BallCatcher : MonoBehaviour
         challengeUnlock.SetActive(false);
         // Assing random number to amount of coins to drop from 7 to 13
         int randomCoinsNumber = Random.Range(7, 14);
+        randomCoinsNumber = 14;
         double coinsPowerUpAdded = randomCoinsNumber * powerUp / 100;
-        dropCoinsAmount = (int)System.Math.Ceiling(coinsPowerUpAdded) + randomCoinsNumber;
+
+        dropCoinsAmount = (int)System.Math.Ceiling(coinsPowerUpAdded);
+
+        homeStatus.SetCollectCoins(dropCoinsAmount);
+
+        dropCoinsAmount = Mathf.Clamp(dropCoinsAmount, 0, 10);
+
         // Assing random number to amount of diamonds to drop from 5 to 8
         dropDiamondsAmount = Random.Range(5, 9);
 
@@ -209,7 +216,7 @@ public class BallCatcher : MonoBehaviour
                 // The coin is not counted yet into player data, collect it
                 if (collectedCoins < dropCoinsAmount)
                 {
-                    homeStatus.CollectCoin();
+                    //homeStatus.CollectCoin();
                     collectedCoins++;
                     // If zoom animation of coins icon has not been run yet,
                     // run it and set its status to run not to repeat it
@@ -226,6 +233,7 @@ public class BallCatcher : MonoBehaviour
                         coinsAdded = true;
                         // Add coins that were collected from this level
                         player.coins += homeStatus.GetCoins();
+                        homeStatus.SetScoreboardValues();
                     }
                 }
             }
@@ -433,7 +441,7 @@ public class BallCatcher : MonoBehaviour
                 // Make angles for all coins that will drop and then drop them
                 MakeDropCoinAngles();
                 // Add coins that were collected from this level
-                player.coins += homeStatus.GetCoins();
+                //player.coins += homeStatus.GetCoins();
                 player.diamonds += homeStatus.GetDiamonds();
             }
 

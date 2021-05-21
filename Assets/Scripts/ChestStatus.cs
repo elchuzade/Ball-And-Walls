@@ -101,6 +101,7 @@ public class ChestStatus : MonoBehaviour
 
         player = FindObjectOfType<Player>();
         player.LoadPlayer();
+
         moreKeysButton.SetActive(false);
         passPhraseButton.SetActive(false);
 

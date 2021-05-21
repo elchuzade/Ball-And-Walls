@@ -101,6 +101,9 @@ public class HomeStatus : MonoBehaviour
 
     GameObject ballStuff;
 
+    // Used from ballCatcher
+    int coinsToCollect = 0;
+
     void Awake()
     {
         ballCatcher = FindObjectOfType<BallCatcher>();
@@ -534,6 +537,17 @@ public class HomeStatus : MonoBehaviour
         }
     }
 
+    public void SetScoreboardValues()
+    {
+        scoreboard.SetCoins(player.coins);
+        scoreboard.SetDiamonds(player.diamonds);
+    }
+
+    public void SetCollectCoins(int _coins)
+    {
+        coinsToCollect = _coins;
+    }
+
     public void CollectCoin()
     {
         // If a ball collides with a coin add it to the level keys and to the scoreboard in canvas
@@ -554,7 +568,7 @@ public class HomeStatus : MonoBehaviour
         {
             return challengeCoins;
         }
-        return coins;
+        return coins + coinsToCollect;
     }
 
     public int GetDiamonds()
