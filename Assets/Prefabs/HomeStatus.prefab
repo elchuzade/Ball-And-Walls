@@ -84,6 +84,9 @@ MonoBehaviour:
   - {fileID: 2939840133514566636, guid: 78caf8445badd4848b068e6c049e618f, type: 3}
   - {fileID: 5560139955304499862, guid: a112e9d37c63c4e888379de7cfe15703, type: 3}
   - {fileID: 4194439138409664049, guid: 4067345422616274fba2ed65b48dce71, type: 3}
+  - {fileID: 7937230841922582776, guid: 7bd8b654bec8ece4cb6030fb6699ca90, type: 3}
+  - {fileID: 7937230841922582776, guid: dd857ac10248880488ab6800504ee486, type: 3}
+  - {fileID: 7937230841922582776, guid: d9b64eee756b9e74d9d76426e9d95b5e, type: 3}
   FocusPointer: {fileID: 0}
   FocusPointerAfterHintHorizontal: {fileID: 0}
   FocusPointerAfterHintVertical: {fileID: 0}
@@ -94,6 +97,13 @@ MonoBehaviour:
   tutorial: 0
   hintIcon: {fileID: 0}
   lifeIcon: {fileID: 0}
+  hintButtonEmpty: {fileID: 0}
+  hintButtonLoader: {fileID: 0}
+  hintButtonReceive: {fileID: 0}
+  hintButtonReceiveEmpty: {fileID: 0}
+  hintButtonReceiveLoader: {fileID: 0}
+  extraLifeButtonEmpty: {fileID: 0}
+  extraLifeButtonLoader: {fileID: 0}
   green: {fileID: 21300000, guid: f3da04c16cf020c4d8b317455ed64754, type: 3}
   blue: {fileID: 21300000, guid: 2ee76f9ce0130ca499445409b858f2c2, type: 3}
   purple: {fileID: 21300000, guid: cac58090b2869b148b0e6ea54a5e48e5, type: 3}

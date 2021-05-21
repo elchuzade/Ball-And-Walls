@@ -299,6 +299,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scoreboard
       objectReference: {fileID: 0}
+    - target: {fileID: 985819661630276527, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
+        type: 3}
+      propertyPath: m_Text
+      value: 999
+      objectReference: {fileID: 0}
     - target: {fileID: 2205711944978072949, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -317,12 +322,12 @@ PrefabInstance:
     - target: {fileID: 3751703474437491730, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -120
+      value: -140
       objectReference: {fileID: 0}
     - target: {fileID: 3751703474437491730, guid: 61aae6d81f9ff4c98bffa22f6bd1f504,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -60
+      value: -120
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61aae6d81f9ff4c98bffa22f6bd1f504, type: 3}
@@ -409,7 +414,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 199905594}
   m_Direction: 0
   m_Value: 0.5
-  m_Size: 0.19942197
+  m_Size: 0.19942199
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -961,7 +966,7 @@ PrefabInstance:
     - target: {fileID: 3000241817006376021, guid: e8d5f450b876d4a7a93676b793c986a1,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -60
+      value: -120
       objectReference: {fileID: 0}
     - target: {fileID: 3000241817006376021, guid: e8d5f450b876d4a7a93676b793c986a1,
         type: 3}
@@ -2202,8 +2207,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 700, y: 1100}
+  m_AnchoredPosition: {x: 0, y: -134.8783}
+  m_SizeDelta: {x: 700, y: 830.2434}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &721403589
 MonoBehaviour:
@@ -4327,7 +4332,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -100}
+  m_AnchoredPosition: {x: 0, y: -110}
   m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1616315099
@@ -4712,8 +4717,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 150}
-  m_SizeDelta: {x: 720, y: 780}
+  m_AnchoredPosition: {x: 0, y: 150.89917}
+  m_SizeDelta: {x: 720, y: 781.7983}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &2050713169
 PrefabInstance:
