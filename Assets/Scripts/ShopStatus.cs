@@ -57,9 +57,7 @@ public class ShopStatus : MonoBehaviour
         }
 
         player = FindObjectOfType<Player>();
-        //player.coins = 100000;
-        //player.SavePlayer();
-        //return;
+        //player.ResetPlayer();
         player.LoadPlayer();
 
         scrollbar.GetComponent<Scrollbar>().value = 0;
