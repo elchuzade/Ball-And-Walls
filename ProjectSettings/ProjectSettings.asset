@@ -213,10 +213,10 @@ PlayerSettings:
     Android: com.Abbox.BallWalls
   buildNumber:
     Standalone: 0
-    iPhone: 3
+    iPhone: 4
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 22
+  AndroidBundleVersionCode: 23
   AndroidMinSdkVersion: 20
   AndroidTargetSdkVersion: 30
   AndroidPreferredInstallLocation: 1
