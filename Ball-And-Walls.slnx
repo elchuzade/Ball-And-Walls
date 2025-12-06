@@ -1,0 +1,9 @@
+﻿<Solution>
+  <Project Path="MoreMountains.NiceVibrations.Demos.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="MoreMountains.NiceVibrations.Rumble.Editor.csproj" />
+  <Project Path="MoreMountains.NiceVibrations.Haptics.csproj" />
+  <Project Path="MoreMountains.NiceVibrations.csproj" />
+  <Project Path="MoreMountains.NiceVibrations.Editor.csproj" />
+  <Project Path="MoreMountains.NiceVibrations.Rumble.csproj" />
+</Solution>
