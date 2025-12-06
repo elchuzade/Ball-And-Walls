@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Deprecated Ad System, can be updated to new Ad System in Unity
+// requires migration of other features too
+
+/*using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Advertisements;
@@ -122,5 +125,72 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     public void OnUnityAdsReady(string placementId)
     {
 
+    }
+}
+*/
+
+
+// Dummy Code below to avoid having errors with ad related code in other scripts
+
+using System;
+using System.Collections;
+using UnityEngine;
+
+public class AdManager : MonoBehaviour
+{
+    public static AdManager instance;
+
+    private Action adSuccess;
+    private Action adSkipped;
+    private Action adFailed;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    // Standard Ad (does nothing)
+    public static void ShowStandardAd(Action success, Action skipped, Action failed)
+    {
+        if (instance == null) return;
+
+        instance.adSuccess = success;
+        instance.adSkipped = skipped;
+        instance.adFailed = failed;
+
+        // Simulate “no ads available”
+        instance.adSkipped?.Invoke();
+    }
+
+    // Banner (does nothing)
+    public static void ShowBanner()
+    {
+        // no-op
+    }
+
+    public static void HideBanner()
+    {
+        // no-op
+    }
+
+    // Rewarded Ad (does nothing, but returns success immediately)
+    public static void ShowRewardAd(Action success, Action skipped, Action failed)
+    {
+        if (instance == null) return;
+
+        instance.adSuccess = success;
+        instance.adSkipped = skipped;
+        instance.adFailed = failed;
+
+        // Simulate instant success
+        instance.adSuccess?.Invoke();
     }
 }

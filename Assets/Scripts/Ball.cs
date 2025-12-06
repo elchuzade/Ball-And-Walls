@@ -199,13 +199,13 @@ public class Ball : MonoBehaviour
     {
         ballReset = false;
         // Add velocity based on the ball speed and velocity vector
-        transform.GetComponent<Rigidbody2D>().velocity = velocityVector * speed;
+        transform.GetComponent<Rigidbody2D>().linearVelocity = velocityVector * speed;
     }
 
     // Stop moving when entered rotation wall or portal or game wall
     public void StopMoving()
     {
-        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        GetComponent<Rigidbody2D>().linearVelocity = Vector3.zero;
     }
 
     // If the ball has entered collider with trigger effect on it
@@ -254,7 +254,7 @@ public class Ball : MonoBehaviour
             // Set ball is forwarded status to not be able to increase repetetively
             forward = true;
             // Increase ball velocity
-            GetComponent<Rigidbody2D>().velocity *= 1.4f;
+            GetComponent<Rigidbody2D>().linearVelocity *= 1.4f;
             // Increase ball launch velocity from walls and portals
             speed *= 1.4f;
             // Increase ball rotation speed inside a wall
@@ -291,7 +291,7 @@ public class Ball : MonoBehaviour
         ResetSpeed();
 
         // Reset ball velocity to zero to stop it from moving
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
 
         // If haptics are enabled set it to vibrate
         if (PlayerPrefs.GetInt("Haptics") == 1)
